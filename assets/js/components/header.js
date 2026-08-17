@@ -88,7 +88,7 @@ document.querySelectorAll('.bottom-bar button').forEach(btn => {
     style.innerHTML = `
         #wa-chat-widget {
             position: fixed;
-            bottom: 30px;
+            bottom: 20px;
             right: 30px;
             z-index: 1050;
             font-family: 'Poppins', sans-serif;
