@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Tiro+Bangla&display=swap');
+
+/* ===== Reset / Base ===== */
+
+     :root {
+      /* Color palette */
+      --color-primary: #009966;       
+      --color-primary-2: #00B27D;
+      --color-bg-1: #f4f4f4;
+      --color-bg-2: #bb2d3b;
+
+      /* Text */
+      --text-color-primary: #f4f4f4;
+      --text-color-default: #009966;
+
+      /* Radius */
+      --radius-sm: 6px;
+      --radius-md: 10px;
+
+      /* Font size */
+      --font-size-sm: 0.8rem;
+    }
+
+    * {
+      font-family: "Poppins";
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f8f9fa;
+      color: #222;
+    }
+
+    .page-title {
+      background-color: var(--color-primary);
+      color: white;
+      padding: 60px 0;
+      text-align: center;
+    }
+
+    .document-card {
+      background-color: rgba(172, 255, 47, 0.205);
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    .document-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Infinite download animation */
+    .download-icon {
+      color: var(--color-primary-2);
+      font-size: 2.5rem;
+    }
+
+    /* On hover, speed up the bounce slightly */
+    .download-icon:hover {
+      animation-duration: 1s;
+      transform: scale(1.1);
+    } */
+
+  /* ================= ANIMATIONS ================= */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-in-out;
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* responsive issues */
+@media (max-width: 425px) {
+  .form-section{
+    font-size: 90%;
+  }
+}

@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Tiro+Bangla&display=swap');
+
+:root {
+  /* ==============================
+            Color palette
+  =============================== */
+  --color-primary: #009966;          /* main green */
+  --color-primary-2: #00B27D;        /* lighter green */
+  --color-bg-1: #f4f4f4;
+  --color-bg-2: #e8f5e9;
+
+  /* ==============================
+            Text
+  =============================== */
+  --text-color-primary: #333;
+  --text-color-default: #009966;
+
+  /* ==============================
+            Radius & Font
+  =============================== */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --font-size-sm: 0.8rem;
+}
+
+/* ============================================= 
+            Custom Design CSS 
+================================================ */
+
+body {
+  font-family: "Poppins";
+  scroll-behavior: smooth;
+}
+
+.container{
+    opacity: 95%;
+}
+
+/* FORM BOX */
+.form-box {
+  animation: fadeInUp 1.2s ease;
+  border-top: 5px solid var(--color-primary);
+  transition: all 0.3s ease-in-out;
+  border-radius: var(--radius-md);
+}
+
+.form-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* ================= BUTTON ================= */
+.btn-animate {
+  transition: all 0.3s ease;
+}
+
+.btn-animate:hover {
+  transform: scale(1.05);
+  background-color: var(--color-primary-2) !important;
+}
+
+/* Bootstrap button overrides */
+.btn-success {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: #fff !important;
+}
+
+.btn-success:hover {
+  background-color: var(--color-primary-2) !important;
+  border-color: var(--color-primary-2) !important;
+}
+
+/* ================= HEADINGS ================= */
+h5.text-primary,
+.text-primary {
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+h5 {
+  color: var(--color-primary);
+}
+
+/* ================= FORM FOCUS STYLES ================= */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 0.25rem rgba(0, 153, 102, 0.25) !important;
+}
+
+/* ================= RADIO & CHECKBOX ================= */
+.form-check-input:checked {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+.form-check-input:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 0.25rem rgba(0, 153, 102, 0.25) !important;
+}
+
+/* ================= LINKS ================= */
+a {
+  color: var(--color-primary);
+}
+
+a:hover {
+  color: var(--color-primary-2);
+}
+
+/* ================= MODAL ================= */
+.modal-content {
+  background: white !important;
+  border-radius: 15px;
+  animation: popIn 0.4s ease-in-out;
+}
+
+.fa-circle-check {
+  color: var(--color-primary) !important;
+}
+
+.button-primary{
+  background-color: var(--color-primary) !important;
+}
+
+/* Scroll Animation*/
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-on-scroll.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ================= ANIMATIONS ================= */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-in-out;
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* reponsive issues */
+@media (max-width: 425px) {
+  .form-section{
+    font-size: 90%;
+  }
+}
+
+
+
+

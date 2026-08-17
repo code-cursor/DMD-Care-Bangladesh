@@ -1,0 +1,322 @@
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Tiro+Bangla&display=swap');
+    
+    :root {
+      --color-primary: #009966;
+      --color-primary-2: #00B27D;
+      --color-accent: #00C3B0;
+      --color-bg: #f9f9f9;
+      --color-card-bg: #ffffff;
+      --color-card-hover: #e0f7f2;
+      --color-hero-start: #c7f0e5;
+      --color-hero-middle: #f0fff8;
+      --color-hero-end: #b2f7e1;
+      --text-color: #333;
+      --text-heading: #007965;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --font-size-sm: 0.9rem;
+    }
+
+    * {
+      font-family:'Poppins', 'Tiro Bangla';
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--color-bg);
+      color: var(--text-color);
+      width: 100%;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      position: relative;
+      padding: 80px 20px;
+      text-align: center;
+      background: linear-gradient(135deg, var(--color-hero-start), var(--color-hero-middle), var(--color-hero-end));
+      overflow: hidden;
+      margin-bottom: 50px;
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+    }
+    
+    .hero-section h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--text-heading);
+      z-index: 2;
+    }
+
+    .hero-section p {
+      font-size: 1.1rem;
+      max-width: 700px;
+      color: #555;
+      z-index: 2;
+    }
+
+    /* --- Read More Button Styles --- */
+    .read-more-btn {
+      display: inline-block;
+      padding: 12px 28px;
+      background-color: var(--color-primary); /* Replace with your theme's brand color variable if you have one */
+      color: #FFFFFF;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: var(--radius-md, 8px); /* Uses your existing radius variable, defaults to 8px */
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      z-index: 2;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .read-more-btn:hover {
+      background-color: var(--color-accent); /* A slightly darker shade for the hover state */
+      transform: translateY(-2px); /* Slight lift effect on hover */
+    }
+
+    /* Floating animated circles behind hero */
+    .hero-section::before,
+    .hero-section::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.4;
+      animation: float 8s ease-in-out infinite;
+      z-index: 1;
+    }
+
+    .hero-section::before {
+      width: 200px;
+      height: 200px;
+      background: var(--color-primary);
+      top: -50px;
+      left: -50px;
+    }
+
+    .hero-section::after {
+      width: 300px;
+      height: 300px;
+      background: var(--color-primary-2);
+      bottom: -100px;
+      right: -100px;
+      animation-delay: 4s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      50% { transform: translateY(-20px) translateX(20px); }
+    }
+
+    /* Flex for text + image in hero (if added) */
+    .hero-flex {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+      width: 100%;
+    }
+
+    /* -------- scroll section design start ---------*/
+    
+    .scrollable-block {
+      height: 450px;
+      overflow-y: auto;
+      margin: 50px auto;
+      padding: 10px 20px 10px 20px;
+      background-color: #f8f9fa;
+      line-height: 1.8;
+      color: #333;
+      
+      /* Clean, flat design */
+      background-color: #ffffff;
+      border: none; /* Removed borders and shadows */
+      
+      /* Typography matching the image */
+      color: #444; 
+      font-family: 'Noto Sans Bengali', system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+    }
+
+    .scrollable-block p {
+      margin-bottom: 20px;
+    }
+
+    .scrollable-block p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* --- Image-Matched Custom Scrollbar --- */
+
+    .scrollable-block::-webkit-scrollbar {
+      width: 12px; 
+    }
+
+    /* The thin line track */
+    .scrollable-block::-webkit-scrollbar-track {
+      /* Uses a linear gradient to draw a 1px line exactly in the middle of the 6px track */
+      background: linear-gradient(90deg, transparent 2.5px, #f0ebfd 2.5px, #f0ebfd 3.5px, transparent 3.5px);
+    }
+
+    /* The pill thumb */
+    .scrollable-block::-webkit-scrollbar-thumb {
+      background-color: #047200; 
+      border-radius: 10px;
+    }
+
+    .scrollable-block::-webkit-scrollbar-thumb:hover {
+      background-color: #047200a6; /* Slightly darker purple on hover */
+    }
+
+    /* --------- scroll section design end --------*/
+
+    
+    /* Section styling */
+    .section {
+      margin-bottom: 40px;
+      padding: 25px 20px;
+      border-radius: var(--radius-md);
+      background-color: var(--color-card-bg);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+      transition: transform 0.3s, background 0.3s;
+    }
+    .section:hover {
+      background-color: var(--color-card-hover);
+      transform: translateY(-5px);
+    }
+
+    .section h2 {
+      color: var(--text-heading);
+      margin-bottom: 15px;
+      font-weight: 600;
+      position: relative;
+    }
+    .section h2::after {
+      content: '';
+      display: block;
+      width: 50px;
+      height: 4px;
+      background: var(--color-accent);
+      margin-top: 6px;
+      border-radius: 2px;
+    }
+
+    ul {
+      margin-left: 1rem;
+    }
+
+    .info-card {
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      margin-bottom: 15px;
+      background: linear-gradient(120deg, #e0f7f2, #f4f9f9);
+      transition: transform 0.3s, background 0.3s;
+    }
+    .info-card:hover {
+      background: linear-gradient(120deg, #00d4a0, #c0fff0 );
+      transform: translateY(-5px);
+      color: #fff;
+    }
+    .info-card i {
+      font-size: 1.8rem;
+      color: var(--color-primary);
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    /* Accordion styling */
+    .accordion-button:focus {
+      box-shadow: none;
+    }
+
+    /* Responsive */
+    @media(min-width: 992px) {
+      .hero-flex {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 50px;
+      }
+
+      .hero-flex p, .hero-flex img {
+        flex: 1;
+      }
+    }
+
+    @media(max-width: 576px) {
+      .hero-section h1 { font-size: 2rem; }
+      .hero-section p { font-size: 1rem; }
+    }
+
+    /* Floating animation */
+    @keyframes floatImage {
+      0%, 100% { transform: translateY(0) rotateZ(0deg); }
+      50% { transform: translateY(-15px) rotateZ(1deg); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+    .read-more-btn {
+      padding: 10px 24px;
+      font-size: 0.95rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .read-more-btn {
+      width: 100%; /* Makes the button full width on very small screens for better tapping */
+      max-width: 250px;
+      }
+    }
+
+    /* Scroll Animation*/
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .animate-on-scroll.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ================= ANIMATIONS ================= */
+    .scroll-reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-in-out;
+    }
+
+    .scroll-reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+    }
+
+    @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes popIn {
+    0% {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    }
+
+    /* reponsive issues */
+    @media (max-width: 425px) {
+    .form-section{
+        font-size: 90%;
+    }
+    }

@@ -1,0 +1,161 @@
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Tiro+Bangla&display=swap');
+    
+    :root {
+      --color-primary: #009966;       
+      --color-primary-2: #00B27D;
+      --color-bg-1: #f4f4f4;
+      --color-bg-2: #bb2d3b;
+
+      --text-color-primary: #f4f4f4;
+      --text-color-default: #009966;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+
+      --font-size-sm: 0.8rem;
+    }
+
+    * {
+      font-family:'Poppins';
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(-45deg, #e6fff3, #f4f4f4, #d9fcef, #c8ffe0);
+      background-size: 400% 400%;
+      animation: gradientFlow 12s ease infinite;
+      color: var(--color-primary);
+      scroll-behavior: smooth;
+    }
+
+    .container{
+      margin-bottom: 100px;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Banner */
+    .banner {
+      position: relative;
+      text-align: left;
+      color: var(--text-color-primary);
+    }
+
+    .banner img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    .banner-text {
+      position: absolute;
+      top: 50%;
+      left: 5%;
+      transform: translateY(-50%);
+      background: var(--color-primary);
+      padding: 1.5rem 2rem;
+      border-radius: var(--radius-md);
+      max-width: 400px;
+      animation: slideInLeft 1.2s ease forwards;
+    }
+
+    @keyframes slideInLeft {
+      0% { opacity: 0; transform: translateX(-50%) translateY(-50%); }
+      100% { opacity: 1; transform: translateX(0) translateY(-50%); }
+    }
+
+    .container{
+      margin-bottom: 0px;
+    }
+
+    /* Doctor Cards */
+    .doctor-card {
+      background: rgba(255,255,255,0.25);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      text-align: center;
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+      backdrop-filter: blur(5px);
+    }
+
+    .doctor-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+
+    .doctor-card img {
+      width: 100%;
+      border-radius: var(--radius-md);
+      margin-bottom: 1rem;
+    }
+
+    .doctor-card h5 {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    .doctor-card h6 {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      text-decoration: underline;
+    }
+
+    .doctor-card p {
+      font-size: 0.9rem;
+    }
+
+    /* Scroll Animation*/
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .animate-on-scroll.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* ================= ANIMATIONS ================= */
+    .scroll-reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease-in-out;
+    }
+
+    .scroll-reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+    }
+
+    @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes popIn {
+    0% {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    }
+
+    /* responsive issues */
+    @media (max-width: 425px) {
+    .form-section{
+        font-size: 90%;
+    }
+    }

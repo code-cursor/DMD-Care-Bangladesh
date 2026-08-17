@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Our Partners</title>
+  <link rel="shortcut icon" href="../assets/src/img/DMD_care_bd_Logo.webp" type="image/x-icon">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="./assets/css/pages/our_partners.css" />
+
+  <!-- Bootstrap 5 CSS (Unified) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons & FontAwesome -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"> 
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Tiro+Bangla&display=swap" rel="stylesheet">
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+
+<body>
+  <!-- Dynamic Header -->
+  <div id="header-container"></div>
+
+  <!-- Partners Section -->
+  <section class="py-5 position-relative">
+    <div class="container py-5">
+      
+      <!-- Section Title & Subtitle -->
+      <div class="text-center mb-5 pb-4 reveal">
+        <h2 class="fw-bold text-dark title-underline mb-4 display-6">
+          Our Partners</span>
+        </h2>
+        <p class="text-muted mx-auto fs-5 fw-medium" style="max-width: 700px;">
+          We collaborate with leading companies to deliver the best services.
+        </p>
+      </div>
+
+      <!-- Partner Logos Grid -->
+      <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4 justify-content-center align-items-center">
+        
+        <!-- Partner 1: shishu hospital -->
+        <div class="col reveal">
+          <div class="partner-card">
+            <img src="assets/src/img/Bangladesh_Shishu_Hospital.webp" alt="BD Shishu Hospital Logo">
+          </div>
+        </div>
+        <!-- Partner 1: Roche -->
+        <div class="col reveal">
+          <div class="partner-card">
+            <img src="assets/src/img/Roche.webp" alt="Roche Logo">
+          </div>
+        </div>
+
+        <!-- Partner 2: Duchenne UK -->
+        <div class="col reveal delay-1">
+          <div class="partner-card">
+            <img src="assets/src/img/duchenneuk_uk.webp" alt="Duchenne UK Logo">
+          </div>
+        </div>
+
+        <!-- Partner 3: Newcastle University -->
+        <div class="col reveal delay-2">
+          <div class="partner-card">
+            <img src="assets/src/img/newcastle-university.webp" alt="Newcastle University Logo">
+          </div>
+        </div>
+
+        <!-- Partner 4: John Walton -->
+        <div class="col reveal delay-3">
+          <div class="partner-card">
+            <img src="assets/src/img/John-Walton-Muscular-Dystrophy-Centre.webp" alt="John Walton Muscular Dystrophy Research Centre Logo">
+          </div>
+        </div>
+
+        <!-- 
+        <div class="col reveal">
+          <div class="partner-card">
+            <img src="path-to-new-partner.png" alt="New Partner">
+          </div>
+        </div> 
+        -->
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Scroll Animation Trigger -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const reveals = document.querySelectorAll(".reveal");
+
+      const revealOptions = {
+        threshold: 0.15,
+        rootMargin: "0px 0px -50px 0px"
+      };
+
+      const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("active");
+            observer.unobserve(entry.target); 
+          }
+        });
+      }, revealOptions);
+
+      reveals.forEach(reveal => {
+        revealOnScroll.observe(reveal);
+      });
+    });
+  </script>
+
+  <!-- Dynamic Footer -->
+  <div id="footer-container"></div>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom Scripts -->
+  <script src="./assets/js/script.js"></script>
+  <script src="./assets/js/pages/about_foundation.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Tiro+Bangla&display=swap');
+
+:root {
+  --color-primary: #009966;
+  --color-primary-2: #00B27D;
+  --color-accent: #00C3B0;
+  --color-bg: #f9f9f9;
+  --color-hero-start: #c7f0e5;
+  --color-hero-middle: #f0fff8;
+  --color-hero-end: #b2f7e1;
+  --text-heading: #007965;
+}
+    * {
+      font-family:'Poppins';
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container{
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+
+    .team-section {
+      text-align: center;
+      position: relative;
+      opacity: 0;
+      transform: translateY(40px);
+      animation: fadeInUpSection 1s ease forwards;
+    }
+
+    @keyframes fadeInUpSection {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Team card styling */
+    .team-card {
+      background: #fff;
+      border: none;
+      transition: all 0.5s ease;
+      padding: 30px 20px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(60px);
+    }
+
+    .team-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+      animation: fadeSlideIn 1s ease forwards;
+    }
+
+    /* Hover ripple background */
+    .team-card::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(13, 253, 45, 0.08), transparent 70%);
+      transform: scale(0);
+      transition: transform 0.4s ease;
+      z-index: 0;
+    }
+
+    .team-card:hover::before {
+      transform: scale(1);
+    }
+
+    /* --- Image circle with inner padding --- */
+    .member-img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-2)); 
+      padding: 6px; /* 👈 space between image and border */
+      margin: 0 auto 15px;
+      overflow: hidden;
+      box-shadow: 0 0 0 rgba(13, 253, 73, 0.5);
+      transition: all 0.5s ease;
+    }
+
+    .member-img img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      background-color: #fff; /* White inner background */
+      transition: all 0.5s ease;
+      transform: scale(1);
+    }
+
+    /* Hover animation on image */
+    .team-card:hover .member-img img {
+      transform: scale(1.08);
+      filter: brightness(1.1);
+    }
+
+    .team-card:hover .member-img {
+      box-shadow: 0 0 20px rgba(22, 163, 74, 0.4);
+    }
+
+    /* Text styles */
+    .member-name {
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 5px;
+    }
+
+    .member-role {
+      color: var(--color-primary);
+      font-weight: 500;
+      margin-bottom: 15px;
+      text-transform: capitalize;
+    }
+
+    .member-desc {
+      color: #666;
+      font-size: 0.9rem;
+      padding: 0 15px;
+    }
+
+    /* Responsive grid spacing */
+    @media (max-width: 767px) {
+      .team-card {
+        margin-bottom: 25px;
+      }
+    }
+
+/* ====== Section Title Design ====== */
+.section-title {
+  text-align: center;
+  margin-bottom: 60px;
+  position: relative;
+  animation: fadeInDown 1s ease;
+}
+
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.title-main {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #111;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+.title-underline {
+  width: 90px;
+  height: 4px;
+  background: var(--color-primary);
+  margin: 0 auto 15px;
+  border-radius: 5px;
+  animation: slideIn 1.5s ease;
+}
+
+@keyframes slideIn {
+  0% { width: 0; opacity: 0; }
+  100% { width: 90px; opacity: 1; }
+}
+
+.title-subtext {
+  font-size: 1rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+    /* responsive issues */
+    @media (max-width: 425px) {
+    .form-section{
+        font-size: 90%;
+    }
+    }

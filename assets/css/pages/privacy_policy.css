@@ -1,0 +1,168 @@
+/* =========================
+   Root Variables
+========================= */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Tiro+Bangla&display=swap');
+
+:root {
+  /* Color palette */
+  --color-primary: #009966;
+  --color-primary-2: #00B27D;
+  --color-bg-1: #f4f4f4;
+  --color-bg-2: #bb2d3b;
+
+  /* Text */
+  --text-color-primary: #f4f4f4;
+  --text-color-default: #009966;
+}
+
+/* =========================
+        Global Styles
+========================= */
+* {
+  font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(#ffffff, #cbffcb);
+  color: #333;
+  line-height: 1.6;
+}
+
+/* =========================
+   Header Section
+========================= */
+.privacy-header {
+  background: var(--color-primary);
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.privacy-header h1 {
+  color: #fff;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 2.5rem); /* ✅ Responsive text scaling */
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  transition: color 0.3s ease;
+}
+
+/* =========================
+   Privacy Content Section
+========================= */
+.privacy-container {
+  padding: 50px !important;
+  background-color: #f2f2f3;
+  border: 2px solid transparent;
+  border-top-right-radius: 50px;
+  border-bottom-left-radius: 50px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  margin: 3rem auto;
+  max-width: 1100px;
+}
+
+.privacy-container:hover {
+  background-color: rgba(204, 255, 153, 0.2);
+  border-color: var(--color-primary);
+}
+
+.privacy-container h2 {
+  font-weight: 600;
+  font-size: clamp(1.2rem, 2vw, 1.5rem); /* ✅ Responsive text */
+  color: #292828;
+  margin-top: 1rem;
+}
+
+.privacy-container h3 {
+  font-weight: 500;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  color: #636363;
+}
+
+.privacy-container p {
+  text-align: justify;
+  font-size: clamp(0.95rem, 1.3vw, 1.1rem); /* ✅ Responsive text */
+  color: #636363;
+  margin-bottom: 1rem;
+}
+
+a.text-pColor {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+a.text-pColor:hover {
+  text-decoration: underline;
+}
+
+hr {
+  border-color: #ccc;
+  margin: 1.5rem 0;
+}
+
+/* =========================
+   Animations
+========================= */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-in-out;
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.7); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* =========================
+   Responsive Adjustments
+========================= */
+@media (max-width: 992px) {
+  .privacy-container {
+    padding: 2rem 1.5rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .privacy-container {
+    border-radius: 30px;
+    margin: 1rem;
+    padding: 1.5rem !important;
+  }
+
+  .privacy-header h1 {
+    font-size: clamp(1.4rem, 4vw, 1.9rem);
+  }
+
+  .privacy-container h2 {
+    font-size: clamp(1.1rem, 3vw, 1.4rem);
+  }
+}
+
+@media (max-width: 425px) {
+  .privacy-container {
+    padding: 1rem !important;
+  }
+
+  .privacy-container p,
+  .privacy-container h2,
+  .privacy-container h3 {
+    font-size: 90%;
+  }
+
+  .privacy-header {
+    padding: 2rem 1rem;
+  }
+}

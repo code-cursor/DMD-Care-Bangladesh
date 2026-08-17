@@ -1,0 +1,473 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Tiro+Bangla&display=swap');
+
+:root{
+  /* Color palette */
+  --color-primary: #009966;       
+  --color-primary-2: #00B27D;
+  --color-bg-1: #f4f4f4;
+  --color-bg-2: #bb2d3b;
+
+  /* Text */
+  --text-color-primary: #f4f4f4;
+  --text-color-default: #009966;
+  --text-color-red: #bb2d3b;
+
+  /* radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+
+  /* font size */
+  --font-size-sm: 0.8rem;
+}
+
+body {
+  font-family:'Poppins';
+}
+
+/* ============================================= 
+            Custom Design CSS 
+================================================ */
+
+/* ======== TOPBAR ======== */
+.topbar {
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary), var(--color-primary-2));
+  color: #f8f9fa;
+  font-size: 0.85rem;
+  padding: 4px 8px;
+  color: var(--text-color-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  opacity: 0;
+  animation: fadeIn 1s forwards; /* Fade-in effect when page loads */
+}
+.topbar .container-fluid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.welcome-text { font-size: var(--font-size-sm); flex-shrink: 0; }
+#datetime { font-size: var(--font-size-sm); flex-shrink: 0; }
+a.btn-contact {
+  background-color: var(--color-bg-1);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  text-decoration: none;
+  color: var(--text-color-primary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+a.btn-contact:hover { 
+  color: var(--text-color-default);
+  font-weight: 700;
+  background-color: white;
+}
+
+/* BRAND LOGO */
+.brand-logo {
+    height: 60px;
+    width: auto;
+    object-fit: contain;
+  }
+/* ------------------------------
+        logo responsive
+---------------------------------- */
+@media (min-width: 320px) and (max-width: 768px){
+  .brand-logo {
+    width: 200px;
+  }
+}
+
+/* Change navbar menu text color */
+.navbar-nav .nav-link {
+  color: black; 
+  transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus {
+  color: #215D4E; 
+}
+
+/* Change active menu item color */
+.navbar-nav .nav-link.active {
+  color: #215D4E; 
+  font-weight: 700;
+}
+
+
+/* ======== CUSTOM GOOGLE TRANSLATE DROPDOWN ======== */
+select.custom-translate {
+  font-size: var(--font-size-sm);
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background-color: var(--color-bg-1);
+  color: #000;
+  flex-shrink: 0;
+}
+
+/* Default color (black/dark) */
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(33, 37, 41, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* When menu is expanded – change to green */
+.navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(25, 135, 84, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* === Global Navbar Text Colors (all devices) === */
+.navbar .nav-link {
+  color: #215D4E !important;
+  font-weight: 600;
+  opacity: 0;
+  animation: fadeIn 1s forwards; /* Fade-in effect when page loads */
+}
+
+.navbar:hover .nav-link:hover{
+  color: var(--text-color-primary) !important; 
+  background-color: var(--color-primary);
+  font-weight: 600;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  padding-left: 5px;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Active and hover states */
+.navbar .nav-link:hover,
+.navbar .nav-link:focus,
+.navbar .nav-link.active {
+  color: var(--text-color-primary) !important;
+  background-color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  padding-left: 5px;
+}
+
+/* Dropdown menu items */
+.navbar .dropdown-item {
+  color: #198754 !important;
+}
+
+.navbar .dropdown-item:hover,
+.navbar .dropdown-item:focus {
+  background-color: var(--color-primary);
+  color: var(--text-color-primary) !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+    color: white !important;
+    text-decoration: none;
+    background-color: var(--color-primary) !important;
+}
+
+/*buttons: adjust button size and spacing */
+.navbar .btn {
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+}
+
+.navbar .btn:hover {
+  transform: scale(1.05);
+}
+
+/* Hide buttons by default */
+.navbar-buttons {
+  display: none;
+}
+
+a.btn_donate {
+  background-color: var(--color-bg-2);
+  color: var(--text-color-primary);
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease-in-out;
+}
+
+/* hover / focus states */
+a.btn_donate:hover,
+a.btn_donate:focus {
+  background-color: var(--color-primary);
+  color: var(--text-color-primary);
+}
+
+/* ======= custom desktop buttons ================== */
+@media (min-width: 700px) {
+  .navbar-buttons {
+    display: flex;
+    gap: 10px; /* space between buttons */
+    align-items: center;
+  }
+}
+
+/* Optical button styling */
+.navbar-buttons .btn {
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+}
+
+.navbar-buttons .btn:hover {
+  transform: scale(1.05);
+}
+
+/* ============== CUSTOM BOTTOM BUTTON =============== */
+    /* Bottom bar base style */
+    .bottom-bar {
+      margin-top: 200px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--color-bg-1);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px 0;
+      z-index: 9999;
+      animation: slideUp 0.5s ease-out;
+    }
+
+    /* Animation for bar appearance */
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Animated button hover and focus */
+    .bottom-bar button {
+      background-color: var(--color-bg-2);
+      color: var(--text-color-primary);
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 5px 10px;
+      font-weight: 700;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .bottom-bar button:hover,
+    .bottom-bar button:focus {
+      background-color: var(--color-primary);
+      color: var(--text-color-primary);
+      /* transform: scale(1); */
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    #button_reg{
+        background-color: var(--color-bg-1);
+        border: 1px solid var(--color-primary);
+        color: var(--text-color-default)
+    }
+
+    #button_reg:hover{
+        background-color: var(--color-primary);
+        color: var(--text-color-primary)
+    }
+
+    #btm-btn_donate{
+        background-color: red;
+        color: var(--text-color-primary)
+    }
+
+    #btm-btn_donate:hover{
+        background-color: var(--color-primary);
+        color: var(--text-color-primary)
+    }
+
+    /* -----------------------------------
+    bottom bar responsive
+    ---------------------------------------*/
+
+    /* Only show on 320px–991px width */
+    @media (max-width: 991px) and (min-width: 320px) {
+      .bottom-bar {
+        display: flex;
+      }
+    
+    }
+
+    /* Hide from larger devices */
+    @media (min-width: 992px) {
+      .bottom-bar {
+        display: none !important;
+      }
+    }
+
+/* ======== MOBILE FIXES ======== */
+@media (max-width: 475px) {
+  .welcome-text { display: none; }
+  #datetime { font-size: var(--font-size-sm); margin-right: 4px; }
+  a.btn-contact { font-size: var(--font-size-sm); padding: 2px 6px; }
+  select.custom-translate { font-size: var(--font-size-sm); padding: 1px 3px; }
+
+    .welcome-text {
+    display: inline-block; /* show welcome text */
+    font-size: 0.75rem;
+    color: var(--text-color-primary);
+    white-space: normal; /* allow wrapping if needed */
+    max-width: 50%; /* limit width to half */
+    overflow-wrap: break-word;
+  }
+  #datetime {
+    font-size: var(--font-size-sm);
+    margin-right: 4px;
+    color: var(--text-color-primary);
+    white-space: nowrap;
+  }
+  a.btn-contact {
+    font-size: var(--font-size-sm);
+    padding: 2px 6px;
+  }
+  select.custom-translate {
+    font-size: var(--font-size-sm);
+    padding: 1px 3px;
+    min-width: 70px; /* force dropdown smaller on mobile */
+  }
+  .topbar .container-fluid {
+    flex-wrap: wrap; /* allow items to wrap */
+    gap: 4px;
+  }
+}
+@media (max-width: 382px) {
+  select.custom-translate { font-size: var(--font-size-sm); padding: 1px 2px; }
+  
+  .welcome-text {
+      display: none; /* heide welcome at 320px and below */
+    }
+
+  select.custom-translate {
+    font-size: var(--font-size-sm);
+    padding: 1px 2px;
+    min-width: 60px;
+  }
+}
+
+@media (max-width: 1245px) and (min-width: 992px) {
+  /* Adjust brand logo size for this screen range */
+  .brand-logo {
+    height: 50px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  #btn-reg{
+    display: none;
+  }  
+}
+
+/* ==============================================
+   Donation Modal Responsive Fix
+   ==============================================*/
+
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.6) !important;
+  z-index: 1050 !important;
+}
+
+/* Ensure modal stays on top */
+.modal {
+  z-index: 1060 !important;
+}
+
+/* Dialog container */
+.modal-dialog {
+  width: 100%;
+  max-width: 500px;
+  margin: 1.75rem auto;
+}
+
+.modal-content {
+  background: linear-gradient(145deg, var(--color-primary), var(--color-primary-2));
+  color: var(--text-color-primary);
+  border-radius: var(--radius-md);
+  padding: 15px 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  animation: slideIn 0.6s ease-out forwards;
+}
+
+.modal-header {
+  border-bottom: 2px solid var(--text-color-primary);
+  padding-bottom: 15px;
+}
+
+.modal-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--color-bg-1);
+}
+
+.modal-body {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-color-primary);
+}
+
+/* Animation */
+@keyframes slideIn {
+  0% {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ========================
+   MEDIA QUERIES
+   =========================*/
+
+/* Tablets and down */
+@media (max-width: 991.98px) {
+  .modal-dialog {
+    max-width: 90%;
+    margin: 1rem auto;
+  }
+
+  .modal-content {
+    padding: 12px 18px;
+  }
+
+  .modal-title {
+    font-size: 1.5rem;
+  }
+
+  .modal-body {
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+}
+
+/* Phones */
+@media (max-width: 575.98px) {
+  .modal-dialog {
+    max-width: 95%;
+    margin: 0.75rem auto;
+  }
+
+  .modal-content {
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+  }
+
+  .modal-title {
+    font-size: 1.3rem;
+  }
+
+  .modal-body {
+    font-size: 0.9rem;
+  }
+}
+
+/* Ensure no page scroll behind modal */
+body.modal-open {
+  overflow: hidden !important;
+}

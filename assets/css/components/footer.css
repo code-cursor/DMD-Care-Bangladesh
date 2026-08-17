@@ -1,0 +1,259 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Tiro+Bangla&display=swap');
+
+:root {
+  /* Color palette */
+  --color-primary: #009966;       
+  --color-primary-2: #00B27D;
+  --color-bg-1: #f4f4f4;
+  --color-bg-2: #bb2d3b;
+
+  /* Text */
+  --text-color-primary: #f4f4f4;
+  --text-color-default: #009966;
+
+  /* radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+
+  /* font size */
+  --font-size-sm: 0.8rem;
+}
+
+/* ============================================= 
+            Custom Design CSS 
+================================================ */
+
+/* Footer Background Color */
+.footer {
+  background: linear-gradient(45deg, var(--color-primary), var(--color-primary), var(--color-primary-2));
+  opacity: 0;
+  animation: fadeIn 1s forwards; /* Fade-in effect when page loads */
+}
+
+/* Footer Link Hover Effect */
+.footer-link:hover {
+  color: var(--text-color-default) !important;
+  text-decoration: none;
+  font-weight: 600;
+  transform: scale(1.1);
+  transition: transform 0.3s ease, color 0.3s ease;
+  background-color: white;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--text-color-primary);
+  padding: 2px 5px;
+  opacity: 0;
+  animation: fadeIn 1s forwards; /* Fade-in effect when page loads */
+}
+
+/* Social Media Icon Hover Effect */
+.social-icon{
+  font-size: 25px;
+}
+
+.social-icon:hover {
+  color: var(--color-primary);
+  font-size: 20px;
+  transform: scale(1.5);
+  transition: transform 0.3s ease, color 0.3s ease; 
+}
+
+/* Footer Text Styling */
+.footer p {
+  font-size: 14px;
+  color: var(--text-color-primary);
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Layout Adjustments */
+@media (max-width: 576px) {
+  .footer .col-12 {
+    text-align: center;
+  }
+
+  .footer a {
+    margin-bottom: 10px;
+  }
+
+  .footer .fa {
+    font-size: 20px;
+  }
+}
+
+/* Only show on 320px–991px width */
+@media (max-width: 991px) and (min-width: 320px) {
+  .bottom-text {
+    padding-bottom: 50px;
+  }
+}
+
+/* Top-Up Button (like WhatsApp floating button) */
+#topUpBtn {
+  display: none; /* Hidden by default */
+  position: fixed;
+  bottom: 80px; /* Adjust as needed above footer */
+  right: 20px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease-in-out;
+}
+
+#topUpBtn:hover {
+  background-color: #f1f1f1;
+  transform: scale(1.1);
+}
+
+/* Icon inside the button */
+#topUpBtn i {
+  font-size: 18px;
+}
+
+/* Social Sidebar Styling --------------
+-----------------------------------*/
+.social-sidebar {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  z-index: 9999;
+}
+
+.social-sidebar ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.social-sidebar ul li {
+  margin: 5px 0;
+}
+
+.social-sidebar ul li a {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 50px; /* Default compact width (only icons) */
+  color: #fff;
+  padding: 10px;
+  font-size: 18px;
+  text-decoration: none;
+  border-radius: 0 30px 30px 0;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Label text */
+.social-sidebar ul li a span {
+  margin-left: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Individual button colors */
+.social-sidebar .facebook {
+  background-color: #3b5998;
+}
+
+.social-sidebar .pinterest {
+  background-color: #bd081c;
+}
+
+.social-sidebar .twitter {
+  background-color: #55acee;
+}
+
+.social-sidebar .youtube {
+  background-color: #ff0000;
+}
+
+/* Hover effect - expand & show text */
+.social-sidebar ul li a:hover {
+  width: 180px; /* Expanded width */
+  transform: translateX(10px);
+  opacity: 0.95;
+}
+
+.social-sidebar ul li a:hover span {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Icon style */
+.social-sidebar ul li a i {
+  font-size: 20px;
+}
+
+/* ============================
+   Responsive Adjustments
+============================ */
+
+/* Mobile Devices (up to 576px) */
+@media (max-width: 576px) {
+  .social-sidebar ul li a {
+    width: 30px;
+    padding: 6px;
+    font-size: 12px;
+  }
+
+  .social-sidebar ul li a i {
+    font-size: 16px;
+  }
+
+  .social-sidebar ul li a:hover {
+    width: 140px;
+  }
+}
+
+/* Tablets (577px–991px) */
+@media (min-width: 577px) and (max-width: 991px) {
+  .social-sidebar ul li a {
+    width: 40px;
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .social-sidebar ul li a i {
+    font-size: 18px;
+  }
+
+  .social-sidebar ul li a:hover {
+    width: 160px;
+  }
+}
+
+/* Desktop (992px and above) */
+@media (min-width: 992px) {
+  .social-sidebar ul li a {
+    width: 50px;
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  .social-sidebar ul li a i {
+    font-size: 20px;
+  }
+
+  .social-sidebar ul li a:hover {
+    width: 180px;
+  }
+}
+
+
+

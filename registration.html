@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Form</title>
+  <link rel="shortcut icon" href="./assets/src/img/DMD_care_bd_Logo.webp" type="image/x-icon">
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="./assets/css/pages/reg_form.css">
+  
+  <!-- Font Awesome for Icons -->
+  <script src="https://kit.fontawesome.com/e8f84a7605.js" crossorigin="anonymous"></script>
+
+  <!-- jQuery (for dynamic loading of header and footer) -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+
+<body>
+  <!-- Dynamic Header -->
+  <div id="header-container"></div>
+
+<!-- DMD Registration Form -->
+<div class="bg-light py-5 form-section" style="background-image: url('assets/src/img/bg_registration.jpg'); background-size: cover; background-position: center; background-attachment: fixed;">
+  <div class="container">
+    <div class="bg-white p-5 rounded shadow-lg mx-auto form-box scroll-reveal" style="max-width: 900px; opacity: 0.97;">
+      <h4 class="text-center fw-semibold text-decoration-underline mb-4" style="color:red;">CONTACT WITH US BEFORE FILL THE FORM</h4>
+      <h3 class="text-center fw-bold mb-2 text-dark">DMD CARE FOUNDATION BANGLADESH</h3>
+      <h4 class="text-center fw-semibold text-decoration-underline mb-4" style="color:red;">Patient Registration Form (Under developing)</h4>
+
+      <form id="registrationForm" action="#" method="post">
+       
+        <!-- ================= BASIC INFORMATION ================= -->
+        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">Basic Information </h5>
+
+        <div class="row mb-3 scroll-reveal">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Patient Full Name <small>(রোগীর পূর্ণ নাম)</small></label>
+            <input type="text" class="form-control" placeholder="Full Name" required>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-bold">Date of Birth <small>(জন্ম)</small></label>
+            <input type="date" class="form-control" required>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-bold">Age <small>(বয়স)</small></label>
+            <input type="number" class="form-control" placeholder="Age" required>
+          </div>
+        </div>
+
+        <div class="row mb-3 scroll-reveal scroll-reveal">
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Gender <small>(লিঙ্গ)</small></label>
+            <select class="form-select">
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Birth Certificate No <small>(জন্ম সনদ)</small></label>
+            <input type="text" class="form-control" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-bold">NID <small>(জাতীয় পরিচয়পত্রের নং)</small></label>
+            <input type="number" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="row mb-3 scroll-reveal scroll-reveal">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Father's Name <small>(পিতার নাম)</small></label>
+            <input type="text" class="form-control" required>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-bold">NID <small>(জাতীয় পরিচয়পত্র)</small></label>
+            <input type="number" class="form-control" required>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-bold">Occupation <small>(পেশা)</small></label>
+            <input type="text" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Father's Education <small>(পিতার শিক্ষাগত যোগ্যতা)</small></label>
+            <input type="text" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="row mb-3 scroll-reveal">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Mother's Name <small>(মাতার নাম)</small></label>
+            <input type="text" class="form-control" required>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-bold">NID <small>(জাতীয় পরিচয়পত্র)</small></label>
+            <input type="number" class="form-control" required>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-bold">Occupation <small>(পেশা)</small></label>
+            <input type="text" class="form-control" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Mother's Education <small>(মাতার শিক্ষাগত যোগ্যতা)</small></label>
+            <input type="text" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="row mb-3 scroll-reveal">
+          <div class="col-md-10">
+            <label class="form-label fw-bold">Guardian Relation with Patient <small>(অভিভাবকের সাথে রোগীর সঙ্গে সম্পর্ক)</small> </label>
+            <input type="text" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="row mb-3 scroll-reveal">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Contact No <small>(যোগাযোগের নম্বর)</small></label>
+            <input type="tel" class="form-control" placeholder="+8801XXXXXXXXX" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Emergency Contact No <small>(জরুরি যোগাযোগের নম্বর)</small></label>
+            <input type="tel" class="form-control" placeholder="+8801XXXXXXXXX" required>
+          </div>
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Email Address <small>(ইমেইল)</small></label>
+          <input type="email" class="form-control" placeholder="example@email.com" required>
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Present Address <small>(বর্তমান ঠিকানা)</small> </label>
+          <textarea class="form-control" rows="2" required></textarea>
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Permanent Address <small>(স্থায়ী ঠিকানা)</small></label>
+          <textarea class="form-control" rows="2" required></textarea>
+        </div>
+
+        <div class="mb-4 scroll-reveal">
+          <label class="form-label fw-bold">Nationality <small>(জাতীয়তা)</small></label>
+          <input type="text" class="form-control" required>
+        </div>
+
+        <!-- ================= MEDICAL INFORMATION ================= -->
+        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3 scroll-reveal">Medical Information (চিকিৎসা সংক্রান্ত তথ্য)</h5>
+
+        <div class="row mb-3 scroll-reveal">
+            <div class="col-md-4">
+                <label class="form-label fw-bold">Blood Group <small>(রক্তের গ্রুপ)</small></label>
+                <select class="form-select" required>
+                <option>Select Blood Group</option>
+                <option>A+</option><option>A-</option>
+                <option>B+</option><option>B-</option>
+                <option>O+</option><option>O-</option>
+                <option>AB+</option><option>AB-</option>
+                </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Diagnosis Type <small>(রোগের ধরন)</small></label>
+            <input type="number" class="form-control" required>
+          </div>
+          <div class="col-md-8">
+            <label class="form-label fw-bold">Age at Diagnosis <small>(রোগ নির্ণয়ের সময় বয়স)</small></label>
+            <input type="text" class="form-control" required>
+          </div>
+          <div class="col-md-8">
+            <label class="form-label fw-bold">Date of Diagnosis <small>(রোগ নির্ণয়ের তারিখ)</small></label>
+            <input type="date" class="form-control" required>
+          </div>
+          
+          <div class="mb-3 scroll-reveal">
+            <label class="form-label fw-bold">Genetic Test Done? <small>(জেনেটিক টেস্ট হয়েছে কি?)</small> </label><br>
+            <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="genTest" value="Yes" required><label class="form-check-label">Yes</label></div>
+            <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="genTest" value="No"><label class="form-check-label">No</label></div>
+         </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Genetic Mutation Type (if known) <small>(জেনেটিক মিউটেশনের ধরন (যদি জানা থাকে))</small></label><br>
+          <div class="form-check"><input class="form-check-input" type="radio" name="mutation" value="Exon Deletion" required><label class="form-check-label">Exon Deletion</label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="mutation" value="Duplication"><label class="form-check-label">Duplication</label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="mutation" value="Point Mutation"><label class="form-check-label">Point Mutation</label></div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="mutation" value="Other" id="otherOption">
+            <label class="form-check-label" for="otherOption">Others / অন্যান্য</label>
+            <input type="text" class="form-control mt-2" placeholder="অন্যান্য বিস্তারিত লিখুন" id="otherDetails">
+          </div>
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Family History of DMD <small>(পরিবারের মধ্যে ডিএমডি’র ইতিহাস)</small></label>
+          <input type="text" class="form-control" required>
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Current Walking Ability <small>(বর্তমান হাঁটার সক্ষমতা)</small></label><br>
+          <div class="form-check"><input class="form-check-input" type="radio" name="Ability" value="Walks independently" required><label class="form-check-label">Walks independently / স্বাভাবিকভাবে হাঁটে </label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="Ability" value="Uses wheelchair"><label class="form-check-label">Uses wheelchair / হুইলচেয়ার ব্যবহার করে </label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="Ability" value="Fully dependent"><label class="form-check-label">Fully dependent / সম্পূর্ণ নির্ভরশীল </label></div>
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Breathing Difficulties <small>(শ্বাসকষ্ট)</small></label><br>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="breath_report" value="Yes" required><label class="form-check-label">Yes</label></div>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="breath_report" value="No"><label class="form-check-label">No</label></div>
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Cardiac Problems <small>(হৃদরোগ সমস্যা)</small></label><br>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="cardiac_report" value="Yes" required><label class="form-check-label">Yes</label></div>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="cardiac_report" value="No"><label class="form-check-label">No</label></div>
+        </div>
+
+        <div class="col-md-8 scroll-reveal">
+          <label class="form-label fw-bold">Other Health Issues <small>(অন্যান্য শারীরিক সমস্যা)</small></label>
+          <input type="text" class="form-control" required>
+        </div>
+    </div>
+
+        <!-- ================= EDUCATIONAL & SOCIAL INFORMATION ================= -->
+        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3 scroll-reveal">Educational & Social (শিক্ষা ও সামাজিক অবস্থা)</h5>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">School Attendance <small>(স্কুলে যায় কি?)</small></label><br>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="report" value="Yes" required><label class="form-check-label">Yes</label></div>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="report" value="No" required><label class="form-check-label">No</label></div>
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Class/Lavel <small>(শ্রেণি)</small></label>
+          <input type="text" class="form-control" required>
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Inclusive Education Support <small>(অন্তর্ভুক্তিমূলক শিক্ষা সহায়তা)</small></label>
+          <input type="text" class="form-control" required>
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Hobbies/Interests <small>(শখ/আগ্রহ)</small></label>
+          <input type="text" class="form-control" required>
+        </div>
+
+        <div class="mb-4 scroll-reveal">
+          <label class="form-label fw-bold">Emotional Challenges <small>(মানসিক বা সামাজিক চ্যালেঞ্জ)</small></label>
+          <input type="text" class="form-control" required>
+        </div>
+
+        <!-- ================= FAMILY INFORMATION ================= -->
+        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3 scroll-reveal">Family & Financial Information <small>(পারিবারিক ও আর্থিক তথ্য)</small></h5>
+
+        <div class="row mb-3 scroll-reveal">
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Total Family Members <small>(পরিবারের মোট সদস্য সংখ্যা)</small></label>
+            <input type="number" class="form-control" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Monthly Family Income <small>(মাসিক পারিবারিক আয়)</small></label>
+            <input type="text" class="form-control" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Financial Challenges Related to Treatment <small>(চিকিৎসা ব্যয়ের আর্থিক চ্যালেঞ্জ)</small></label>
+            <textarea class="form-control" rows="2" required></textarea>
+          </div>
+        </div>
+
+        <!-- ================= SUPPORT NEEDED ================= -->
+        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3 scroll-reveal">Need Financial Aid For(if needed) <small>(যে ধরনের আর্থিক সহায়তা প্রয়োজন (যদি প্রয়োজন থাকে))</small></h5>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Financial Support Types (আর্থিক সহায়তার ক্ষেত্রসমূহ)</label><br>
+          <div class="form-check"><input class="form-check-input" type="radio" name="fin_support" value="Treatment" required><label class="form-check-label">Treatment <small>(চিকিৎসা)</small></label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="fin_support" value="Physiotherapy"><label class="form-check-label">Physiotherapy <small>(ফিজিওথেরাপি)</small></label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="fin_support" value="Wheelchair"><label class="form-check-label">Wheelchair <small>(হুইলচেয়ার)</small></label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="fin_support" value="Education Support"><label class="form-check-label">Education Support <small>(শিক্ষাগত সহায়তা)</small></label></div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="fin_support" value="Unknown" id="otherOption">
+            <label class="form-check-label" for="otherOption">Others <small>(অন্যান্য)</small></label>
+            <input type="text" class="form-check-input mt-2" placeholder="অন্যান্য বিস্তারিত লিখুন" id="otherDetails">
+          </div>
+        </div>
+
+        <!-- ================= GENETIC & CLINICAL DETAILS ================= -->
+        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3 scroll-reveal">Genetic & Clinical Details (জেনেটিক ও ক্লিনিক্যাল তথ্য)</h5>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Gene Mutation Report Attached <small>(জেনেটিক রিপোর্ট সংযুক্ত)</small></label><br>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="gene_report" value="Yes" required><label class="form-check-label">Yes</label></div>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="gene_report" value="No"><label class="form-check-label">No</label></div>
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Steroid Use <small>(স্টেরয়েড ব্যবহার)</small></label><br>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="steroid" value="Yes" required><label class="form-check-label">Yes</label></div>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="steroid" value="No"><label class="form-check-label">No</label></div>
+          <input type="text" class="form-control mt-2" placeholder="If yes, mention medicine name">
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Age when Steroid Started <small>(স্টেরয়েড শুরুর বয়স)</small></label><br>
+          <input type="text" class="form-control" required>
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Duration of Steroid Use <small>(কতদিন ধরে স্টেরয়েড ব্যবহার করছেন)</small></label><br>
+          <input type="text" class="form-control" required>
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Cardiac Evaluation Done <small>(হার্ট পরীক্ষা সম্পন্ন)</small></label><br>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="cardiac_eva" value="Yes" required><label class="form-check-label">Yes</label></div>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="cardiac_eva" value="No"><label class="form-check-label">No</label></div>
+        </div>
+
+        <div class="mb-4 scroll-reveal">
+          <label class="form-label fw-bold">Respiratory Evaluation Done <small>(শ্বাসযন্ত্র পরীক্ষা সম্পন্ন)</small></label><br>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="res_report" value="Yes" required><label class="form-check-label">Yes</label></div>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="res_report" value="No"><label class="form-check-label">No</label></div>
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Therapy Received <small>(গৃহীত থেরাপি)</small></label><br>
+          <div class="form-check"><input class="form-check-input" type="radio" name="therapy" value="Occupational therapy"><label class="form-check-label" required>Occupational therapy <small>(অকুপেশনাল থেরাপি)</small></label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="therapy" value="Physiotherapy"><label class="form-check-label">Physiotherapy <small>(ফিজিওথেরাপি)</small></label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="therapy" value="Speech therapy"><label class="form-check-label">Speech therapy <small(স্পিচ থেরাপি)</small></label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="therapy" value="Hydrotherapy"><label class="form-check-label">Hydrotherapy <small>(হাইড্রোথেরাপি)</small></label></div>
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Assistive Devices Used <small>(ব্যবহৃত সহায়ক যন্ত্রপাতি)</small></label><br>
+          <div class="form-check"><input class="form-check-input" type="radio" name="devices" value="Ankle Braces" required><label class="form-check-label">Ankle Braces <small>(অ্যাঙ্কল ব্রেস)</small></label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="devices" value="Wheelchair"><label class="form-check-label">Wheelchair <small>(হুইলচেয়ার)</small></label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="devices" value="Standing Frame"><label class="form-check-label">Standing Frame <small>(স্ট্যান্ডিং ফ্রেম)</small></label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="devices" value="Others"><label class="form-check-label">Others <small>(অন্যান্য)</small></label></div>
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Current Medications <small>(বর্তমান ব্যবহৃত ওষুধ)</small></label><br>
+          <input type="text" class="form-control" required>
+        </div>
+
+        <!-- ================= SOCIO-ECONOMIC INFO ================= -->
+        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3 scroll-reveal">Socio-Economic Information (সামাজিক ও অর্থনৈতিক তথ্য)</h5>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Living Area <small>(বসবাসের এলাকা)</small></label><br>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="liv_area" value="Urban"><label class="form-check-label" required>Urban <small>(শহর)</small></label></div>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="liv_area" value="Semi-urban"><label class="form-check-label">Semi-Urban <small>(আধা-শহর)</small></label></div>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="liv_area" value="Rural"><label class="form-check-label">Rural <small>(গ্রাম)</small></label></div>
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Housing Type (বাসস্থান)</label><br>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="housing" value="Own"><label class="form-check-label" required>Own <small>(নিজস্ব)</small></label></div>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="housing" value="Rented"><label class="form-check-label">Rented <small>(ভাড়া)</small></label></div>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="housing" value="Shared"><label class="form-check-label">Shared <small>(শেয়ারকৃত)</small></label></div>
+        </div>
+
+        <div class="mb-3 scroll-reveal">
+          <label class="form-label fw-bold">Internet Access <small>(ইন্টারনেট সংযোগ)</small></label><br>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="access" value="Yes"><label class="form-check-label" required>Yes</label></div>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="access" value="No"><label class="form-check-label">No</label></div>
+        </div>
+
+        <div class="mb-4 scroll-reveal">
+          <label class="form-label fw-bold">Health Insurance <small>(স্বাস্থ্যবীমা আছে কি?)</small></label><br>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="insurance" value="Yes"><label class="form-check-label" required>Yes</label></div>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="insurance" value="No"><label class="form-check-label">No</label></div>
+        </div>
+
+        <!-- ================= ATTACHMENT ================= -->
+        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3 scroll-reveal">Attachement <small>(সংযুক্তি)</small></h5>
+        <!-- Section for Photo Attachment -->
+        <div class="mb-4 scroll-reveal">
+          <label class="form-label fw-bold">Attach Photo <small>(ফটো সংযুক্ত করুন)</small></label><br>
+          <input type="file" class="form-control" id="photoUpload" accept="image/*" onchange="showImagePreview()" required>
+          <div id="photoPreview" style="margin-top: 10px;">
+            <!-- Image preview will appear here -->
+          </div>
+        </div>
+
+        <!-- Section for Report Attachment -->
+        <div class="mb-4 scroll-reveal">
+          <label class="form-label fw-bold">Attach Genetic Report <small>(রিপোর্ট সংযুক্ত করুন)</small></label><br>
+          <input type="file" class="form-control" id="reportUpload" accept=".pdf, .img, ,png" required>
+        </div>
+
+        <!-- ================= CONSENT ================= -->
+        <h5 class="fw-bold text-primary border-bottom pb-2 mb-3 scroll-reveal">Consent & Data Sharing <small>(সম্মতি ও তথ্য শেয়ারিং)</small></h5>
+        
+        <div class="form-check mb-4 scroll-reveal">
+          <input class="form-check-input" type="checkbox" id="consent" required>
+          <label class="form-check-label" for="consent">
+            I/We are voluntarily filling out this form. We have no objection to the use of the information provided by “DMD Care Foundation Bangladesh” for treatment, awareness and research purposes.<br>
+            <small>(আমি/আমরা স্বেচ্ছায় এই ফর্মটি পূরণ করছি। প্রদত্ত তথ্য চিকিৎসা, সচেতনতা ও গবেষণা কাজে “ডিএমডি কেয়ার ফাউন্ডেশন বাংলাদেশ” ব্যবহার করতে পারবে এতে আমাদের কোন আপত্তি নাই।)</small>
+          </label>
+        </div>
+
+        <div class="text-center scroll-reveal">
+          <button type="submit" class="btn btn-success px-5 py-2 btn-animate">
+            <i class="fa-solid fa-paper-plane me-2"></i> Submit Registration
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center p-4">
+      <div class="modal-body">
+        <i class="fa-solid fa-circle-check text-success fa-4x mb-3"></i>
+        <h4 class="fw-bold mb-2 text-success">Registration Submitted!</h4>
+        <p class="text-muted mb-0">Thank you for registering with DMD Care Foundation Bangladesh.</p>
+      </div>
+      <div class="modal-footer border-0 justify-content-center">
+        <button type="button" class="btn btn-primary px-4" style="background-color: var(--color-primary); border-color: var(--color-primary);" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Dynamic Footer -->
+  <div id="footer-container"></div>
+
+<!-- Bootstrap JS (required for modal functionality) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="./assets/js/pages/reg_form.js"></script>
+<script src="./assets/js/script.js"></script>
+
+
+</body>
