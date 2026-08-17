@@ -88,14 +88,14 @@ document.querySelectorAll('.bottom-bar button').forEach(btn => {
     style.innerHTML = `
         #wa-chat-widget {
             position: fixed;
-            bottom: 20px;
-            right: 30px;
+            bottom: 140px;
+            right: 20px;
             z-index: 1050;
             font-family: 'Poppins', sans-serif;
         }
         .wa-toggle-btn {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             background-color: #25D366;
             color: white;
             border: none;
