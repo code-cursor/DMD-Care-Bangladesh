@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.venv*/
+.tmp/
+.env
+backend/dmd_admin.sqlite3
+backend/uploads/

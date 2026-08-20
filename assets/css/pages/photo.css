@@ -116,6 +116,53 @@
     color: #fff;
     }
 
+    .photo-pagination {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .pagination-buttons {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .page-button {
+      min-width: 2.25rem;
+      height: 2.25rem;
+      padding: 0 0.65rem;
+      border: 0;
+      border-radius: 4px;
+      background: transparent;
+      color: #111827;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .page-button:hover:not(:disabled),
+    .page-button.active {
+      background: #d81b0c;
+      color: #fff;
+    }
+
+    .page-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+
+    .pagination-summary {
+      margin: 0;
+      color: #111827;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+
     @media (max-width: 768px) {
       .gallery-grid {
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -124,6 +171,15 @@
       .overlay {
         font-size: 0.9rem;
         padding: 15px;
+      }
+
+      .photo-pagination {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .pagination-summary {
+        white-space: normal;
       }
     }
 

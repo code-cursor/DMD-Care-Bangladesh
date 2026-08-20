@@ -26,12 +26,12 @@
 <!-- DMD Registration Form -->
 <div class="bg-light py-5 form-section" style="background-image: url('assets/src/img/bg_registration.jpg'); background-size: cover; background-position: center; background-attachment: fixed;">
   <div class="container">
-    <div class="bg-white p-5 rounded shadow-lg mx-auto form-box scroll-reveal" style="max-width: 900px; opacity: 0.97;">
+    <div id="registrationFormBox" class="bg-white p-5 rounded shadow-lg mx-auto form-box scroll-reveal" style="max-width: 900px; opacity: 0.97;">
       <h4 class="text-center fw-semibold text-decoration-underline mb-4" style="color:red;">CONTACT WITH US BEFORE FILL THE FORM</h4>
       <h3 class="text-center fw-bold mb-2 text-dark">DMD CARE FOUNDATION BANGLADESH</h3>
       <h4 class="text-center fw-semibold text-decoration-underline mb-4" style="color:red;">Patient Registration Form (Under developing)</h4>
 
-      <form id="registrationForm" action="#" method="post">
+      <form id="registrationForm" action="#" method="post" enctype="multipart/form-data">
        
         <!-- ================= BASIC INFORMATION ================= -->
         <h5 class="fw-bold text-primary border-bottom pb-2 mb-3">Basic Information </h5>
@@ -39,11 +39,11 @@
         <div class="row mb-3 scroll-reveal">
           <div class="col-md-6">
             <label class="form-label fw-bold">Patient Full Name <small>(রোগীর পূর্ণ নাম)</small></label>
-            <input type="text" class="form-control" placeholder="Full Name" required>
+            <input name="patient_full_name" type="text" class="form-control" placeholder="Full Name" required>
           </div>
           <div class="col-md-3">
             <label class="form-label fw-bold">Date of Birth <small>(জন্ম)</small></label>
-            <input type="date" class="form-control" required>
+            <input name="date_of_birth" type="date" class="form-control" required>
           </div>
           <div class="col-md-3">
             <label class="form-label fw-bold">Age <small>(বয়স)</small></label>
@@ -62,11 +62,11 @@
           </div>
           <div class="col-md-4">
             <label class="form-label fw-bold">Birth Certificate No <small>(জন্ম সনদ)</small></label>
-            <input type="text" class="form-control" required>
+            <input name="birth_certificate_no" type="text" class="form-control" required>
           </div>
           <div class="col-md-4">
             <label class="form-label fw-bold">NID <small>(জাতীয় পরিচয়পত্রের নং)</small></label>
-            <input type="number" class="form-control" required>
+            <input name="nid" type="number" class="form-control" required>
           </div>
         </div>
 
@@ -162,7 +162,7 @@
           </div>
           <div class="col-md-4">
             <label class="form-label fw-bold">Diagnosis Type <small>(রোগের ধরন)</small></label>
-            <input type="number" class="form-control" required>
+            <input name="diagnosis_type" type="text" class="form-control" placeholder="e.g. Duchenne Muscular Dystrophy" required>
           </div>
           <div class="col-md-8">
             <label class="form-label fw-bold">Age at Diagnosis <small>(রোগ নির্ণয়ের সময় বয়স)</small></label>
@@ -217,7 +217,7 @@
 
         <div class="col-md-8 scroll-reveal">
           <label class="form-label fw-bold">Other Health Issues <small>(অন্যান্য শারীরিক সমস্যা)</small></label>
-          <input type="text" class="form-control" required>
+          <input name="other_health_issues" type="text" class="form-control" required>
         </div>
     </div>
 
@@ -386,7 +386,7 @@
         <!-- Section for Report Attachment -->
         <div class="mb-4 scroll-reveal">
           <label class="form-label fw-bold">Attach Genetic Report <small>(রিপোর্ট সংযুক্ত করুন)</small></label><br>
-          <input type="file" class="form-control" id="reportUpload" accept=".pdf, .img, ,png" required>
+          <input type="file" class="form-control" id="reportUpload" accept=".pdf,image/jpeg,image/png,image/webp" required>
         </div>
 
         <!-- ================= CONSENT ================= -->
@@ -427,6 +427,22 @@
   </div>
 </div>
 
+<!-- Duplicate Registration Modal -->
+<div class="modal fade" id="duplicateRegistrationModal" tabindex="-1" aria-labelledby="duplicateRegistrationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center p-4">
+      <div class="modal-body">
+        <i class="fa-solid fa-triangle-exclamation text-warning fa-4x mb-3"></i>
+        <h4 id="duplicateRegistrationModalLabel" class="fw-bold mb-2 text-warning">Already Registered</h4>
+        <p id="duplicateRegistrationMessage" class="text-muted mb-0">This patient is already registered with this disease or health issue.</p>
+      </div>
+      <div class="modal-footer border-0 justify-content-center">
+        <button type="button" class="btn btn-warning px-4" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Dynamic Footer -->
   <div id="footer-container"></div>
 
@@ -438,3 +454,4 @@
 
 
 </body>
+</html>
