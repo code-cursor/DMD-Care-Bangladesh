@@ -45,7 +45,7 @@ function ensureHeaderStylesheet() {
 }
 
 function ensureHeaderScript() {
-  const src = "./assets/js/components/header.js";
+  const src = "./assets/js/components/header.js?v=20260822-5";
   if (typeof window.initSiteHeader === "function") return Promise.resolve();
 
   const existingScript = document.querySelector(`script[src="${src}"]`);
@@ -123,7 +123,7 @@ function initLoadedHeader() {
 $(document).ready(function () {
   trackVisitor();
   ensureHeaderStylesheet();
-  $("#header-container").load("header.html header", function () {
+  $("#header-container").load("header.html?v=20260822-5 header", function () {
     Promise.all([ensureHeaderScript(), ensureBootstrapScript()]).then(function () {
       initLoadedHeader();
       ensureGoogleTranslateScript();

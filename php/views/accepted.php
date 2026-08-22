@@ -1,0 +1,8 @@
+<section class="work-section active">
+  <div class="section-card-title"><h3>Accepted Patients</h3><span>Approved patients with exports, images, and editing.</span></div>
+  <div class="toolbar accepted-toolbar"><input id="acceptedSearch" class="form-control form-control-sm" placeholder="Search accepted patients"><a class="btn btn-outline-success btn-sm" href="?action=export"><i class="bi bi-file-earmark-excel"></i> Export All</a></div>
+  <div class="table-wrap"><table id="acceptedTable" class="table table-hover align-middle"><thead><tr><th>ID</th><th>Patient</th><th>Phone</th><th>Email</th><th>Source</th><th>Updated</th><th>Actions</th></tr></thead><tbody>
+    <?php foreach ($accepted as $row): $searchText = strtolower($row['patient_name'] . ' ' . $row['guardian_phone'] . ' ' . ($row['guardian_email'] ?? '')); ?><tr data-search="<?= e($searchText) ?>"><td><?= e($row['id']) ?></td><td><?= e($row['patient_name']) ?></td><td><?= e($row['guardian_phone']) ?></td><td><?= e($row['guardian_email']) ?></td><td><?= e($row['source']) ?></td><td><?= e($row['updated_at']) ?></td><td><div class="actions"><a class="btn btn-sm btn-outline-success" href="?action=export_patient&amp;id=<?= e($row['id']) ?>" title="Download Excel"><i class="bi bi-file-earmark-excel"></i></a><a class="btn btn-sm btn-outline-success" href="?section=requests&amp;view_registration=<?= e($row['id']) ?>" title="View images"><i class="bi bi-images"></i></a><a class="btn btn-sm btn-outline-secondary" href="?section=requests&amp;edit_registration=<?= e($row['id']) ?>"><i class="bi bi-pencil"></i></a></div></td></tr><?php endforeach; ?>
+    <?php if (!$accepted): ?><tr><td colspan="7" class="text-center muted">No accepted patients.</td></tr><?php endif; ?>
+  </tbody></table></div>
+</section>

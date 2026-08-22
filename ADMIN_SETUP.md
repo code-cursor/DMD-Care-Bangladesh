@@ -1,34 +1,23 @@
-# Admin/API Setup
+# DMD Care Admin Setup (PHP)
 
-1. Install Python 3.11+.
-2. From this project folder, install dependencies:
+The admin panel is server-rendered PHP. It does not require FastAPI, Uvicorn, ASGI, WSGI, or browser API requests.
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-```
+## Database
 
-3. Copy `.env.example` to `.env` and change `SECRET_KEY`, `ADMIN_BOOTSTRAP_PASSWORD`, and SMS settings.
-4. Start the API:
+The panel uses the original MySQL database through DATABASE_URL. Existing accounts, registrations, content, visitors, and SMS logs are preserved.
 
-```powershell
-uvicorn backend.main:app --reload --host 127.0.0.1 --port 8002
-```
+On this computer, the original WAMP MySQL database runs on port 3308 because another MySQL80 service occupies port 3306. run-project.bat starts the correct database automatically.
 
-5. Open `admin.html`.
+A safety copy of the original database files is stored at C:	mpdmd_care_bangladesh_before_restore_20260822.
 
-Default local login:
+## Requirements
 
-- Email: `admin@example.com`
-- Password: `ChangeMeNow123!`
+- PHP 8.1+ with PDO, pdo_mysql, session, and fileinfo
+- MySQL/MariaDB
+- Apache with PHP enabled
 
-REST docs run at `http://127.0.0.1:8002/docs`.
+Open http://DMDCareBangladesh.loc/admin.php. Requests to admin.html redirect automatically.
 
-If you run the API on a different port, set `window.DMD_API_BASE_URL` before loading the page.
+## cPanel
 
-SMS behavior:
-
-- If `SMS_API_URL` is empty, SMS requests are logged with status `skipped`.
-- If `SMS_API_URL` is set, the API sends JSON: `{ "to": "...", "message": "...", "sender_id": "DMDCARE" }`.
-- Set `SMS_IP_UPDATE_URL` to the gateway's IP-whitelist endpoint. The admin sends JSON: `{ "ip": "..." }` with the same bearer API key.
+Upload the project into the PHP document root, enable PHP 8.1 or later, and configure DATABASE_URL in .env with the hosting MySQL credentials. Keep the included .htaccess to protect configuration and database files. Do not configure Passenger.

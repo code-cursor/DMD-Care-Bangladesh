@@ -1,0 +1,12 @@
+<FilesMatch "(^\.env($|\.)|^requirements\.txt$|^passenger_wsgi\.py$|\.(sqlite3|py|pyc|log)$)">
+    Require all denied
+</FilesMatch>
+
+Options -Indexes
+<IfModule mod_headers.c>
+    <FilesMatch "^(all_patient_stories\.html|all_patient_stories\.js|patient-story-list-data\.js)$">
+        Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
+</IfModule>
