@@ -21,7 +21,7 @@ function ensureHeaderScript(callback) {
     }
 
     const script = document.createElement("script");
-    script.src = "./assets/js/components/header.js?v=20260823-1";
+    script.src = "./assets/js/components/header.js?v=20260823-2";
     script.onload = callback;
     document.body.appendChild(script);
 }

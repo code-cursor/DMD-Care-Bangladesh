@@ -475,3 +475,21 @@ a.btn_donate:focus {
 body.modal-open {
   overflow: hidden !important;
 }
+
+/* Google Translate UI adjustments */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+}
+body {
+  top: 0px !important;
+}
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}
+#google_translate_element {
+  display: none !important;
+}

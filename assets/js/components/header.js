@@ -108,18 +108,97 @@
     });
   }
 
+  function getTranslateCookieLang() {
+    const match = document.cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
+    if (!match) return null;
+    const parts = decodeURIComponent(match[1]).split("/");
+    return parts[parts.length - 1] || null;
+  }
+
+  function setTranslateCookie(lang) {
+    const cookieVal = `/en/${lang}`;
+    document.cookie = `googtrans=${cookieVal}; path=/;`;
+    const hostname = window.location.hostname;
+    if (hostname && !hostname.match(/^(\d{1,3}\.){3}\d{1,3}$/) && hostname !== "localhost") {
+      document.cookie = `googtrans=${cookieVal}; domain=.${hostname}; path=/;`;
+    }
+  }
+
+  function clearTranslateCookie() {
+    document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    const hostname = window.location.hostname;
+    if (hostname && !hostname.match(/^(\d{1,3}\.){3}\d{1,3}$/) && hostname !== "localhost") {
+      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=." + hostname + "; path=/;";
+    }
+  }
+
+  function ensureGoogleTranslate() {
+    let container = document.getElementById("google_translate_element");
+    if (!container) {
+      container = document.createElement("div");
+      container.id = "google_translate_element";
+      container.style.display = "none";
+      document.body.appendChild(container);
+    }
+
+    window.googleTranslateElementInit = function () {
+      if (window.google?.translate?.TranslateElement) {
+        new window.google.translate.TranslateElement(
+          { pageLanguage: "en", autoDisplay: false },
+          "google_translate_element"
+        );
+      }
+    };
+
+    if (window.google?.translate?.TranslateElement) {
+      window.googleTranslateElementInit();
+      return;
+    }
+
+    if (!document.querySelector('script[src*="translate.google.com/translate_a/element.js"]')) {
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  }
+
   function bindTranslation(scope) {
     const select = scope.querySelector("#language-select");
     if (!select || select.dataset.headerTranslateBound === "true") return;
     select.dataset.headerTranslateBound = "true";
+
+    // Synchronize selector with active cookie language if present
+    const savedLang = getTranslateCookieLang();
+    if (savedLang) {
+      const hasOption = Array.from(select.options).some((opt) => opt.value === savedLang);
+      if (hasOption) {
+        select.value = savedLang;
+      }
+    }
+
     select.addEventListener("change", () => {
-      const applyLanguage = () => {
+      const lang = select.value;
+      if (lang === "en") {
+        clearTranslateCookie();
+      } else {
+        setTranslateCookie(lang);
+      }
+
+      const applyCombo = (attempts = 0) => {
         const combo = document.querySelector(".goog-te-combo");
-        if (!combo) return setTimeout(applyLanguage, 500);
-        combo.value = select.value;
-        combo.dispatchEvent(new Event("change"));
+        if (combo) {
+          combo.value = lang;
+          combo.dispatchEvent(new Event("change"));
+        } else if (attempts < 12) {
+          setTimeout(() => applyCombo(attempts + 1), 250);
+        } else {
+          // If combo is not accessible, reload to apply cookie translation
+          window.location.reload();
+        }
       };
-      applyLanguage();
+      applyCombo();
     });
   }
 
@@ -158,6 +237,7 @@
     bindGlobalClose();
     bindNavbar(scope);
     bindTranslation(scope);
+    ensureGoogleTranslate();
     markActivePage(scope);
     if (dateTimer) clearInterval(dateTimer);
     updateDateTime(scope);
@@ -314,8 +394,8 @@ if (document.readyState === "loading") {
 } else {
   initWhatsAppWidget();
 }
-function googleTranslateElementInit() {
-  if (window.google?.translate) {
-    new google.translate.TranslateElement({ pageLanguage: "en", autoDisplay: false }, "google_translate_element");
+window.googleTranslateElementInit = function () {
+  if (window.google?.translate?.TranslateElement) {
+    new window.google.translate.TranslateElement({ pageLanguage: "en", autoDisplay: false }, "google_translate_element");
   }
-}
+};
