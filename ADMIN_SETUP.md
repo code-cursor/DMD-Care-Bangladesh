@@ -16,8 +16,16 @@ A safety copy of the original database files is stored at C:	mpdmd_care_banglade
 - MySQL/MariaDB
 - Apache with PHP enabled
 
-Open http://DMDCareBangladesh.loc/admin.php. Requests to admin.html redirect automatically.
+Open http://DMDCareBangladesh.loc/admin. Requests to admin.php and admin.html redirect automatically.
 
 ## cPanel
 
-Upload the project into the PHP document root, enable PHP 8.1 or later, and configure DATABASE_URL in .env with the hosting MySQL credentials. Keep the included .htaccess to protect configuration and database files. Do not configure Passenger.
+Upload the project into the PHP document root, enable PHP 8.1 or later, and configure `DATABASE_URL` in `.env` with the hosting MySQL credentials. Keep the included `.htaccess` to protect configuration and database files. Do not configure Passenger.
+
+Do not upload the local WAMP database URL to the live server. Shared hosting usually blocks `root`, so a live `.env` should use the database name, database user, and password created in cPanel:
+
+```env
+DATABASE_URL=mysql+pymysql://cpanel_user:cpanel_password@localhost:3306/cpanel_database?charset=utf8mb4
+```
+
+If the password contains symbols such as `@`, `#`, `/`, `:`, or `?`, URL-encode them before putting them in the URL. For example, `@` becomes `%40`.

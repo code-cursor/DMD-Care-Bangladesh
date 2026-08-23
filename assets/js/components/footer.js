@@ -8,7 +8,7 @@ $('.footer-link').on('click', function(e) {
       scrollTop: $(target).offset().top
     }, 1000);
   }
-  // Otherwise (normal link like contact.html), let it work normally
+  // Otherwise (normal link like contact), let it work normally
 });
 
   // Social Media Icon Animation: Hover Effect

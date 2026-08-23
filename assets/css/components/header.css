@@ -152,6 +152,10 @@ select.custom-translate {
   color: #198754 !important;
 }
 
+.navbar .dropdown-menu.show {
+  display: block;
+}
+
 .navbar .dropdown-item:hover,
 .navbar .dropdown-item:focus {
   background-color: var(--color-primary);

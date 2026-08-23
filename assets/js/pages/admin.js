@@ -737,7 +737,7 @@ async function loadDirectEntryFields() {
   const host = document.getElementById("directRegistrationFields");
   const submitButton = document.getElementById("directRegistrationSubmit");
   try {
-    const response = await fetch("./registration.html", { cache: "no-store" });
+    const response = await fetch("./registration", { cache: "no-store" });
     if (!response.ok) throw new Error("Unable to load the registration form");
     const source = new DOMParser().parseFromString(await response.text(), "text/html");
     const sourceForm = source.getElementById("registrationForm");

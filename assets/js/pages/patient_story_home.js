@@ -8,7 +8,7 @@ const patientStoryApiCandidates = [
 async function resolvePatientStoryApiBase() {
   for (const base of patientStoryApiCandidates) {
     try {
-      const response = await fetch(`${base}/api/health`);
+      const response = await fetch(`${base}/content-api/health`);
       if (response.ok) return base;
     } catch {}
   }
@@ -30,7 +30,7 @@ function patientStoryImageUrl(url, apiBase) {
 }
 
 function patientStoryDetailLink(item) {
-  return item.extra?.link || `muntasir_billah_story.html?id=${encodeURIComponent(item.id)}`;
+  return item.extra?.link || `muntasir_billah_story?id=${encodeURIComponent(item.id)}`;
 }
 
 function startPatientStoryCarousel(carousel) {
@@ -53,7 +53,7 @@ async function loadHomePatientStories() {
 
   try {
     const apiBase = await resolvePatientStoryApiBase();
-    const response = await fetch(`${apiBase}/api/content/patient_story`);
+    const response = await fetch(`${apiBase}/content-api/content/patient_story`);
     if (!response.ok) return;
     const items = await response.json();
     if (!items.length) return;

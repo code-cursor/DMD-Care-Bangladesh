@@ -6,11 +6,11 @@ $bodyLines = array_values(array_filter(explode("
 ?>
 <section class="work-section active">
   <div class="section-card-title">
-    <h3><?= e($contentType === 'health_team' ? 'Health Team' : ($contentType === 'gallery' ? 'Gallery' : 'Patient Stories')) ?></h3>
-    <span><?= e($contentType === 'health_team' ? 'Add or edit complete doctor profiles.' : ($contentType === 'gallery' ? 'Maintain photo and video gallery records.' : 'Manage the home card, story list, and full patient story page.')) ?></span>
+    <h3><?= e($contentType === 'gallery' ? 'Gallery' : 'Patient Stories') ?></h3>
+    <span><?= e($contentType === 'gallery' ? 'Maintain photo and video gallery records.' : 'Manage the home card, story list, and full patient story page.') ?></span>
   </div>
 
-  <?php if ($contentType === 'gallery'): ?><div class="content-tabs"><a class="content-tab <?= $contentMedia === 'photo' ? 'active' : '' ?>" href="?section=content&amp;type=gallery&amp;media=photo"><i class="bi bi-image"></i> Photo</a><a class="content-tab <?= $contentMedia === 'video' ? 'active' : '' ?>" href="?section=content&amp;type=gallery&amp;media=video"><i class="bi bi-camera-video"></i> Video</a></div><?php endif; ?>
+  <?php if ($contentType === 'gallery'): ?><div class="content-tabs"><a class="content-tab <?= $contentMedia === 'photo' ? 'active' : '' ?>" href="/admin?section=content&amp;type=gallery&amp;media=photo"><i class="bi bi-image"></i> Photo</a><a class="content-tab <?= $contentMedia === 'video' ? 'active' : '' ?>" href="/admin?section=content&amp;type=gallery&amp;media=video"><i class="bi bi-camera-video"></i> Video</a></div><?php endif; ?>
   <?php if ($contentType === 'patient_story'): ?>
     <div id="patientStoryTabs" class="content-tabs">
       <button class="content-tab active" type="button" data-story-section="home"><i class="bi bi-house-heart"></i> Home Page</button>
@@ -23,15 +23,7 @@ $bodyLines = array_values(array_filter(explode("
     <form class="data-form" method="post" enctype="multipart/form-data">
       <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="content_save"><input type="hidden" name="return_section" value="content"><input type="hidden" name="id" value="<?= e($contentForm['id']) ?>"><input type="hidden" name="type" value="<?= e($contentType) ?>"><input type="hidden" name="existing_image_url" value="<?= e($contentForm['image_url']) ?>"><input type="hidden" name="media_type" value="<?= e($contentMedia) ?>">
 
-      <?php if ($contentType === 'health_team'): ?>
-        <div class="row g-3">
-          <div class="col-12"><label class="form-label">Doctor's Name</label><input name="doctor_name" class="form-control" value="<?= e($contentForm['title']) ?>" required></div>
-          <div class="col-12"><label class="form-label">Specialty</label><input name="doctor_specialty" class="form-control" value="<?= e($contentForm['summary']) ?>"></div>
-          <div class="col-12"><label class="form-label">Medical Qualifications</label><input name="doctor_qualifications" class="form-control" value="<?= e($contentExtra['qualifications'] ?? ($bodyLines[0] ?? '')) ?>"></div>
-          <div class="col-12"><label class="form-label">Job/Academic Position</label><input name="doctor_job_position" class="form-control" value="<?= e($contentExtra['job_position'] ?? ($bodyLines[1] ?? '')) ?>"></div>
-          <div class="col-12"><label class="form-label">Workplace/Hospital Location</label><input name="doctor_workplace" class="form-control" value="<?= e($contentExtra['workplace'] ?? implode(' ', array_slice($bodyLines, 2))) ?>"></div>
-        </div>
-      <?php elseif ($contentType === 'gallery'): ?>
+      <?php if ($contentType === 'gallery'): ?>
         <div class="row g-3">
           <div class="col-12"><label class="form-label">Title</label><input name="title" class="form-control" value="<?= e($contentForm['title']) ?>" required></div>
           <div class="col-12"><label class="form-label">Summary</label><input name="summary" class="form-control" value="<?= e($contentForm['summary']) ?>"></div>
@@ -67,11 +59,11 @@ $bodyLines = array_values(array_filter(explode("
         <div class="col-md-2 publish-box"><input id="published" name="is_published" type="checkbox" class="form-check-input" <?= $contentForm['is_published'] ? 'checked' : '' ?>><label for="published">Published</label></div>
       </div>
       <button class="btn btn-success mt-3"><i class="bi bi-save"></i> <?= $editContent ? 'Update' : 'Create' ?></button>
-      <?php if ($editContent): ?><a class="btn btn-outline-secondary mt-3" href="?section=content&amp;type=<?= e($contentType) ?><?= $contentType === 'gallery' ? '&amp;media=' . e($contentMedia) : '' ?>">Cancel</a><?php endif; ?>
+      <?php if ($editContent): ?><a class="btn btn-outline-secondary mt-3" href="/admin?section=content&amp;type=<?= e($contentType) ?><?= $contentType === 'gallery' ? '&amp;media=' . e($contentMedia) : '' ?>">Cancel</a><?php endif; ?>
     </form>
 
     <div class="table-wrap"><table class="table table-hover align-middle"><thead><tr><th>Preview</th><th>Title</th><th>Published</th><th>Actions</th></tr></thead><tbody>
-      <?php foreach ($contents as $row): ?><tr><td><?php if ($row['image_url']): ?><img class="content-preview" src="<?= e($row['image_url']) ?>" alt=""><?php else: ?><i class="bi bi-camera-video"></i><?php endif; ?></td><td><?= e($row['title']) ?><br><small class="muted"><?= e($row['slug']) ?></small></td><td><?= $row['is_published'] ? 'Yes' : 'No' ?></td><td><div class="actions"><a class="btn btn-sm btn-outline-secondary" href="?section=content&amp;type=<?= e($contentType) ?><?= $contentType === 'gallery' ? '&amp;media=' . e($contentMedia) : '' ?>&amp;edit_content=<?= e($row['id']) ?>"><i class="bi bi-pencil"></i></a><?php if (in_array($user['role'], ['super_admin','admin'], true)): ?><form method="post" data-confirm="Delete this content item?"><input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="content_delete"><input type="hidden" name="return_section" value="content"><input type="hidden" name="id" value="<?= e($row['id']) ?>"><input type="hidden" name="type" value="<?= e($contentType) ?>"><button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button></form><?php endif; ?></div></td></tr><?php endforeach; ?>
+      <?php foreach ($contents as $row): ?><tr><td><?php if ($row['image_url']): ?><img class="content-preview" src="<?= e($row['image_url']) ?>" alt=""><?php else: ?><i class="bi bi-camera-video"></i><?php endif; ?></td><td><?= e($row['title']) ?><br><small class="muted"><?= e($row['slug']) ?></small></td><td><?= $row['is_published'] ? 'Yes' : 'No' ?></td><td><div class="actions"><a class="btn btn-sm btn-outline-secondary" href="/admin?section=content&amp;type=<?= e($contentType) ?><?= $contentType === 'gallery' ? '&amp;media=' . e($contentMedia) : '' ?>&amp;edit_content=<?= e($row['id']) ?>"><i class="bi bi-pencil"></i></a><?php if (in_array($user['role'], ['super_admin','admin'], true)): ?><form method="post" data-confirm="Delete this content item?"><input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="content_delete"><input type="hidden" name="return_section" value="content"><input type="hidden" name="id" value="<?= e($row['id']) ?>"><input type="hidden" name="type" value="<?= e($contentType) ?>"><button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button></form><?php endif; ?></div></td></tr><?php endforeach; ?>
       <?php if (!$contents): ?><tr><td colspan="4" class="text-center muted">No content found.</td></tr><?php endif; ?>
     </tbody></table></div>
   </div>

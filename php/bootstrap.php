@@ -214,7 +214,7 @@ function take_flash(): ?array
 function redirect_admin(string $section = 'dashboard', array $query = []): never
 {
     $query = array_merge(['section' => $section], $query);
-    header('Location: admin.php?' . http_build_query($query));
+    header('Location: /admin?' . http_build_query($query));
     exit;
 }
 

@@ -1,0 +1,27 @@
+<?php
+declare(strict_types=1);
+
+require_once __DIR__ . '/../../php/bootstrap.php';
+
+function public_content_items(string $type): array
+{
+    initialize_database();
+    $statement = db()->prepare('SELECT id,type,title,slug,summary,body,image_url,position,is_published,extra,created_at,updated_at FROM content_items WHERE type=? AND is_published=1 ORDER BY position,id DESC');
+    $statement->execute([$type]);
+
+    return array_map(static function (array $row): array {
+        $row['id'] = (int) $row['id'];
+        $row['position'] = (int) $row['position'];
+        $row['is_published'] = (bool) $row['is_published'];
+        $row['extra'] = json_decode($row['extra'] ?: '{}', true) ?: [];
+        return $row;
+    }, $statement->fetchAll());
+}
+
+function send_public_content(string $type): never
+{
+    header('Content-Type: application/json; charset=UTF-8');
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    echo json_encode(public_content_items($type), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    exit;
+}

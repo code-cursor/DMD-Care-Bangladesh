@@ -23,17 +23,7 @@ function handle_content_action(string $action, array $user): never
     $type = (string) ($_POST['type'] ?? '');
     $extra = [];
 
-    if ($type === 'health_team') {
-        $title = trim((string) ($_POST['doctor_name'] ?? ''));
-        $summary = trim((string) ($_POST['doctor_specialty'] ?? ''));
-        $extra = [
-            'qualifications' => trim((string) ($_POST['doctor_qualifications'] ?? '')),
-            'job_position' => trim((string) ($_POST['doctor_job_position'] ?? '')),
-            'workplace' => trim((string) ($_POST['doctor_workplace'] ?? '')),
-        ];
-        $body = implode("
-", array_filter($extra));
-    } elseif ($type === 'gallery') {
+    if ($type === 'gallery') {
         $title = trim((string) ($_POST['title'] ?? ''));
         $summary = trim((string) ($_POST['summary'] ?? ''));
         $mediaType = ($_POST['media_type'] ?? 'photo') === 'video' ? 'video' : 'photo';
@@ -101,7 +91,7 @@ function sync_public_patient_story_cards(): void
                 'age' => $extra['age'] ?? '',
                 'diagnosis_year' => $extra['diagnosis_year'] ?? '',
                 'status' => $extra['status'] ?? '',
-                'link' => $extra['link'] ?? '',
+                'link' => $extra['link'] ?? 'muntasir_billah_story?id=' . (int) $row['id'],
             ],
         ];
     }, $rows);

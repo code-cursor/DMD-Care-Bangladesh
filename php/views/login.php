@@ -1,7 +1,8 @@
 <div class="login-shell">
-  <form class="login-panel" method="post" action="admin.php">
+  <form class="login-panel" method="post" action="/admin">
     <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
     <input type="hidden" name="action" value="login">
+    <input type="hidden" name="return_to" value="<?= e($_SERVER['REQUEST_URI'] ?? '/admin') ?>">
     <div class="login-brand">
       <img src="./assets/src/img/DMD_care_bd_Logo.webp" alt="DMD Care Bangladesh" class="login-logo">
       <div><span class="eyebrow">Welcome back</span><h1>DMD Care Admin</h1></div>

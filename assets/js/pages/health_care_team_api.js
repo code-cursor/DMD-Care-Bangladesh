@@ -12,7 +12,7 @@ let currentTeamPage = 1;
 async function resolveHealthApiBase() {
   for (const base of healthApiCandidates) {
     try {
-      const response = await fetch(`${base}/api/health`);
+      const response = await fetch(`${base}/content-api/health`);
       if (response.ok) return base;
     } catch {}
   }
@@ -71,7 +71,7 @@ async function loadHealthCareTeam() {
     if (!healthApiBasePromise) healthApiBasePromise = resolveHealthApiBase();
     const healthApiBase = await healthApiBasePromise;
     window.__DMD_HEALTH_API_BASE__ = healthApiBase;
-    const response = await fetch(`${healthApiBase}/api/content/health_team`);
+    const response = await fetch(`${healthApiBase}/content-api/content/health_team`);
     if (!response.ok) return;
     const items = await response.json();
     if (!items.length) return;

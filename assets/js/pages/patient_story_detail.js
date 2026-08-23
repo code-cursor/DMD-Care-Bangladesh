@@ -8,7 +8,7 @@ const detailApiCandidates = [
 async function resolveDetailApiBase() {
   for (const base of detailApiCandidates) {
     try {
-      const response = await fetch(`${base}/api/health`);
+      const response = await fetch(`${base}/content-api/health`);
       if (response.ok) return base;
     } catch {}
   }
@@ -70,7 +70,7 @@ async function loadPatientStoryDetail() {
   const requestedId = Number(params.get("id"));
   try {
     const apiBase = await resolveDetailApiBase();
-    const response = await fetch(`${apiBase}/api/content/patient_story`);
+    const response = await fetch(`${apiBase}/content-api/content/patient_story`);
     if (!response.ok) return;
     const items = await response.json();
     const item = items.find((story) => story.id === requestedId) || items[0];

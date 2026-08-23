@@ -5,6 +5,27 @@ require_once __DIR__ . '/actions/registrations.php';
 require_once __DIR__ . '/actions/content.php';
 require_once __DIR__ . '/actions/system.php';
 
+function admin_return_url(string $value): string
+{
+    $value = trim($value);
+    if ($value === '') {
+        return '/admin';
+    }
+
+    $parts = parse_url($value);
+    if ($parts === false || isset($parts['scheme']) || isset($parts['host'])) {
+        return '/admin';
+    }
+
+    $path = '/' . ltrim((string) ($parts['path'] ?? ''), '/');
+    if ($path !== '/admin') {
+        return '/admin';
+    }
+
+    $query = isset($parts['query']) && $parts['query'] !== '' ? '?' . $parts['query'] : '';
+    return '/admin' . $query;
+}
+
 function handle_admin_post(): void
 {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -25,7 +46,8 @@ function handle_admin_post(): void
             session_regenerate_id(true);
             $_SESSION['user_id'] = (int) $user['id'];
             flash('Welcome back, ' . $user['name'] . '.');
-            redirect_admin();
+            header('Location: ' . admin_return_url((string) ($_POST['return_to'] ?? '')));
+            exit;
         }
 
         if ($action === 'logout') {
@@ -49,6 +71,10 @@ function handle_admin_post(): void
         throw new RuntimeException('Unknown admin action.');
     } catch (Throwable $exception) {
         flash($exception->getMessage(), 'danger');
+        if (($_POST['action'] ?? '') === 'login') {
+            header('Location: ' . admin_return_url((string) ($_POST['return_to'] ?? '')));
+            exit;
+        }
         redirect_admin((string) ($_POST['return_section'] ?? 'dashboard'));
     }
 }

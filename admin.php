@@ -43,15 +43,15 @@ if ($user && ($_GET['action'] ?? '') === 'export_patient') {
     download_excel(slugify($patient['patient_name']) . '_' . $patient['id'] . '_details.xls', ['Field','Value'], $rows);
 }
 
-$sections = ['dashboard', 'requests', 'direct', 'accepted', 'content', 'users', 'sms'];
-$section = (string) ($_GET['section'] ?? 'dashboard');
+$sections = ['dashboard', 'requests', 'direct', 'accepted', 'content', 'users', 'sms', 'health_team'];
+$section = str_replace('\\', '', (string) ($_GET['section'] ?? 'dashboard'));
 if (!in_array($section, $sections, true)) {
     $section = 'dashboard';
 }
-$contentType = (string) ($_GET['type'] ?? 'health_team');
-$contentMedia = ($_GET['media'] ?? 'photo') === 'video' ? 'video' : 'photo';
-if (!in_array($contentType, ['health_team', 'gallery', 'patient_story'], true)) {
-    $contentType = 'health_team';
+$contentType = str_replace('\\', '', (string) ($_GET['type'] ?? 'gallery'));
+$contentMedia = str_replace('\\', '', (string) ($_GET['media'] ?? 'photo')) === 'video' ? 'video' : 'photo';
+if (!in_array($contentType, ['gallery', 'patient_story'], true)) {
+    $contentType = 'gallery';
 }
 
 if ($user) {
@@ -96,6 +96,7 @@ if ($user) {
     $users = db()->query('SELECT id,name,email,role,is_active,created_at FROM users ORDER BY id')->fetchAll();
     $smsLogs = db()->query('SELECT s.*,r.patient_name FROM sms_logs s LEFT JOIN registrations r ON r.id=s.registration_id ORDER BY s.id DESC LIMIT 200')->fetchAll();
     $acceptedForSms = db()->query('SELECT id,patient_name,guardian_phone FROM registrations WHERE status="accepted" ORDER BY patient_name')->fetchAll();
+    $healthTeamMembers = db()->query('SELECT * FROM content_items WHERE type="health_team" ORDER BY position,id DESC')->fetchAll();
 
     $editRegistration = null;
     if ($id = (int) ($_GET['edit_registration'] ?? 0)) {
@@ -120,6 +121,12 @@ if ($user) {
         $statement = db()->prepare('SELECT * FROM content_items WHERE id=?');
         $statement->execute([$id]);
         $editContent = $statement->fetch() ?: null;
+    }
+    $editHealthTeamMember = null;
+    if ($id = (int) ($_GET['edit_health_team'] ?? 0)) {
+        $statement = db()->prepare('SELECT * FROM content_items WHERE id=? AND type="health_team"');
+        $statement->execute([$id]);
+        $editHealthTeamMember = $statement->fetch() ?: null;
     }
 }
 ?>
@@ -149,17 +156,18 @@ if ($user) {
         <button id="mobileMenuCloseBtn" class="mobile-menu-close" type="button" aria-label="Close navigation"><i class="bi bi-x-lg"></i></button>
       </div>
       <div class="side-nav-title">Navigation</div>
-      <a class="nav-btn <?= $section === 'dashboard' ? 'active' : '' ?>" href="?section=dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a>
-      <a class="nav-btn <?= $section === 'requests' ? 'active' : '' ?>" href="?section=requests"><i class="bi bi-inbox"></i> Requests</a>
-      <a class="nav-btn <?= $section === 'direct' ? 'active' : '' ?>" href="?section=direct"><i class="bi bi-pencil-square"></i> Direct Entry</a>
-      <a class="nav-btn <?= $section === 'accepted' ? 'active' : '' ?>" href="?section=accepted"><i class="bi bi-person-check"></i> Accepted Patients</a>
+      <a class="nav-btn <?= $section === 'dashboard' ? 'active' : '' ?>" href="/admin?section=dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a class="nav-btn <?= $section === 'requests' ? 'active' : '' ?>" href="/admin?section=requests"><i class="bi bi-inbox"></i> Requests</a>
+      <a class="nav-btn <?= $section === 'direct' ? 'active' : '' ?>" href="/admin?section=direct"><i class="bi bi-pencil-square"></i> Direct Entry</a>
+      <a class="nav-btn <?= $section === 'accepted' ? 'active' : '' ?>" href="/admin?section=accepted"><i class="bi bi-person-check"></i> Accepted Patients</a>
       <div class="side-nav-title">CMS</div>
-      <?php foreach (['health_team'=>['people','Health Team'],'gallery'=>['images','Gallery'],'patient_story'=>['journal-medical','Patient Stories']] as $type => [$icon,$label]): ?>
-        <a class="nav-btn <?= $section === 'content' && $contentType === $type ? 'active' : '' ?>" href="?section=content&amp;type=<?= e($type) ?>"><i class="bi bi-<?= e($icon) ?>"></i> <?= e($label) ?></a>
+      <?php foreach (['gallery'=>['images','Gallery'],'patient_story'=>['journal-medical','Patient Stories']] as $type => [$icon,$label]): ?>
+        <a class="nav-btn <?= $section === 'content' && $contentType === $type ? 'active' : '' ?>" href="/admin?section=content&amp;type=<?= e($type) ?>"><i class="bi bi-<?= e($icon) ?>"></i> <?= e($label) ?></a>
       <?php endforeach; ?>
       <div class="side-nav-title">System</div>
-      <a class="nav-btn <?= $section === 'users' ? 'active' : '' ?>" href="?section=users"><i class="bi bi-person-gear"></i> Users</a>
-      <a class="nav-btn <?= $section === 'sms' ? 'active' : '' ?>" href="?section=sms"><i class="bi bi-chat-dots"></i> SMS Logs</a>
+      <a class="nav-btn <?= $section === 'health_team' ? 'active' : '' ?>" href="/admin?section=health_team"><i class="bi bi-people"></i> Health Care Team</a>
+      <a class="nav-btn <?= $section === 'users' ? 'active' : '' ?>" href="/admin?section=users"><i class="bi bi-person-gear"></i> Users</a>
+      <a class="nav-btn <?= $section === 'sms' ? 'active' : '' ?>" href="/admin?section=sms"><i class="bi bi-chat-dots"></i> SMS Logs</a>
     </aside>
     <button id="sidebarBackdrop" class="sidebar-backdrop" type="button" tabindex="-1" aria-label="Close navigation"></button>
     <main class="workspace">
@@ -167,7 +175,7 @@ if ($user) {
         <button id="mobileMenuBtn" class="mobile-menu-btn" type="button" aria-label="Open navigation"><i class="bi bi-list"></i></button>
         <div><h2><?= e(ucwords(str_replace('_', ' ', $section))) ?></h2><span class="muted"><?= e($user['name']) ?> (<?= e($user['role']) ?>)</span></div>
         <div class="topbar-actions">
-          <a href="./index.html" class="btn btn-light btn-sm" target="_blank" rel="noopener"><i class="bi bi-globe2"></i> Website</a>
+          <a href="/" class="btn btn-light btn-sm" target="_blank" rel="noopener"><i class="bi bi-globe2"></i> Website</a>
           <form method="post"><input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="logout"><button class="btn btn-outline-danger btn-sm"><i class="bi bi-box-arrow-right"></i> Logout</button></form>
         </div>
       </header>

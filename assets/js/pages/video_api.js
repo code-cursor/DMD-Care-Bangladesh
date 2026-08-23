@@ -12,7 +12,7 @@ let currentVideoPage = 1;
 async function resolveVideoApiBase() {
   for (const base of videoApiCandidates) {
     try {
-      const response = await fetch(`${base}/api/health`);
+      const response = await fetch(`${base}/content-api/health`);
       if (response.ok) return base;
     } catch {}
   }
@@ -73,7 +73,7 @@ async function loadVideoGalleryContent() {
   try {
     if (!videoApiBasePromise) videoApiBasePromise = resolveVideoApiBase();
     const videoApiBase = await videoApiBasePromise;
-    const response = await fetch(`${videoApiBase}/api/content/gallery`);
+    const response = await fetch(`${videoApiBase}/content-api/content/gallery`);
     if (!response.ok) return;
     const allItems = await response.json();
     const items = allItems.filter((item) => item.extra?.media_type === "video" && (item.extra?.video_url || item.body));

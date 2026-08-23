@@ -3,6 +3,54 @@ declare(strict_types=1);
 
 function handle_system_action(string $action, array $user): never
 {
+    if ($action === 'health_team_save') {
+        require_role(['super_admin', 'admin', 'editor']);
+        $id = (int) ($_POST['id'] ?? 0);
+        $name = trim((string) ($_POST['doctor_name'] ?? ''));
+        $specialty = trim((string) ($_POST['doctor_specialty'] ?? ''));
+        $extra = [
+            'qualifications' => trim((string) ($_POST['doctor_qualifications'] ?? '')),
+            'job_position' => trim((string) ($_POST['doctor_job_position'] ?? '')),
+            'workplace' => trim((string) ($_POST['doctor_workplace'] ?? '')),
+        ];
+        if (mb_strlen($name) < 2) {
+            throw new RuntimeException('Doctor name is required.');
+        }
+        $imageUrl = trim((string) ($_POST['existing_image_url'] ?? ''));
+        if (!empty($_FILES['image']['name'])) {
+            $imageUrl = store_uploaded_image($_FILES['image'], 'health_team')['url'];
+        }
+        $body = implode("\n", array_filter($extra));
+        $values = [
+            'health_team',
+            $name,
+            slugify($name),
+            $specialty ?: null,
+            $body ?: null,
+            $imageUrl ?: null,
+            (int) ($_POST['position'] ?? 0),
+            isset($_POST['is_published']) ? 1 : 0,
+            json_encode($extra, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+        ];
+        if ($id) {
+            $values[] = $id;
+            db()->prepare('UPDATE content_items SET type=?,title=?,slug=?,summary=?,body=?,image_url=?,position=?,is_published=?,extra=?,updated_at=CURRENT_TIMESTAMP WHERE id=? AND type="health_team"')->execute($values);
+            flash('Health care team profile updated.');
+        } else {
+            $values[] = $user['id'];
+            db()->prepare('INSERT INTO content_items (type,title,slug,summary,body,image_url,position,is_published,extra,created_by_id) VALUES (?,?,?,?,?,?,?,?,?,?)')->execute($values);
+            flash('Health care team profile created.');
+        }
+        redirect_admin('health_team');
+    }
+
+    if ($action === 'health_team_delete') {
+        require_role(['super_admin', 'admin']);
+        db()->prepare('DELETE FROM content_items WHERE id=? AND type="health_team"')->execute([(int) ($_POST['id'] ?? 0)]);
+        flash('Health care team profile deleted.');
+        redirect_admin('health_team');
+    }
+
     if ($action === 'user_save') {
         require_role(['super_admin', 'admin']);
         $id = (int) ($_POST['id'] ?? 0);

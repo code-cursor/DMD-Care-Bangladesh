@@ -12,7 +12,7 @@ let currentPhotoPage = 1;
 async function resolvePhotoApiBase() {
   for (const base of photoApiCandidates) {
     try {
-      const response = await fetch(`${base}/api/health`);
+      const response = await fetch(`${base}/content-api/health`);
       if (response.ok) return base;
     } catch {}
   }
@@ -71,7 +71,7 @@ async function loadGalleryContent() {
     if (!photoApiBasePromise) photoApiBasePromise = resolvePhotoApiBase();
     const photoApiBase = await photoApiBasePromise;
     window.__DMD_PHOTO_API_BASE__ = photoApiBase;
-    const response = await fetch(`${photoApiBase}/api/content/gallery`);
+    const response = await fetch(`${photoApiBase}/content-api/content/gallery`);
     if (!response.ok) return;
     const allItems = await response.json();
     const items = allItems.filter((item) => (item.extra?.media_type || "photo") === "photo");

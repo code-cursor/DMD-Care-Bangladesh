@@ -114,54 +114,6 @@
       font-size: 0.9rem;
     }
 
-    .health-team-pagination {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-top: 2rem;
-      margin-bottom: 100px;
-      padding-top: 1rem;
-      border-top: 1px solid #d1d5db;
-    }
-
-    .pagination-buttons {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.35rem;
-    }
-
-    .page-button {
-      min-width: 2.25rem;
-      height: 2.25rem;
-      padding: 0 0.65rem;
-      border: 0;
-      border-radius: 4px;
-      background: transparent;
-      color: #111827;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-
-    .page-button:hover:not(:disabled),
-    .page-button.active {
-      background: #d81b0c;
-      color: #fff;
-    }
-
-    .page-button:disabled {
-      cursor: not-allowed;
-      opacity: 0.4;
-    }
-
-    .pagination-summary {
-      margin: 0;
-      color: #111827;
-      font-size: 0.85rem;
-      white-space: nowrap;
-    }
-
     /* Scroll Animation*/
     .animate-on-scroll {
       opacity: 0;
@@ -183,6 +135,64 @@
     .scroll-reveal.visible {
     opacity: 1;
     transform: translateY(0);
+    }
+
+    .team-pagination,
+    .photo-pagination,
+    .video-pagination {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      width: 100%;
+      margin: 2rem auto 0;
+      color: #1f3d35;
+    }
+
+    .pagination-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .page-button {
+      min-width: 2.5rem;
+      height: 2.5rem;
+      padding: 0 0.85rem;
+      border: 1px solid rgba(0, 153, 102, 0.28);
+      border-radius: 6px;
+      background: #fff;
+      color: #006b4a;
+      font-size: 0.88rem;
+      font-weight: 600;
+      line-height: 1;
+      cursor: pointer;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+
+    .page-button:hover:not(:disabled),
+    .page-button.active {
+      background: #009966;
+      border-color: #009966;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .page-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+      background: #f3f7f5;
+      color: #6f817b;
+    }
+
+    .pagination-summary {
+      margin: 0;
+      color: #4b625b;
+      font-size: 0.92rem;
+      text-align: center;
     }
 
     @keyframes fadeInUp {
@@ -207,12 +217,10 @@
         font-size: 90%;
     }
 
-    .health-team-pagination {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .pagination-summary {
-        white-space: normal;
+    .page-button {
+      min-width: 2.25rem;
+      height: 2.25rem;
+      padding: 0 0.65rem;
+      font-size: 0.8rem;
     }
     }
