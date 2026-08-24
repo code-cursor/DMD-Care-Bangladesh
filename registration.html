@@ -62,11 +62,11 @@
           </div>
           <div class="col-md-4">
             <label class="form-label fw-bold">Birth Certificate No <small>(জন্ম সনদ)</small></label>
-            <input name="birth_certificate_no" type="text" class="form-control" required>
+            <input name="birth_certificate_no" type="text" class="form-control" inputmode="numeric" maxlength="17" pattern="[0-9]{17}" required>
           </div>
           <div class="col-md-4">
             <label class="form-label fw-bold">NID <small>(জাতীয় পরিচয়পত্রের নং)</small></label>
-            <input name="nid" type="number" class="form-control" required>
+            <input name="nid" type="text" class="form-control" inputmode="numeric" maxlength="17" pattern="(?:[0-9]{10}|[0-9]{17})" required>
           </div>
         </div>
 
@@ -77,7 +77,7 @@
           </div>
           <div class="col-md-3">
             <label class="form-label fw-bold">NID <small>(জাতীয় পরিচয়পত্র)</small></label>
-            <input name="fathers_nid" type="number" class="form-control" required>
+            <input name="fathers_nid" type="text" class="form-control" inputmode="numeric" maxlength="17" pattern="(?:[0-9]{10}|[0-9]{17})" required>
           </div>
           <div class="col-md-3">
             <label class="form-label fw-bold">Occupation <small>(পেশা)</small></label>
@@ -96,7 +96,7 @@
           </div>
           <div class="col-md-3">
             <label class="form-label fw-bold">NID <small>(জাতীয় পরিচয়পত্র)</small></label>
-            <input name="mothers_nid" type="number" class="form-control" required>
+            <input name="mothers_nid" type="text" class="form-control" inputmode="numeric" maxlength="17" pattern="(?:[0-9]{10}|[0-9]{17})" required>
           </div>
           <div class="col-md-3">
             <label class="form-label fw-bold">Occupation <small>(পেশা)</small></label>
@@ -118,11 +118,11 @@
         <div class="row mb-3 scroll-reveal">
           <div class="col-md-6">
             <label class="form-label fw-bold">Contact No <small>(যোগাযোগের নম্বর)</small></label>
-            <input name="contact_no" type="tel" class="form-control" placeholder="+8801XXXXXXXXX" required>
+            <input name="contact_no" type="tel" class="form-control" inputmode="numeric" maxlength="11" pattern="[0-9]{11}" placeholder="01XXXXXXXXX" required>
           </div>
           <div class="col-md-6">
             <label class="form-label fw-bold">Emergency Contact No <small>(জরুরি যোগাযোগের নম্বর)</small></label>
-            <input name="emergency_contact_no" type="tel" class="form-control" placeholder="+8801XXXXXXXXX" required>
+            <input name="emergency_contact_no" type="tel" class="form-control" inputmode="numeric" maxlength="11" pattern="[0-9]{11}" placeholder="01XXXXXXXXX" required>
           </div>
         </div>
 
@@ -166,7 +166,7 @@
           </div>
           <div class="col-md-8">
             <label class="form-label fw-bold">Age at Diagnosis <small>(রোগ নির্ণয়ের সময় বয়স)</small></label>
-            <input name="age_at_diagnosis" type="text" class="form-control" required>
+            <input name="age_at_diagnosis" type="number" class="form-control" min="0" step="1" required>
           </div>
           <div class="col-md-8">
             <label class="form-label fw-bold">Date of Diagnosis <small>(রোগ নির্ণয়ের তারিখ)</small></label>
@@ -232,7 +232,7 @@
 
         <div class="mb-3 scroll-reveal">
           <label class="form-label fw-bold">Class/Lavel <small>(শ্রেণি)</small></label>
-          <input name="class_lavel" type="text" class="form-control" required>
+          <input name="class_lavel" type="number" class="form-control" min="0" step="1" required>
         </div>
 
         <div class="mb-3 scroll-reveal">
@@ -386,7 +386,7 @@
         <!-- Section for Report Attachment -->
         <div class="mb-4 scroll-reveal">
           <label class="form-label fw-bold">Attach Genetic Report <small>(রিপোর্ট সংযুক্ত করুন)</small></label><br>
-          <input name="genetic_report" type="file" class="form-control" id="reportUpload" accept=".pdf,image/jpeg,image/png,image/webp" required>
+          <input name="genetic_report[]" type="file" class="form-control" id="reportUpload" accept=".pdf,image/jpeg,image/png,image/webp" multiple required>
         </div>
 
         <!-- ================= CONSENT ================= -->

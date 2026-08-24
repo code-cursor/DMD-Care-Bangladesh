@@ -36,8 +36,8 @@ function validationMessageFor(field) {
   if (field.validity.valueMissing) return `${fieldName} is required.`;
   if (field.validity.typeMismatch) return `Please enter a valid ${fieldName.toLowerCase()}.`;
   if (field.validity.rangeUnderflow || field.validity.rangeOverflow) return `${fieldName} is outside the allowed range.`;
-  if (field.validity.stepMismatch || field.validity.badInput) return `Please enter a valid value for ${fieldName}.`;
-  if (field.validity.patternMismatch) return `Please enter ${fieldName} in the correct format.`;
+  if (field.validity.stepMismatch || field.validity.badInput) return `Please enter a valid numeric value for ${fieldName}.`;
+  if (field.validity.patternMismatch) return field.title || `Please enter ${fieldName} in the correct format.`;
   return field.validationMessage || `Please check ${fieldName}.`;
 }
 
@@ -47,15 +47,72 @@ function showFieldPopup(field, message) {
   field.focus({ preventScroll: true });
 }
 
+function digitsOnly(value) {
+  return String(value || "").replace(/\D/g, "");
+}
+
+function isValidDigitLength(value, lengths) {
+  const digits = digitsOnly(value);
+  return lengths.includes(digits.length) && digits === String(value || "").trim();
+}
+
+function isValidProviderEmail(value) {
+  const email = String(value || "").trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return false;
+  return /@(?:gmail\.com|yahoo\.(?:com|co\.[a-z]{2})|ymail\.com|rocketmail\.com|outlook\.com|hotmail\.com|live\.com|msn\.com|icloud\.com|me\.com|protonmail\.com|aol\.com)$/.test(email);
+}
+
+function setFieldValidity(field, message) {
+  field.setCustomValidity(message);
+  field.classList.toggle("is-invalid", Boolean(message));
+}
+
 function validateRegistrationForm(form) {
-  const phoneFields = form.querySelectorAll("input[type='tel']");
-  phoneFields.forEach((field) => {
-    const value = field.value.trim();
-    field.setCustomValidity(value && !isValidPhone(value) ? "Enter a valid phone number using 8 to 15 digits. Example: +8801XXXXXXXXX" : "");
+  form.classList.add("was-validated");
+  form.querySelectorAll("input, select, textarea").forEach((field) => setFieldValidity(field, ""));
+
+  ["birth_certificate_no"].forEach((name) => {
+    const field = form.elements[name];
+    if (field && field.value.trim() && !isValidDigitLength(field.value, [17])) {
+      setFieldValidity(field, "Birth certificate number must be exactly 17 digits.");
+    }
+  });
+
+  ["nid", "fathers_nid", "mothers_nid"].forEach((name) => {
+    const field = form.elements[name];
+    if (field && field.value.trim() && !isValidDigitLength(field.value, [10, 17])) {
+      setFieldValidity(field, "NID must be exactly 10 or 17 digits.");
+    }
+  });
+
+  ["contact_no", "emergency_contact_no"].forEach((name) => {
+    const field = form.elements[name];
+    if (field && field.value.trim() && !isValidPhone(field.value)) {
+      setFieldValidity(field, "Mobile number must be exactly 11 digits.");
+    }
+  });
+
+  const contact = form.elements.contact_no;
+  const emergency = form.elements.emergency_contact_no;
+  if (contact?.value.trim() && emergency?.value.trim() && digitsOnly(contact.value) === digitsOnly(emergency.value)) {
+    setFieldValidity(emergency, "Emergency contact number must be different from mobile number.");
+  }
+
+  const email = form.elements.email_address;
+  if (email?.value.trim() && !isValidProviderEmail(email.value)) {
+    setFieldValidity(email, "Enter a valid email address from Gmail, Yahoo, Outlook, Hotmail, iCloud, ProtonMail, or similar providers.");
+  }
+
+  ["age_at_diagnosis", "class_lavel"].forEach((name) => {
+    const field = form.elements[name];
+    if (field && field.value.trim() && (!Number.isFinite(Number(field.value)) || Number(field.value) < 0)) {
+      setFieldValidity(field, `${readableFieldName(field)} must be numeric.`);
+    }
   });
 
   const firstInvalidField = form.querySelector("input:invalid, select:invalid, textarea:invalid");
   if (firstInvalidField) {
+    firstInvalidField.classList.add("is-invalid");
     showFieldPopup(firstInvalidField, validationMessageFor(firstInvalidField));
     return false;
   }
@@ -91,7 +148,7 @@ function collectFields(form) {
 }
 
 function isValidPhone(value) {
-  return /^\+?[0-9]{8,15}$/.test(String(value || "").replace(/\s+/g, ""));
+  return isValidDigitLength(value, [11]);
 }
 
 function validateFile(file, options) {
@@ -122,13 +179,14 @@ function validateImage() {
 
 function validateReport() {
   const fileInput = document.getElementById("reportUpload");
-  const file = fileInput.files[0];
-  const isValid = validateFile(file, {
-    maxSize: 5 * 1024 * 1024,
+  const files = Array.from(fileInput.files || []);
+  const isValid = files.every((file) => validateFile(file, {
+    maxSize: file.type === "application/pdf" ? 5 * 1024 * 1024 : 2 * 1024 * 1024,
     types: ["application/pdf", "image/jpeg", "image/png", "image/webp"],
-    sizeMessage: "Report is too large. Maximum size is 5MB.",
+    sizeMessage: "Each PDF report must be 5MB or smaller; each image report must be 2MB or smaller.",
     typeMessage: "Invalid report type. Please upload PDF, JPG, PNG, or WEBP.",
-  });
+  }));
+  fileInput.classList.toggle("is-invalid", !isValid || (fileInput.required && files.length === 0));
   if (!isValid) fileInput.value = "";
   return isValid;
 }
@@ -171,9 +229,9 @@ function buildRegistrationFormData(form) {
   formData.append("payload", JSON.stringify(fields));
 
   const photo = document.getElementById("photoUpload").files[0];
-  const report = document.getElementById("reportUpload").files[0];
+  const reports = Array.from(document.getElementById("reportUpload").files || []);
   if (photo) formData.append("photo", photo);
-  if (report) formData.append("genetic_report", report);
+  reports.forEach((report) => formData.append("genetic_report[]", report));
 
   return formData;
 }
@@ -236,6 +294,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  document.querySelectorAll("#registrationForm input, #registrationForm select, #registrationForm textarea").forEach((field) => {
+    field.addEventListener("input", () => {
+      field.setCustomValidity("");
+      field.classList.remove("is-invalid");
+    });
+    field.addEventListener("change", () => {
+      field.setCustomValidity("");
+      field.classList.remove("is-invalid");
+    });
+  });
   document.getElementById("photoUpload").addEventListener("change", showImagePreview);
   document.getElementById("reportUpload").addEventListener("change", validateReport);
 

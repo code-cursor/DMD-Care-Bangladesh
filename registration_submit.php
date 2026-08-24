@@ -29,6 +29,44 @@ function registration_health_issues(array $payload): array
     ]));
 }
 
+function registration_digits_only(mixed $value): string
+{
+    return preg_replace('/\D+/', '', (string) $value) ?: '';
+}
+
+function registration_exact_digits(mixed $value, array $lengths): bool
+{
+    $value = trim((string) $value);
+    $digits = registration_digits_only($value);
+    return $value !== '' && $value === $digits && in_array(strlen($digits), $lengths, true);
+}
+
+function registration_valid_provider_email(string $email): bool
+{
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return false;
+    }
+    return preg_match('/@(?:gmail\.com|yahoo\.(?:com|co\.[a-z]{2})|ymail\.com|rocketmail\.com|outlook\.com|hotmail\.com|live\.com|msn\.com|icloud\.com|me\.com|protonmail\.com|aol\.com)$/i', $email) === 1;
+}
+
+function registration_uploaded_files(array $file): array
+{
+    if (is_array($file['name'] ?? null)) {
+        $files = [];
+        foreach ($file['name'] as $index => $name) {
+            $files[] = [
+                'name' => $name,
+                'type' => $file['type'][$index] ?? '',
+                'tmp_name' => $file['tmp_name'][$index] ?? '',
+                'error' => $file['error'][$index] ?? UPLOAD_ERR_NO_FILE,
+                'size' => $file['size'][$index] ?? 0,
+            ];
+        }
+        return $files;
+    }
+    return [$file];
+}
+
 function same_registration_patient(array $parsed, array $existing): bool
 {
     $newPayload = $parsed['payload'];
@@ -100,11 +138,28 @@ try {
     if (mb_strlen($patientName) < 2) {
         throw new RuntimeException('Patient full name is required.');
     }
-    if (!valid_phone($guardianPhone)) {
-        throw new RuntimeException('A valid guardian/contact phone is required.');
+    if (!registration_exact_digits($guardianPhone, [11])) {
+        throw new RuntimeException('Mobile number must be exactly 11 digits.');
     }
-    if ($guardianEmail !== '' && !filter_var($guardianEmail, FILTER_VALIDATE_EMAIL)) {
-        throw new RuntimeException('Guardian email is invalid.');
+    if ($guardianEmail !== '' && !registration_valid_provider_email($guardianEmail)) {
+        throw new RuntimeException('Guardian email is invalid. Use a valid Gmail, Yahoo, Outlook, Hotmail, iCloud, ProtonMail, or similar email.');
+    }
+    if (!registration_exact_digits($payload['birth_certificate_no'] ?? '', [17])) {
+        throw new RuntimeException('Birth certificate number must be exactly 17 digits.');
+    }
+    foreach (['nid', 'fathers_nid', 'mothers_nid'] as $nidField) {
+        if (!registration_exact_digits($payload[$nidField] ?? '', [10, 17])) {
+            throw new RuntimeException('NID must be exactly 10 or 17 digits.');
+        }
+    }
+    if (registration_digits_only($payload['contact_no'] ?? '') === registration_digits_only($payload['emergency_contact_no'] ?? '')) {
+        throw new RuntimeException('Emergency contact number must be different from mobile number.');
+    }
+    foreach (['age_at_diagnosis', 'class_lavel'] as $numericField) {
+        $numericValue = trim((string) ($payload[$numericField] ?? ''));
+        if ($numericValue === '' || !is_numeric($numericValue) || (float) $numericValue < 0) {
+            throw new RuntimeException(str_replace('_', ' ', ucfirst($numericField)) . ' must be numeric.');
+        }
     }
 
     $payload['patient_name'] = $patientName;
@@ -121,9 +176,19 @@ try {
     ensure_not_duplicate_registration($parsed);
 
     $attachments = [];
-    foreach (['photo' => 'photo', 'genetic_report' => 'genetic_report'] as $input => $key) {
-        if (!empty($_FILES[$input]['name'])) {
-            $attachments[$key] = store_uploaded_image($_FILES[$input], $key);
+    if (!empty($_FILES['photo']['name'])) {
+        $attachments['photo'] = store_uploaded_image($_FILES['photo'], 'photo');
+    }
+    if (!empty($_FILES['genetic_report']['name'])) {
+        $reports = [];
+        foreach (registration_uploaded_files($_FILES['genetic_report']) as $file) {
+            if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+                $reports[] = store_uploaded_image($file, 'genetic_report');
+            }
+        }
+        if ($reports) {
+            $attachments['genetic_report'] = $reports[0];
+            $attachments['genetic_reports'] = $reports;
         }
     }
     if ($attachments) {
