@@ -67,24 +67,26 @@ function handle_system_action(string $action, array $user): never
         if ($id) {
             $values = [$name, $email, $role, isset($_POST['is_active']) ? 1 : 0];
             $sql = 'UPDATE users SET name=?,email=?,role=?,is_active=?,updated_at=CURRENT_TIMESTAMP';
+            $passwordChanged = false;
             if ($password !== '') {
-                if (mb_strlen($password) < 8) {
-                    throw new RuntimeException('Password must contain at least 8 characters.');
+                if (mb_strlen($password) < 6) {
+                    throw new RuntimeException('Password must contain at least 6 characters.');
                 }
                 $sql .= ',password_hash=?';
                 $values[] = password_hash($password, PASSWORD_DEFAULT);
+                $passwordChanged = true;
             }
             $sql .= ' WHERE id=?';
             $values[] = $id;
             db()->prepare($sql)->execute($values);
-            flash('User updated.');
+            flash($passwordChanged ? 'User details and password updated successfully.' : 'User updated successfully.');
         } else {
-            if (mb_strlen($password) < 8) {
-                throw new RuntimeException('Password must contain at least 8 characters.');
+            if (mb_strlen($password) < 6) {
+                throw new RuntimeException('Password must contain at least 6 characters.');
             }
             db()->prepare('INSERT INTO users (name,email,password_hash,role,is_active) VALUES (?,?,?,?,1)')
                 ->execute([$name, $email, password_hash($password, PASSWORD_DEFAULT), $role]);
-            flash('User created.');
+            flash('User created successfully.');
         }
         redirect_admin('users');
     }
