@@ -6,9 +6,9 @@
   const backdrop = document.getElementById("sidebarBackdrop");
 
   function setSidebar(open) {
-    sidebar?.classList.toggle("open", open);
-    backdrop?.classList.toggle("show", open);
-    body.classList.toggle("sidebar-open", open);
+    sidebar?.classList.toggle("is-open", open);
+    backdrop?.classList.toggle("is-open", open);
+    body.classList.toggle("admin-menu-open", open);
     openButton?.setAttribute("aria-expanded", open ? "true" : "false");
   }
 
