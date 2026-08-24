@@ -9,7 +9,7 @@
     </div>
     <button class="btn btn-success mt-3"><i class="bi bi-send"></i> Send SMS</button>
   </form>
-  <?php if (in_array($user['role'], ['super_admin','admin'], true)): ?>
+  <?php if ($user['role'] === 'super_admin'): ?>
   <div class="section-card-title"><h3>IP Update Facility</h3><span>Update the configured SMS gateway IP address without browser API calls.</span></div>
   <form class="data-form mb-4" method="post">
     <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="sms_ip_update"><input type="hidden" name="return_section" value="sms">

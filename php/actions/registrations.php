@@ -56,6 +56,7 @@ function handle_registration_action(string $action, array $user): never
         }
         $sql = 'INSERT INTO registrations (patient_name,guardian_phone,guardian_email,status,source,notes,payload,created_by_id,reviewed_by_id) VALUES (?,?,?,?,"admin",?,?,?,?)';
         db()->prepare($sql)->execute([$name, $phone, $email ?: null, $status, $notes ?: null, $payload, $user['id'], $user['id']]);
+        unset($_SESSION['direct_entry_old']);
         flash('Registration created.');
         redirect_admin('direct');
     }

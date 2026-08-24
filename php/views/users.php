@@ -1,5 +1,5 @@
 <section class="work-section active">
-  <div class="section-card-title"><h3>Admin Users</h3><span>Add, edit, activate, deactivate, and remove admin accounts.</span></div>
+  <div class="section-card-title"><h3>Admin Users</h3><span>Add, edit, activate, deactivate, and remove staff accounts.</span></div>
   <?php if (in_array($user['role'], ['super_admin','admin'], true)): ?>
   <?php $userForm = $editUser ?: ['id'=>'','name'=>'','email'=>'','role'=>'editor','is_active'=>1]; ?>
   <form id="userForm" class="data-form mb-4" method="post">
@@ -12,7 +12,7 @@
       <div class="col-md-3"><label class="form-label">Name</label><input name="name" class="form-control" value="<?= e($userForm['name']) ?>" required></div>
       <div class="col-md-3"><label class="form-label">Email</label><input name="email" type="email" class="form-control" value="<?= e($userForm['email']) ?>" required></div>
       <div class="col-md-3"><label class="form-label">Password<?= $editUser ? ' <span class="muted small">(leave blank to keep)</span>' : '' ?></label><input name="password" type="password" minlength="6" class="form-control" placeholder="<?= $editUser ? 'Enter new password to change' : 'Min 6 characters' ?>" <?= $editUser ? '' : 'required' ?> autocomplete="new-password"></div>
-      <div class="col-md-3"><label class="form-label">Role</label><select name="role" class="form-select"><?php foreach (['admin','editor','viewer','super_admin'] as $role): ?><option value="<?= e($role) ?>" <?= $userForm['role'] === $role ? 'selected' : '' ?>><?= e($role) ?></option><?php endforeach; ?></select></div>
+      <div class="col-md-3"><label class="form-label">Role</label><select name="role" class="form-select"><?php foreach (['admin','editor','viewer'] as $role): ?><option value="<?= e($role) ?>" <?= $userForm['role'] === $role ? 'selected' : '' ?>><?= e($role) ?></option><?php endforeach; ?></select></div>
       <?php if ($editUser): ?><div class="col-12"><label class="form-check"><input name="is_active" value="1" type="checkbox" class="form-check-input" <?= $userForm['is_active'] ? 'checked' : '' ?>> Account is active</label></div><?php endif; ?>
     </div>
     <div class="d-flex flex-wrap gap-2 mt-3">

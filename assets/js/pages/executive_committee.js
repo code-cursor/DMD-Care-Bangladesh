@@ -57,7 +57,9 @@ const members = [
 
 
 $(document).ready(function() {
-      const row = $(".row");
+      const row = $(".team-section > .row");
+      if (row.data("committeeLoaded")) return;
+      row.data("committeeLoaded", true);
       members.forEach((m, i) => {
         row.append(`
           <div class="col-12 col-sm-6 col-lg-4">

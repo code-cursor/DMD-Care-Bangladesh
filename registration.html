@@ -47,14 +47,14 @@
           </div>
           <div class="col-md-3">
             <label class="form-label fw-bold">Age <small>(বয়স)</small></label>
-            <input type="number" class="form-control" placeholder="Age" required>
+            <input name="age" type="number" class="form-control" placeholder="Age" required>
           </div>
         </div>
 
         <div class="row mb-3 scroll-reveal scroll-reveal">
           <div class="col-md-4">
             <label class="form-label fw-bold">Gender <small>(লিঙ্গ)</small></label>
-            <select class="form-select">
+            <select name="gender" class="form-select">
               <option>Male</option>
               <option>Female</option>
               <option>Other</option>
@@ -73,77 +73,77 @@
         <div class="row mb-3 scroll-reveal scroll-reveal">
           <div class="col-md-6">
             <label class="form-label fw-bold">Father's Name <small>(পিতার নাম)</small></label>
-            <input type="text" class="form-control" required>
+            <input name="fathers_name" type="text" class="form-control" required>
           </div>
           <div class="col-md-3">
             <label class="form-label fw-bold">NID <small>(জাতীয় পরিচয়পত্র)</small></label>
-            <input type="number" class="form-control" required>
+            <input name="fathers_nid" type="number" class="form-control" required>
           </div>
           <div class="col-md-3">
             <label class="form-label fw-bold">Occupation <small>(পেশা)</small></label>
-            <input type="text" class="form-control" required>
+            <input name="fathers_occupation" type="text" class="form-control" required>
           </div>
           <div class="col-md-6">
             <label class="form-label fw-bold">Father's Education <small>(পিতার শিক্ষাগত যোগ্যতা)</small></label>
-            <input type="text" class="form-control" required>
+            <input name="fathers_education" type="text" class="form-control" required>
           </div>
         </div>
 
         <div class="row mb-3 scroll-reveal">
           <div class="col-md-6">
             <label class="form-label fw-bold">Mother's Name <small>(মাতার নাম)</small></label>
-            <input type="text" class="form-control" required>
+            <input name="mothers_name" type="text" class="form-control" required>
           </div>
           <div class="col-md-3">
             <label class="form-label fw-bold">NID <small>(জাতীয় পরিচয়পত্র)</small></label>
-            <input type="number" class="form-control" required>
+            <input name="mothers_nid" type="number" class="form-control" required>
           </div>
           <div class="col-md-3">
             <label class="form-label fw-bold">Occupation <small>(পেশা)</small></label>
-            <input type="text" class="form-control" required>
+            <input name="mothers_occupation" type="text" class="form-control" required>
           </div>
           <div class="col-md-6">
             <label class="form-label fw-bold">Mother's Education <small>(মাতার শিক্ষাগত যোগ্যতা)</small></label>
-            <input type="text" class="form-control" required>
+            <input name="mothers_education" type="text" class="form-control" required>
           </div>
         </div>
 
         <div class="row mb-3 scroll-reveal">
           <div class="col-md-10">
             <label class="form-label fw-bold">Guardian Relation with Patient <small>(অভিভাবকের সাথে রোগীর সঙ্গে সম্পর্ক)</small> </label>
-            <input type="text" class="form-control" required>
+            <input name="guardian_relation_with_patient" type="text" class="form-control" required>
           </div>
         </div>
 
         <div class="row mb-3 scroll-reveal">
           <div class="col-md-6">
             <label class="form-label fw-bold">Contact No <small>(যোগাযোগের নম্বর)</small></label>
-            <input type="tel" class="form-control" placeholder="+8801XXXXXXXXX" required>
+            <input name="contact_no" type="tel" class="form-control" placeholder="+8801XXXXXXXXX" required>
           </div>
           <div class="col-md-6">
             <label class="form-label fw-bold">Emergency Contact No <small>(জরুরি যোগাযোগের নম্বর)</small></label>
-            <input type="tel" class="form-control" placeholder="+8801XXXXXXXXX" required>
+            <input name="emergency_contact_no" type="tel" class="form-control" placeholder="+8801XXXXXXXXX" required>
           </div>
         </div>
 
         <div class="mb-3 scroll-reveal">
           <label class="form-label fw-bold">Email Address <small>(ইমেইল)</small></label>
-          <input type="email" class="form-control" placeholder="example@email.com" required>
+          <input name="email_address" type="email" class="form-control" placeholder="example@email.com" required>
         </div>
 
         <div class="mb-3 scroll-reveal">
           <label class="form-label fw-bold">Present Address <small>(বর্তমান ঠিকানা)</small> </label>
-          <textarea class="form-control" rows="2" required></textarea>
+          <textarea name="present_address" class="form-control" rows="2" required></textarea>
         </div>
 
         <div class="mb-3 scroll-reveal">
           <label class="form-label fw-bold">Permanent Address <small>(স্থায়ী ঠিকানা)</small></label>
-          <textarea class="form-control" rows="2" required></textarea>
+          <textarea name="permanent_address" class="form-control" rows="2" required></textarea>
         </div>
 
         <div class="mb-4 scroll-reveal">
           <label class="form-label fw-bold">Nationality <small>(জাতীয়তা)</small></label>
-          <input type="text" class="form-control" required>
+          <input name="nationality" type="text" class="form-control" required>
         </div>
 
         <!-- ================= MEDICAL INFORMATION ================= -->
@@ -152,8 +152,8 @@
         <div class="row mb-3 scroll-reveal">
             <div class="col-md-4">
                 <label class="form-label fw-bold">Blood Group <small>(রক্তের গ্রুপ)</small></label>
-                <select class="form-select" required>
-                <option>Select Blood Group</option>
+                <select name="blood_group" class="form-select" required>
+                <option value="" selected disabled>Select Blood Group</option>
                 <option>A+</option><option>A-</option>
                 <option>B+</option><option>B-</option>
                 <option>O+</option><option>O-</option>
@@ -166,17 +166,17 @@
           </div>
           <div class="col-md-8">
             <label class="form-label fw-bold">Age at Diagnosis <small>(রোগ নির্ণয়ের সময় বয়স)</small></label>
-            <input type="text" class="form-control" required>
+            <input name="age_at_diagnosis" type="text" class="form-control" required>
           </div>
           <div class="col-md-8">
             <label class="form-label fw-bold">Date of Diagnosis <small>(রোগ নির্ণয়ের তারিখ)</small></label>
-            <input type="date" class="form-control" required>
+            <input name="date_of_diagnosis" type="date" class="form-control" required>
           </div>
           
           <div class="mb-3 scroll-reveal">
             <label class="form-label fw-bold">Genetic Test Done? <small>(জেনেটিক টেস্ট হয়েছে কি?)</small> </label><br>
-            <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="genTest" value="Yes" required><label class="form-check-label">Yes</label></div>
-            <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="genTest" value="No"><label class="form-check-label">No</label></div>
+            <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="gentest" value="Yes" required><label class="form-check-label">Yes</label></div>
+            <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="gentest" value="No"><label class="form-check-label">No</label></div>
          </div>
 
         <div class="mb-3 scroll-reveal">
@@ -187,20 +187,20 @@
           <div class="form-check">
             <input class="form-check-input" type="radio" name="mutation" value="Other" id="otherOption">
             <label class="form-check-label" for="otherOption">Others / অন্যান্য</label>
-            <input type="text" class="form-control mt-2" placeholder="অন্যান্য বিস্তারিত লিখুন" id="otherDetails">
+            <input type="text" class="form-control mt-2" placeholder="অন্যান্য বিস্তারিত লিখুন" name="otherdetails" id="otherDetails">
           </div>
         </div>
 
         <div class="mb-3 scroll-reveal">
           <label class="form-label fw-bold">Family History of DMD <small>(পরিবারের মধ্যে ডিএমডি’র ইতিহাস)</small></label>
-          <input type="text" class="form-control" required>
+          <input name="family_history_of_dmd" type="text" class="form-control" required>
         </div>
 
         <div class="mb-3 scroll-reveal">
           <label class="form-label fw-bold">Current Walking Ability <small>(বর্তমান হাঁটার সক্ষমতা)</small></label><br>
-          <div class="form-check"><input class="form-check-input" type="radio" name="Ability" value="Walks independently" required><label class="form-check-label">Walks independently / স্বাভাবিকভাবে হাঁটে </label></div>
-          <div class="form-check"><input class="form-check-input" type="radio" name="Ability" value="Uses wheelchair"><label class="form-check-label">Uses wheelchair / হুইলচেয়ার ব্যবহার করে </label></div>
-          <div class="form-check"><input class="form-check-input" type="radio" name="Ability" value="Fully dependent"><label class="form-check-label">Fully dependent / সম্পূর্ণ নির্ভরশীল </label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="ability" value="Walks independently" required><label class="form-check-label">Walks independently / স্বাভাবিকভাবে হাঁটে </label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="ability" value="Uses wheelchair"><label class="form-check-label">Uses wheelchair / হুইলচেয়ার ব্যবহার করে </label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="ability" value="Fully dependent"><label class="form-check-label">Fully dependent / সম্পূর্ণ নির্ভরশীল </label></div>
         </div>
 
         <div class="mb-3 scroll-reveal">
@@ -232,22 +232,22 @@
 
         <div class="mb-3 scroll-reveal">
           <label class="form-label fw-bold">Class/Lavel <small>(শ্রেণি)</small></label>
-          <input type="text" class="form-control" required>
+          <input name="class_lavel" type="text" class="form-control" required>
         </div>
 
         <div class="mb-3 scroll-reveal">
           <label class="form-label fw-bold">Inclusive Education Support <small>(অন্তর্ভুক্তিমূলক শিক্ষা সহায়তা)</small></label>
-          <input type="text" class="form-control" required>
+          <input name="inclusive_education_support" type="text" class="form-control" required>
         </div>
 
         <div class="mb-3 scroll-reveal">
           <label class="form-label fw-bold">Hobbies/Interests <small>(শখ/আগ্রহ)</small></label>
-          <input type="text" class="form-control" required>
+          <input name="hobbies_interests" type="text" class="form-control" required>
         </div>
 
         <div class="mb-4 scroll-reveal">
           <label class="form-label fw-bold">Emotional Challenges <small>(মানসিক বা সামাজিক চ্যালেঞ্জ)</small></label>
-          <input type="text" class="form-control" required>
+          <input name="emotional_challenges" type="text" class="form-control" required>
         </div>
 
         <!-- ================= FAMILY INFORMATION ================= -->
@@ -256,15 +256,15 @@
         <div class="row mb-3 scroll-reveal">
           <div class="col-md-4">
             <label class="form-label fw-bold">Total Family Members <small>(পরিবারের মোট সদস্য সংখ্যা)</small></label>
-            <input type="number" class="form-control" required>
+            <input name="total_family_members" type="number" class="form-control" required>
           </div>
           <div class="col-md-4">
             <label class="form-label fw-bold">Monthly Family Income <small>(মাসিক পারিবারিক আয়)</small></label>
-            <input type="text" class="form-control" required>
+            <input name="monthly_family_income" type="text" class="form-control" required>
           </div>
           <div class="col-md-4">
             <label class="form-label fw-bold">Financial Challenges Related to Treatment <small>(চিকিৎসা ব্যয়ের আর্থিক চ্যালেঞ্জ)</small></label>
-            <textarea class="form-control" rows="2" required></textarea>
+            <textarea name="financial_challenges_related_to_treatment" class="form-control" rows="2" required></textarea>
           </div>
         </div>
 
@@ -280,7 +280,7 @@
           <div class="form-check">
             <input class="form-check-input" type="radio" name="fin_support" value="Unknown" id="otherOption">
             <label class="form-check-label" for="otherOption">Others <small>(অন্যান্য)</small></label>
-            <input type="text" class="form-check-input mt-2" placeholder="অন্যান্য বিস্তারিত লিখুন" id="otherDetails">
+            <input name="otherdetails_2" type="text" class="form-check-input mt-2" placeholder="অন্যান্য বিস্তারিত লিখুন" id="otherDetails">
           </div>
         </div>
 
@@ -297,17 +297,17 @@
           <label class="form-label fw-bold">Steroid Use <small>(স্টেরয়েড ব্যবহার)</small></label><br>
           <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="steroid" value="Yes" required><label class="form-check-label">Yes</label></div>
           <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="steroid" value="No"><label class="form-check-label">No</label></div>
-          <input type="text" class="form-control mt-2" placeholder="If yes, mention medicine name">
+          <input name="steroid_use" type="text" class="form-control mt-2" placeholder="If yes, mention medicine name">
         </div>
 
         <div class="mb-3 scroll-reveal">
           <label class="form-label fw-bold">Age when Steroid Started <small>(স্টেরয়েড শুরুর বয়স)</small></label><br>
-          <input type="text" class="form-control" required>
+          <input name="age_when_steroid_started" type="text" class="form-control" required>
         </div>
 
         <div class="mb-3 scroll-reveal">
           <label class="form-label fw-bold">Duration of Steroid Use <small>(কতদিন ধরে স্টেরয়েড ব্যবহার করছেন)</small></label><br>
-          <input type="text" class="form-control" required>
+          <input name="duration_of_steroid_use" type="text" class="form-control" required>
         </div>
 
         <div class="mb-3 scroll-reveal">
@@ -324,7 +324,7 @@
 
         <div class="mb-3 scroll-reveal">
           <label class="form-label fw-bold">Therapy Received <small>(গৃহীত থেরাপি)</small></label><br>
-          <div class="form-check"><input class="form-check-input" type="radio" name="therapy" value="Occupational therapy"><label class="form-check-label" required>Occupational therapy <small>(অকুপেশনাল থেরাপি)</small></label></div>
+          <div class="form-check"><input class="form-check-input" type="radio" name="therapy" value="Occupational therapy" required><label class="form-check-label">Occupational therapy <small>(অকুপেশনাল থেরাপি)</small></label></div>
           <div class="form-check"><input class="form-check-input" type="radio" name="therapy" value="Physiotherapy"><label class="form-check-label">Physiotherapy <small>(ফিজিওথেরাপি)</small></label></div>
           <div class="form-check"><input class="form-check-input" type="radio" name="therapy" value="Speech therapy"><label class="form-check-label">Speech therapy <small(স্পিচ থেরাপি)</small></label></div>
           <div class="form-check"><input class="form-check-input" type="radio" name="therapy" value="Hydrotherapy"><label class="form-check-label">Hydrotherapy <small>(হাইড্রোথেরাপি)</small></label></div>
@@ -340,7 +340,7 @@
 
         <div class="mb-3 scroll-reveal">
           <label class="form-label fw-bold">Current Medications <small>(বর্তমান ব্যবহৃত ওষুধ)</small></label><br>
-          <input type="text" class="form-control" required>
+          <input name="current_medications" type="text" class="form-control" required>
         </div>
 
         <!-- ================= SOCIO-ECONOMIC INFO ================= -->
@@ -348,27 +348,27 @@
 
         <div class="mb-3 scroll-reveal">
           <label class="form-label fw-bold">Living Area <small>(বসবাসের এলাকা)</small></label><br>
-          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="liv_area" value="Urban"><label class="form-check-label" required>Urban <small>(শহর)</small></label></div>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="liv_area" value="Urban" required><label class="form-check-label">Urban <small>(শহর)</small></label></div>
           <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="liv_area" value="Semi-urban"><label class="form-check-label">Semi-Urban <small>(আধা-শহর)</small></label></div>
           <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="liv_area" value="Rural"><label class="form-check-label">Rural <small>(গ্রাম)</small></label></div>
         </div>
 
         <div class="mb-3 scroll-reveal">
           <label class="form-label fw-bold">Housing Type (বাসস্থান)</label><br>
-          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="housing" value="Own"><label class="form-check-label" required>Own <small>(নিজস্ব)</small></label></div>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="housing" value="Own" required><label class="form-check-label">Own <small>(নিজস্ব)</small></label></div>
           <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="housing" value="Rented"><label class="form-check-label">Rented <small>(ভাড়া)</small></label></div>
           <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="housing" value="Shared"><label class="form-check-label">Shared <small>(শেয়ারকৃত)</small></label></div>
         </div>
 
         <div class="mb-3 scroll-reveal">
           <label class="form-label fw-bold">Internet Access <small>(ইন্টারনেট সংযোগ)</small></label><br>
-          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="access" value="Yes"><label class="form-check-label" required>Yes</label></div>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="access" value="Yes" required><label class="form-check-label">Yes</label></div>
           <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="access" value="No"><label class="form-check-label">No</label></div>
         </div>
 
         <div class="mb-4 scroll-reveal">
           <label class="form-label fw-bold">Health Insurance <small>(স্বাস্থ্যবীমা আছে কি?)</small></label><br>
-          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="insurance" value="Yes"><label class="form-check-label" required>Yes</label></div>
+          <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="insurance" value="Yes" required><label class="form-check-label">Yes</label></div>
           <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="insurance" value="No"><label class="form-check-label">No</label></div>
         </div>
 
@@ -377,7 +377,7 @@
         <!-- Section for Photo Attachment -->
         <div class="mb-4 scroll-reveal">
           <label class="form-label fw-bold">Attach Photo <small>(ফটো সংযুক্ত করুন)</small></label><br>
-          <input type="file" class="form-control" id="photoUpload" accept="image/*" onchange="showImagePreview()" required>
+          <input name="photo" type="file" class="form-control" id="photoUpload" accept="image/*" onchange="showImagePreview()" required>
           <div id="photoPreview" style="margin-top: 10px;">
             <!-- Image preview will appear here -->
           </div>
@@ -386,14 +386,14 @@
         <!-- Section for Report Attachment -->
         <div class="mb-4 scroll-reveal">
           <label class="form-label fw-bold">Attach Genetic Report <small>(রিপোর্ট সংযুক্ত করুন)</small></label><br>
-          <input type="file" class="form-control" id="reportUpload" accept=".pdf,image/jpeg,image/png,image/webp" required>
+          <input name="genetic_report" type="file" class="form-control" id="reportUpload" accept=".pdf,image/jpeg,image/png,image/webp" required>
         </div>
 
         <!-- ================= CONSENT ================= -->
         <h5 class="fw-bold text-primary border-bottom pb-2 mb-3 scroll-reveal">Consent & Data Sharing <small>(সম্মতি ও তথ্য শেয়ারিং)</small></h5>
         
         <div class="form-check mb-4 scroll-reveal">
-          <input class="form-check-input" type="checkbox" id="consent" required>
+          <input name="consent" class="form-check-input" type="checkbox" id="consent" required>
           <label class="form-check-label" for="consent">
             I/We are voluntarily filling out this form. We have no objection to the use of the information provided by “DMD Care Foundation Bangladesh” for treatment, awareness and research purposes.<br>
             <small>(আমি/আমরা স্বেচ্ছায় এই ফর্মটি পূরণ করছি। প্রদত্ত তথ্য চিকিৎসা, সচেতনতা ও গবেষণা কাজে “ডিএমডি কেয়ার ফাউন্ডেশন বাংলাদেশ” ব্যবহার করতে পারবে এতে আমাদের কোন আপত্তি নাই।)</small>

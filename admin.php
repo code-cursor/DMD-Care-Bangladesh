@@ -137,7 +137,7 @@ if ($user) {
       return ($extra['media_type'] ?? 'photo') === $contentMedia;
     }));
   }
-  $users = db()->query('SELECT id,name,email,role,is_active,created_at FROM users ORDER BY id')->fetchAll();
+  $users = db()->query('SELECT id,name,email,role,is_active,created_at FROM users WHERE role <> "super_admin" ORDER BY id')->fetchAll();
   $smsLogs = db()->query('SELECT s.*,r.patient_name FROM sms_logs s LEFT JOIN registrations r ON r.id=s.registration_id ORDER BY s.id DESC LIMIT 200')->fetchAll();
   $acceptedForSms = db()->query('SELECT id,patient_name,guardian_phone FROM registrations WHERE status="accepted" ORDER BY patient_name')->fetchAll();
   $healthTeamMembers = db()->query('SELECT * FROM content_items WHERE type="health_team" ORDER BY position,id DESC')->fetchAll();
@@ -156,7 +156,7 @@ if ($user) {
   }
   $editUser = null;
   if ($id = (int) ($_GET['edit_user'] ?? 0)) {
-    $statement = db()->prepare('SELECT id,name,email,role,is_active FROM users WHERE id=?');
+    $statement = db()->prepare('SELECT id,name,email,role,is_active FROM users WHERE id=? AND role <> "super_admin"');
     $statement->execute([$id]);
     $editUser = $statement->fetch() ?: null;
   }

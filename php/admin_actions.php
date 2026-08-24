@@ -71,6 +71,9 @@ function handle_admin_post(): void
         throw new RuntimeException('Unknown admin action.');
     } catch (Throwable $exception) {
         flash($exception->getMessage(), 'danger');
+        if (($_POST['action'] ?? '') === 'registration_save' && ($_POST['return_section'] ?? '') === 'direct') {
+            $_SESSION['direct_entry_old'] = $_POST;
+        }
         if (($_POST['action'] ?? '') === 'login') {
             header('Location: ' . admin_return_url((string) ($_POST['return_to'] ?? '')));
             exit;

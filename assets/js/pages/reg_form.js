@@ -1,20 +1,4 @@
-const configuredRegApiBase = window.DMD_API_BASE_URL?.replace(/\/$/, "");
-const regApiCandidates = [
-  configuredRegApiBase,
-  location.protocol.startsWith("http") ? location.origin.replace(/\/$/, "") : null,
-  "http://127.0.0.1:8002",
-].filter((value, index, values) => value && values.indexOf(value) === index);
-let regApiBasePromise = null;
-
-async function resolveRegApiBase() {
-  for (const base of regApiCandidates) {
-    try {
-      const response = await fetch(`${base}/api/health`);
-      if (response.ok) return base;
-    } catch {}
-  }
-  return "http://127.0.0.1:8002";
-}
+const registrationSubmitUrl = "/registration_submit.php";
 
 function revealOnScroll() {
   document.querySelectorAll(".scroll-reveal").forEach((el) => {
@@ -38,6 +22,45 @@ function fieldLabel(field) {
   const wrapper = field.closest(".col-md-2, .col-md-3, .col-md-4, .col-md-6, .col-md-8, .col-md-10, .col-12, .mb-3, .mb-4");
   const label = wrapper ? wrapper.querySelector("label") : null;
   return label ? label.textContent : "";
+}
+function readableFieldName(field) {
+  const label = fieldLabel(field)
+    .replace(/\s*\([^)]*\)/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  return label || field.placeholder || field.name || "This field";
+}
+
+function validationMessageFor(field) {
+  const fieldName = readableFieldName(field);
+  if (field.validity.valueMissing) return `${fieldName} is required.`;
+  if (field.validity.typeMismatch) return `Please enter a valid ${fieldName.toLowerCase()}.`;
+  if (field.validity.rangeUnderflow || field.validity.rangeOverflow) return `${fieldName} is outside the allowed range.`;
+  if (field.validity.stepMismatch || field.validity.badInput) return `Please enter a valid value for ${fieldName}.`;
+  if (field.validity.patternMismatch) return `Please enter ${fieldName} in the correct format.`;
+  return field.validationMessage || `Please check ${fieldName}.`;
+}
+
+function showFieldPopup(field, message) {
+  alert(message);
+  field.scrollIntoView({ behavior: "smooth", block: "center" });
+  field.focus({ preventScroll: true });
+}
+
+function validateRegistrationForm(form) {
+  const phoneFields = form.querySelectorAll("input[type='tel']");
+  phoneFields.forEach((field) => {
+    const value = field.value.trim();
+    field.setCustomValidity(value && !isValidPhone(value) ? "Enter a valid phone number using 8 to 15 digits. Example: +8801XXXXXXXXX" : "");
+  });
+
+  const firstInvalidField = form.querySelector("input:invalid, select:invalid, textarea:invalid");
+  if (firstInvalidField) {
+    showFieldPopup(firstInvalidField, validationMessageFor(firstInvalidField));
+    return false;
+  }
+
+  return true;
 }
 
 function setFieldValue(fields, key, value) {
@@ -177,20 +200,17 @@ async function submitRegistration(form) {
   submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Submitting...';
 
   try {
-    if (!regApiBasePromise) regApiBasePromise = resolveRegApiBase();
-    const regApiBase = await regApiBasePromise;
-    const response = await fetch(`${regApiBase}/api/registrations`, {
+    const response = await fetch(registrationSubmitUrl, {
       method: "POST",
       body: buildRegistrationFormData(form),
     });
     if (!response.ok) {
       const body = await response.json().catch(() => ({}));
-      if (response.status === 409 && body.detail?.code === "duplicate_patient_health_issue") {
-        showDuplicateRegistration(body.detail.message);
+      if (response.status === 409 && body.code === "duplicate_patient_health_issue") {
+        showDuplicateRegistration(body.message);
         return;
       }
-      const detail = typeof body.detail === "string" ? body.detail : body.detail?.message;
-      throw new Error(detail || "Registration submission failed.");
+      throw new Error(body.message || "Registration submission failed.");
     }
 
     showRegistrationSuccess(form);
@@ -222,10 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("registrationForm").addEventListener("submit", (event) => {
     event.preventDefault();
     const form = event.currentTarget;
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
+    if (!validateRegistrationForm(form)) return;
     if (!validateImage() || !validateReport()) return;
     submitRegistration(form);
   });

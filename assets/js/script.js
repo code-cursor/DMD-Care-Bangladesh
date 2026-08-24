@@ -1,11 +1,56 @@
-function ensureHeaderStylesheet() {
-    const href = "./assets/css/components/header.css";
-    if (document.querySelector(`link[href="${href}"]`)) return;
+const frontendCacheVersion = "20260824-frontend-4";
 
+function setFrontendCookie(name, value, days = 365) {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Lax`;
+}
+
+function getFrontendCookie(name) {
+    const encodedName = `${encodeURIComponent(name)}=`;
+    return document.cookie
+        .split(";")
+        .map((item) => item.trim())
+        .find((item) => item.startsWith(encodedName))
+        ?.slice(encodedName.length) || "";
+}
+
+function ensureFrontendVisitorCookie() {
+    if (getFrontendCookie("dmd_visitor_id")) return;
+    const randomPart = window.crypto?.randomUUID ? window.crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    setFrontendCookie("dmd_visitor_id", randomPart);
+}
+
+function ensureStylesheet(href) {
+    if (document.querySelector(`link[href="${href}"]`)) return;
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = href;
     document.head.appendChild(link);
+}
+
+function ensureScript(src, callback) {
+    const scriptPath = src.replace(/^\.\//, "").split("?")[0];
+    const existing = Array.from(document.querySelectorAll("script[src]")).find((script) => {
+        const currentSrc = (script.getAttribute("src") || "").replace(/^\.\//, "");
+        return currentSrc.includes(scriptPath) && !script.closest("#header-container, #footer-container, #banner-container");
+    });
+    if (existing) {
+        if (callback) {
+            if (existing.dataset.loaded === "true") callback();
+            else existing.addEventListener("load", callback, { once: true });
+        }
+        return;
+    }
+    const script = document.createElement("script");
+    script.src = src;
+    script.onload = () => {
+        script.dataset.loaded = "true";
+        callback?.();
+    };
+    document.body.appendChild(script);
+}
+function ensureHeaderStylesheet() {
+    ensureStylesheet("./assets/css/components/header.css");
 }
 
 function ensureHeaderScript(callback) {
@@ -14,16 +59,9 @@ function ensureHeaderScript(callback) {
         return;
     }
 
-    const headerScript = document.querySelector('script[src*="assets/js/components/header.js"]');
-    if (headerScript) {
-        headerScript.addEventListener("load", callback, { once: true });
-        return;
-    }
-
-    const script = document.createElement("script");
-    script.src = "./assets/js/components/header.js?v=20260823-2";
-    script.onload = callback;
-    document.body.appendChild(script);
+    ensureScript("./assets/js/components/header.js?v=20260824-1", function () {
+        if (window.initSiteHeader) callback();
+    });
 }
 
 function initLoadedHeader(container) {
@@ -34,14 +72,76 @@ function initLoadedHeader(container) {
     });
 }
 
-$(document).ready(function() {
-    // Load header, footer, banner
+function extractHtmlPart(html, selector) {
+    if (!selector) return html;
+    const parsed = new DOMParser().parseFromString(html, "text/html");
+    const nodes = parsed.querySelectorAll(selector);
+    return Array.from(nodes).map((node) => {
+        const clone = node.cloneNode(true);
+        if (clone.matches?.("script")) return "";
+        clone.querySelectorAll?.("script").forEach((script) => script.remove());
+        return clone.outerHTML;
+    }).join("");
+}
+
+function loadCachedFragment(containerId, url, selector, afterLoad) {
+    const container = document.getElementById(containerId);
+    if (!container) {
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", () => loadCachedFragment(containerId, url, selector, afterLoad), { once: true });
+        } else {
+            setTimeout(() => loadCachedFragment(containerId, url, selector, afterLoad), 0);
+        }
+        return;
+    }
+
+    const cacheKey = `dmd_fragment_${containerId}`;
+    const versionCookie = `dmd_${containerId}_version`;
+    const cookieVersion = getFrontendCookie(versionCookie);
+    const cached = cookieVersion === frontendCacheVersion ? localStorage.getItem(cacheKey) : "";
+
+    if (cached) {
+        container.innerHTML = cached;
+        afterLoad?.(container);
+    }
+
+    fetch(url, { cache: "no-cache" })
+        .then((response) => response.ok ? response.text() : Promise.reject(new Error(`Unable to load ${url}`)))
+        .then((html) => {
+            const fragment = extractHtmlPart(html, selector);
+            if (!fragment || fragment === cached) return;
+            container.innerHTML = fragment;
+            localStorage.setItem(cacheKey, fragment);
+            setFrontendCookie(versionCookie, frontendCacheVersion);
+            afterLoad?.(container);
+        })
+        .catch(() => {
+            if (!cached && window.jQuery) {
+                const target = selector ? `${url} ${selector}` : url;
+                $(`#${containerId}`).load(target, function () { afterLoad?.(this); });
+            }
+        });
+}
+
+function initLoadedFooter() {
+    ensureStylesheet("./assets/css/components/footer.css");
+    ensureScript("./assets/js/components/footer.js?v=20260824-1");
+}
+function initSharedFragments() {
+    ensureFrontendVisitorCookie();
     ensureHeaderStylesheet();
-    $("#header-container").load("header header", function () {
-        initLoadedHeader(this);
-    });
-    $("#footer-container").load("footer");
-    $("#banner-container").load("banner");
+    loadCachedFragment("header-container", "header", "header", initLoadedHeader);
+    loadCachedFragment("footer-container", "footer", "#topUpBtn, .social-sidebar, footer.footer", initLoadedFooter);
+    loadCachedFragment("banner-container", "banner", "body > *");
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initSharedFragments, { once: true });
+} else {
+    initSharedFragments();
+}
+
+$(document).ready(function() {
 
     // Scroll reveal animation
     function revealScrollItems() {

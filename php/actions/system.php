@@ -61,10 +61,19 @@ function handle_system_action(string $action, array $user): never
         if (mb_strlen($name) < 2 || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new RuntimeException('Enter a valid name and email.');
         }
-        if (!in_array($role, ['super_admin', 'admin', 'editor', 'viewer'], true)) {
+        if (!in_array($role, ['admin', 'editor', 'viewer'], true)) {
             throw new RuntimeException('Invalid role.');
         }
         if ($id) {
+            $statement = db()->prepare('SELECT role FROM users WHERE id=?');
+            $statement->execute([$id]);
+            $targetUser = $statement->fetch();
+            if (!$targetUser) {
+                throw new RuntimeException('User not found.');
+            }
+            if ($targetUser['role'] === 'super_admin') {
+                throw new RuntimeException('Super admin account cannot be managed here.');
+            }
             $values = [$name, $email, $role, isset($_POST['is_active']) ? 1 : 0];
             $sql = 'UPDATE users SET name=?,email=?,role=?,is_active=?,updated_at=CURRENT_TIMESTAMP';
             $passwordChanged = false;
@@ -97,7 +106,7 @@ function handle_system_action(string $action, array $user): never
         if ($id === (int) $user['id']) {
             throw new RuntimeException('You cannot deactivate your own account.');
         }
-        db()->prepare('UPDATE users SET is_active=CASE WHEN is_active=1 THEN 0 ELSE 1 END,updated_at=CURRENT_TIMESTAMP WHERE id=?')->execute([$id]);
+        db()->prepare('UPDATE users SET is_active=CASE WHEN is_active=1 THEN 0 ELSE 1 END,updated_at=CURRENT_TIMESTAMP WHERE id=? AND role <> "super_admin"')->execute([$id]);
         flash('User status updated.');
         redirect_admin('users');
     }
@@ -108,13 +117,13 @@ function handle_system_action(string $action, array $user): never
         if ($id === (int) $user['id']) {
             throw new RuntimeException('You cannot delete your own account.');
         }
-        db()->prepare('DELETE FROM users WHERE id=?')->execute([$id]);
+        db()->prepare('DELETE FROM users WHERE id=? AND role <> "super_admin"')->execute([$id]);
         flash('User deleted.');
         redirect_admin('users');
     }
 
     if ($action === 'sms_ip_update') {
-        require_role(['super_admin', 'admin']);
+        require_role(['super_admin']);
         $result = update_sms_gateway_ip(trim((string) ($_POST['ip_address'] ?? '')));
         flash($result['message'], $result['success'] ? 'success' : 'warning');
         redirect_admin('sms');
