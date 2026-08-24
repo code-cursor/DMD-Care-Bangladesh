@@ -41,10 +41,26 @@ function validationMessageFor(field) {
   return field.validationMessage || `Please check ${fieldName}.`;
 }
 
+function showValidationPopup(message, field = null) {
+  const modalElement = document.getElementById("validationModal");
+  const messageElement = document.getElementById("validationModalMessage");
+  if (messageElement) messageElement.textContent = message;
+
+  if (modalElement && window.bootstrap) {
+    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+    modal.show();
+  } else {
+    alert(message);
+  }
+
+  if (field) {
+    field.scrollIntoView({ behavior: "smooth", block: "center" });
+    setTimeout(() => field.focus({ preventScroll: true }), 250);
+  }
+}
+
 function showFieldPopup(field, message) {
-  alert(message);
-  field.scrollIntoView({ behavior: "smooth", block: "center" });
-  field.focus({ preventScroll: true });
+  showValidationPopup(message, field);
 }
 
 function digitsOnly(value) {
@@ -154,11 +170,11 @@ function isValidPhone(value) {
 function validateFile(file, options) {
   if (!file) return true;
   if (file.size > options.maxSize) {
-    alert(options.sizeMessage);
+    showValidationPopup(options.sizeMessage, options.field || null);
     return false;
   }
   if (!options.types.includes(file.type)) {
-    alert(options.typeMessage);
+    showValidationPopup(options.typeMessage, options.field || null);
     return false;
   }
   return true;
@@ -172,6 +188,7 @@ function validateImage() {
     types: ["image/jpeg", "image/png", "image/webp"],
     sizeMessage: "Photo is too large. Maximum size is 2MB.",
     typeMessage: "Invalid photo type. Please upload JPG, PNG, or WEBP.",
+    field: fileInput,
   });
   if (!isValid) fileInput.value = "";
   return isValid;
@@ -180,11 +197,17 @@ function validateImage() {
 function validateReport() {
   const fileInput = document.getElementById("reportUpload");
   const files = Array.from(fileInput.files || []);
+  if (fileInput.required && files.length === 0) {
+    fileInput.classList.add("is-invalid");
+    showValidationPopup("Attach Genetic Report is required.", fileInput);
+    return false;
+  }
   const isValid = files.every((file) => validateFile(file, {
     maxSize: file.type === "application/pdf" ? 5 * 1024 * 1024 : 2 * 1024 * 1024,
     types: ["application/pdf", "image/jpeg", "image/png", "image/webp"],
     sizeMessage: "Each PDF report must be 5MB or smaller; each image report must be 2MB or smaller.",
     typeMessage: "Invalid report type. Please upload PDF, JPG, PNG, or WEBP.",
+    field: fileInput,
   }));
   fileInput.classList.toggle("is-invalid", !isValid || (fileInput.required && files.length === 0));
   if (!isValid) fileInput.value = "";
@@ -273,7 +296,7 @@ async function submitRegistration(form) {
 
     showRegistrationSuccess(form);
   } catch (error) {
-    alert(error.message);
+    showValidationPopup(error.message);
   } finally {
     submitButton.disabled = false;
     submitButton.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i> Submit Registration';
