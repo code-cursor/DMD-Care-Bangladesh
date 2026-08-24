@@ -16,8 +16,52 @@ $user = $startupError === null ? current_user() : null;
 $flash = take_flash();
 
 if ($user && ($_GET['action'] ?? '') === 'export') {
-  $rows = db()->query('SELECT id,patient_name,guardian_phone,guardian_email,status,source,notes,created_at,updated_at FROM registrations WHERE status="accepted" ORDER BY id DESC')->fetchAll(PDO::FETCH_NUM);
-  download_excel('accepted_patients_' . date('Y-m-d') . '.xls', ['ID', 'Patient Name', 'Guardian Phone', 'Guardian Email', 'Status', 'Source', 'Notes', 'Created At', 'Updated At'], $rows);
+  $patients = db()->query('SELECT * FROM registrations WHERE status="accepted" ORDER BY id DESC')->fetchAll();
+
+  $payloadKeys = [];
+  foreach ($patients as $patient) {
+    $payload = json_decode($patient['payload'] ?: '{}', true) ?: [];
+    foreach (array_keys($payload) as $k) {
+      if ($k !== 'attachments' && !in_array($k, $payloadKeys, true)) {
+        $payloadKeys[] = $k;
+      }
+    }
+  }
+
+  $headers = ['ID', 'Patient Name', 'Guardian Phone', 'Guardian Email', 'Status', 'Source', 'Notes'];
+  foreach ($payloadKeys as $key) {
+    $headers[] = ucwords(str_replace('_', ' ', $key));
+  }
+  $headers[] = 'Created At';
+  $headers[] = 'Updated At';
+
+  $rows = [];
+  foreach ($patients as $patient) {
+    $payload = json_decode($patient['payload'] ?: '{}', true) ?: [];
+    $row = [
+      $patient['id'],
+      $patient['patient_name'],
+      $patient['guardian_phone'],
+      $patient['guardian_email'],
+      $patient['status'],
+      $patient['source'],
+      $patient['notes'],
+    ];
+
+    foreach ($payloadKeys as $key) {
+      $val = $payload[$key] ?? '';
+      if (is_array($val)) {
+        $val = implode(', ', array_map(fn($v) => is_scalar($v) ? (string) $v : json_encode($v, JSON_UNESCAPED_UNICODE), $val));
+      }
+      $row[] = $val;
+    }
+
+    $row[] = $patient['created_at'];
+    $row[] = $patient['updated_at'];
+    $rows[] = $row;
+  }
+
+  download_excel('accepted_patients_' . date('Y-m-d') . '.xls', $headers, $rows);
 }
 if ($user && ($_GET['action'] ?? '') === 'export_patient') {
   $statement = db()->prepare('SELECT * FROM registrations WHERE id=?');
