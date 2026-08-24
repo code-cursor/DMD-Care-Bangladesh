@@ -1,4 +1,4 @@
-const frontendCacheVersion = "20260824-frontend-4";
+const frontendCacheVersion = "20260824-frontend-5";
 
 function setFrontendCookie(name, value, days = 365) {
     const expires = new Date(Date.now() + days * 864e5).toUTCString();
@@ -51,6 +51,10 @@ function ensureScript(src, callback) {
 }
 function ensureHeaderStylesheet() {
     ensureStylesheet("./assets/css/components/header.css");
+}
+
+function ensureIconStylesheet() {
+    ensureStylesheet("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css");
 }
 
 function ensureHeaderScript(callback) {
@@ -129,6 +133,7 @@ function initLoadedFooter() {
 }
 function initSharedFragments() {
     ensureFrontendVisitorCookie();
+    ensureIconStylesheet();
     ensureHeaderStylesheet();
     loadCachedFragment("header-container", "header", "header", initLoadedHeader);
     loadCachedFragment("footer-container", "footer", "#topUpBtn, .social-sidebar, footer.footer", initLoadedFooter);
