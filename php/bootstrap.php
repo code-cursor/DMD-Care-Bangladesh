@@ -155,6 +155,7 @@ function initialize_database(): void
 
     try {
         ensure_all_registrations_have_stories();
+        ensure_default_partners();
     } catch (Throwable) {
         // Suppress during initial bootstrap if tables are in creation
     }
@@ -176,8 +177,8 @@ function sync_public_patient_story_cards(): void
                 'status' => $extra['status'] ?? ($row['summary'] ?? ''),
                 'link' => $extra['link'] ?? 'muntasir_billah_story?id=' . (int) $row['id'],
                 'author' => $extra['author'] ?? $row['title'],
-                'home_text' => $extra['home_text'] ?? '',
-                'home_link_text' => $extra['home_link_text'] ?? 'Click for more stories about me',
+                'home_text' => mb_substr((string) ($extra['home_text'] ?? ''), 0, 350),
+                'home_link_text' => 'Click for more stories about me',
                 'registration_id' => $extra['registration_id'] ?? null,
             ],
         ];
@@ -256,6 +257,7 @@ function sync_registration_patient_story(int $registrationId, bool $preserveExis
             if (empty($updatedExtra['link'])) {
                 $updatedExtra['link'] = 'muntasir_billah_story?id=' . $contentId;
             }
+            $updatedExtra['home_link_text'] = 'Click for more stories about me';
             $img = $existing['image_url'] ?: $photoUrl;
 
             $stmt = db()->prepare('UPDATE content_items SET title=?, summary=?, image_url=?, extra=?, updated_at=CURRENT_TIMESTAMP WHERE id=?');
@@ -337,6 +339,27 @@ function ensure_all_registrations_have_stories(): void
     $registrations = db()->query('SELECT id FROM registrations ORDER BY id ASC')->fetchAll();
     foreach ($registrations as $row) {
         sync_registration_patient_story((int) $row['id'], true);
+    }
+}
+
+function ensure_default_partners(): void
+{
+    $count = (int) db()->query('SELECT COUNT(*) FROM content_items WHERE type IN ("partner", "partner_seed_marker")')->fetchColumn();
+    if ($count > 0) {
+        return;
+    }
+
+    db()->prepare('INSERT INTO content_items (type,title,slug,summary,body,image_url,position,is_published,extra,created_by_id,created_at,updated_at) VALUES ("partner_seed_marker","Partner Seed Marker","partner-seed-marker",NULL,NULL,NULL,0,0,"{}",NULL,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)')->execute();
+    $partners = [
+        ['Bangladesh Shishu Hospital', 'assets/src/img/Bangladesh_Shishu_Hospital.webp', 1],
+        ['Roche', 'assets/src/img/Roche.webp', 2],
+        ['Duchenne UK', 'assets/src/img/duchenneuk_uk.webp', 3],
+        ['Newcastle University', 'assets/src/img/newcastle-university.webp', 4],
+        ['John Walton Muscular Dystrophy Centre', 'assets/src/img/John-Walton-Muscular-Dystrophy-Centre.webp', 5],
+    ];
+    $stmt = db()->prepare('INSERT INTO content_items (type,title,slug,summary,body,image_url,position,is_published,extra,created_by_id,created_at,updated_at) VALUES ("partner",?,?,?,?,?,?,1,"{}",NULL,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)');
+    foreach ($partners as [$title, $imageUrl, $position]) {
+        $stmt->execute([$title, slugify($title), null, null, $imageUrl, $position]);
     }
 }
 

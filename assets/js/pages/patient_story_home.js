@@ -33,6 +33,11 @@ function patientStoryDetailLink(item) {
   return item.extra?.link || `muntasir_billah_story?id=${encodeURIComponent(item.id)}`;
 }
 
+function truncatePatientStoryText(value, maxLength = 350) {
+  const text = String(value || "");
+  return text.length > maxLength ? `${text.slice(0, maxLength).trimEnd()}...` : text;
+}
+
 function startPatientStoryCarousel(carousel) {
   if (!carousel || !window.bootstrap) return;
   bootstrap.Carousel.getInstance(carousel)?.dispose();
@@ -60,8 +65,8 @@ async function loadHomePatientStories() {
 
     inner.innerHTML = items.map((item, index) => {
       const extra = item.extra || {};
-      const text = extra.home_text || item.body || item.summary || `${item.title} is receiving multidisciplinary care, therapy, and family-supported rehabilitation through DMD Care Bangladesh.`;
-      const linkText = extra.home_link_text || "Click for more stories about me";
+      const text = truncatePatientStoryText(extra.home_text || item.body || item.summary || `${item.title} is receiving multidisciplinary care, therapy, and family-supported rehabilitation through DMD Care Bangladesh.`);
+      const linkText = "Click for more stories about me";
       const author = extra.author || item.title || "";
       return `
         <div class="carousel-item${index === 0 ? " active" : ""}">

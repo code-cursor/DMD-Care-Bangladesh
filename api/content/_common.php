@@ -14,6 +14,10 @@ function public_content_items(string $type): array
         $row['position'] = (int) $row['position'];
         $row['is_published'] = (bool) $row['is_published'];
         $row['extra'] = json_decode($row['extra'] ?: '{}', true) ?: [];
+        if ($type === 'patient_story') {
+            $row['extra']['home_text'] = mb_substr((string) ($row['extra']['home_text'] ?? ''), 0, 350);
+            $row['extra']['home_link_text'] = 'Click for more stories about me';
+        }
         return $row;
     }, $statement->fetchAll());
 }

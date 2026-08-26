@@ -36,6 +36,11 @@
     }
 
     /* ================= PARTNER CARDS ================= */
+    #partnerGrid a {
+      display: block;
+      text-decoration: none;
+    }
+
     .partner-card {
       background: #ffffff;
       border-radius: var(--radius-md);

@@ -59,6 +59,10 @@ function handle_content_action(string $action, array $user): never
         $title = trim((string) ($_POST['story_name'] ?? ''));
         $summary = trim((string) ($_POST['story_status'] ?? ''));
         $body = trim((string) ($_POST['story_detail_body'] ?? ''));
+        $homeText = trim((string) ($_POST['story_home_text'] ?? ''));
+        if (mb_strlen($homeText) > 350) {
+            throw new RuntimeException('Home short story text must be 350 characters or less.');
+        }
         $registrationId = (int) ($_POST['registration_id'] ?? 0);
         if ($registrationId > 0) {
             $extra['registration_id'] = $registrationId;
@@ -70,9 +74,11 @@ function handle_content_action(string $action, array $user): never
                 $extra['registration_id'] = (int) $currExtra['registration_id'];
             }
         }
-        foreach (['author','home_text','home_link_text','age','diagnosis_year','status','detail_title','detail_video_url','detail_body','phone','whatsapp','facebook'] as $key) {
+        foreach (['author','age','diagnosis_year','status','detail_title','detail_video_url','detail_body','phone','whatsapp','facebook'] as $key) {
             $extra[$key] = trim((string) ($_POST["story_$key"] ?? ''));
         }
+        $extra['home_text'] = $homeText;
+        $extra['home_link_text'] = 'Click for more stories about me';
         $extra['link'] = 'muntasir_billah_story?id=' . ($id ?: ($registrationId ?: 1));
     } else {
         throw new RuntimeException('Invalid content type.');

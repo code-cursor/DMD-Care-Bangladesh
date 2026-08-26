@@ -8,6 +8,7 @@
     <a class="quick-link" href="?section=requests"><i class="bi bi-inbox"></i><span>Review Requests</span></a>
     <a class="quick-link" href="?section=direct"><i class="bi bi-pencil-square"></i><span>Add Registration</span></a>
     <a class="quick-link" href="/admin?section=content&amp;type=gallery"><i class="bi bi-layout-text-window"></i><span>Manage Content</span></a>
+    <a class="quick-link" href="?section=partners"><i class="bi bi-building"></i><span>Manage Partners</span></a>
     <a class="quick-link" href="?section=sms"><i class="bi bi-chat-dots"></i><span>SMS Activity</span></a>
     <a class="quick-link" href="?action=export"><i class="bi bi-file-earmark-excel"></i><span>Download Excel</span></a>
   </div>

@@ -87,7 +87,7 @@ if ($user && ($_GET['action'] ?? '') === 'export_patient') {
   download_excel(slugify($patient['patient_name']) . '_' . $patient['id'] . '_details.xls', ['Field', 'Value'], $rows);
 }
 
-$sections = ['dashboard', 'requests', 'direct', 'accepted', 'content', 'users', 'sms', 'health_team'];
+$sections = ['dashboard', 'requests', 'direct', 'accepted', 'content', 'users', 'sms', 'health_team', 'partners'];
 $section = str_replace('\\', '', (string) ($_GET['section'] ?? 'dashboard'));
 if (!in_array($section, $sections, true)) {
   $section = 'dashboard';
@@ -141,6 +141,7 @@ if ($user) {
   $smsLogs = db()->query('SELECT s.*,r.patient_name FROM sms_logs s LEFT JOIN registrations r ON r.id=s.registration_id ORDER BY s.id DESC LIMIT 200')->fetchAll();
   $acceptedForSms = db()->query('SELECT id,patient_name,guardian_phone FROM registrations WHERE status="accepted" ORDER BY patient_name')->fetchAll();
   $healthTeamMembers = db()->query('SELECT * FROM content_items WHERE type="health_team" ORDER BY position,id DESC')->fetchAll();
+  $partners = db()->query('SELECT * FROM content_items WHERE type="partner" ORDER BY position,id DESC')->fetchAll();
 
   $editRegistration = null;
   if ($id = (int) ($_GET['edit_registration'] ?? 0)) {
@@ -171,6 +172,12 @@ if ($user) {
     $statement = db()->prepare('SELECT * FROM content_items WHERE id=? AND type="health_team"');
     $statement->execute([$id]);
     $editHealthTeamMember = $statement->fetch() ?: null;
+  }
+  $editPartner = null;
+  if ($id = (int) ($_GET['edit_partner'] ?? 0)) {
+    $statement = db()->prepare('SELECT * FROM content_items WHERE id=? AND type="partner"');
+    $statement->execute([$id]);
+    $editPartner = $statement->fetch() ?: null;
   }
 }
 ?>
@@ -239,24 +246,28 @@ if ($user) {
           <button id="mobileMenuCloseBtn" class="mobile-menu-close" type="button" aria-label="Close navigation"><i
               class="bi bi-x-lg"></i></button>
         </div>
-        <div class="side-nav-title">Navigation</div>
         <a class="nav-btn <?= $section === 'dashboard' ? 'active' : '' ?>" href="/admin?section=dashboard"><i
             class="bi bi-speedometer2"></i> Dashboard</a>
+
+        <div class="side-nav-title">Patient</div>
         <a class="nav-btn <?= $section === 'requests' ? 'active' : '' ?>" href="/admin?section=requests"><i
             class="bi bi-inbox"></i> Requests</a>
-        <a class="nav-btn <?= $section === 'direct' ? 'active' : '' ?>" href="/admin?section=direct"><i
-            class="bi bi-pencil-square"></i> Direct Entry</a>
         <a class="nav-btn <?= $section === 'accepted' ? 'active' : '' ?>" href="/admin?section=accepted"><i
             class="bi bi-person-check"></i> Accepted Patients</a>
-        <div class="side-nav-title">CMS</div>
-        <?php foreach (['gallery' => ['images', 'Gallery'], 'patient_story' => ['journal-medical', 'Patient Stories']] as $type => [$icon, $label]): ?>
-          <a class="nav-btn <?= $section === 'content' && $contentType === $type ? 'active' : '' ?>"
-            href="/admin?section=content&amp;type=<?= e($type) ?>"><i class="bi bi-<?= e($icon) ?>"></i>
-            <?= e($label) ?></a>
-        <?php endforeach; ?>
-        <div class="side-nav-title">System</div>
+        <a class="nav-btn <?= $section === 'content' && $contentType === 'patient_story' ? 'active' : '' ?>" href="/admin?section=content&amp;type=patient_story"><i
+            class="bi bi-journal-medical"></i> Patient Stories</a>
+        <a class="nav-btn <?= $section === 'direct' ? 'active' : '' ?>" href="/admin?section=direct"><i
+            class="bi bi-pencil-square"></i> Direct Entry</a>
+
+        <div class="side-nav-title">Others Pages</div>
+        <a class="nav-btn <?= $section === 'content' && $contentType === 'gallery' ? 'active' : '' ?>" href="/admin?section=content&amp;type=gallery"><i
+            class="bi bi-images"></i> Gallery</a>
         <a class="nav-btn <?= $section === 'health_team' ? 'active' : '' ?>" href="/admin?section=health_team"><i
             class="bi bi-people"></i> Health Care Team</a>
+        <a class="nav-btn <?= $section === 'partners' ? 'active' : '' ?>" href="/admin?section=partners"><i
+            class="bi bi-building"></i> Our Partners</a>
+
+        <div class="side-nav-title">System</div>
         <a class="nav-btn <?= $section === 'users' ? 'active' : '' ?>" href="/admin?section=users"><i
             class="bi bi-person-gear"></i> Users</a>
         <a class="nav-btn <?= $section === 'sms' ? 'active' : '' ?>" href="/admin?section=sms"><i

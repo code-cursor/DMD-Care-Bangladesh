@@ -114,8 +114,7 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
                 <div class="row g-3">
                   <div class="col-md-6"><label class="form-label">Patient Name</label><input name="story_name" class="form-control" value="<?= e($contentForm['title']) ?>" required></div>
                   <div class="col-md-6"><label class="form-label">Author / Display Name</label><input name="story_author" class="form-control" value="<?= e($contentExtra['author'] ?? $contentForm['title']) ?>" placeholder="e.g. <?= e($contentForm['title']) ?>"></div>
-                  <div class="col-12"><label class="form-label">Home Short Story Text</label><textarea name="story_home_text" class="form-control" rows="4" placeholder="Brief teaser story summary to display on the homepage carousel..."><?= e($contentExtra['home_text'] ?? '') ?></textarea></div>
-                  <div class="col-12"><label class="form-label">Home Link Text</label><input name="story_home_link_text" class="form-control" value="<?= e($contentExtra['home_link_text'] ?? 'Click for more stories about me') ?>"></div>
+                  <div class="col-12"><label class="form-label">Home Short Story Text <small class="text-muted">(max 350 characters)</small></label><textarea name="story_home_text" class="form-control" rows="4" maxlength="350" placeholder="Brief teaser story summary to display on the homepage carousel..."><?= e($contentExtra['home_text'] ?? '') ?></textarea></div>
                 </div>
               </div>
 
@@ -146,12 +145,13 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
             <div class="row g-3 mt-3 pt-3 border-top align-items-center">
               <div class="col-md-5">
                 <label class="form-label fw-semibold">Story Photo / Image</label>
-                <input name="image" type="file" class="form-control" accept="image/jpeg,image/png,image/webp">
                 <?php if ($contentForm['image_url']): ?>
                   <div class="mt-2 d-flex align-items-center gap-2">
                     <img class="attachment-preview" src="<?= e($contentForm['image_url']) ?>" alt="Current story photo" style="max-height:60px; border-radius:6px;">
-                    <small class="text-muted">Current photo preview</small>
+                    <small class="text-muted">Registration photo used on all story cards</small>
                   </div>
+                <?php else: ?>
+                  <small class="text-muted">No registration photo found. The default story image will be used.</small>
                 <?php endif; ?>
               </div>
               <div class="col-md-3">

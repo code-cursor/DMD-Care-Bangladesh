@@ -1,4 +1,4 @@
-const frontendCacheVersion = "20260824-frontend-5";
+const frontendCacheVersion = "20260827-frontend-1";
 
 function setFrontendCookie(name, value, days = 365) {
     const expires = new Date(Date.now() + days * 864e5).toUTCString();
@@ -131,13 +131,19 @@ function initLoadedFooter() {
     ensureStylesheet("./assets/css/components/footer.css");
     ensureScript("./assets/js/components/footer.js?v=20260824-1");
 }
+
+function initLoadedBanner() {
+    ensureStylesheet("./assets/css/components/banner.css");
+    ensureScript("./assets/js/components/banner.js?v=20260827-1");
+}
+
 function initSharedFragments() {
     ensureFrontendVisitorCookie();
     ensureIconStylesheet();
     ensureHeaderStylesheet();
     loadCachedFragment("header-container", "header", "header", initLoadedHeader);
     loadCachedFragment("footer-container", "footer", "#topUpBtn, .social-sidebar, footer.footer", initLoadedFooter);
-    loadCachedFragment("banner-container", "banner", "body > *");
+    loadCachedFragment("banner-container", "banner.html", ".hero-section", initLoadedBanner);
 }
 
 if (document.readyState === "loading") {

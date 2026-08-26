@@ -51,6 +51,45 @@ function handle_system_action(string $action, array $user): never
         redirect_admin('health_team');
     }
 
+    if ($action === 'partner_save') {
+        require_role(['super_admin', 'admin', 'editor']);
+        $id = (int) ($_POST['id'] ?? 0);
+        $title = trim((string) ($_POST['partner_name'] ?? ''));
+        $website = trim((string) ($_POST['partner_website'] ?? ''));
+        if (mb_strlen($title) < 2) {
+            throw new RuntimeException('Partner name is required.');
+        }
+        if ($website !== '' && !filter_var($website, FILTER_VALIDATE_URL)) {
+            throw new RuntimeException('Partner website must be a valid URL.');
+        }
+        $imageUrl = trim((string) ($_POST['existing_image_url'] ?? ''));
+        if (!empty($_FILES['image']['name'])) {
+            $imageUrl = store_uploaded_image($_FILES['image'], 'partner')['url'];
+        }
+        if ($imageUrl === '') {
+            throw new RuntimeException('Partner logo is required.');
+        }
+        $extra = ['website' => $website];
+        $values = ['partner', $title, slugify($title), $website ?: null, null, $imageUrl, (int) ($_POST['position'] ?? 0), isset($_POST['is_published']) ? 1 : 0, json_encode($extra, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)];
+        if ($id) {
+            $values[] = $id;
+            db()->prepare('UPDATE content_items SET type=?,title=?,slug=?,summary=?,body=?,image_url=?,position=?,is_published=?,extra=?,updated_at=CURRENT_TIMESTAMP WHERE id=? AND type="partner"')->execute($values);
+            flash('Partner updated.');
+        } else {
+            $values[] = $user['id'];
+            db()->prepare('INSERT INTO content_items (type,title,slug,summary,body,image_url,position,is_published,extra,created_by_id,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)')->execute($values);
+            flash('Partner added.');
+        }
+        redirect_admin('partners');
+    }
+
+    if ($action === 'partner_delete') {
+        require_role(['super_admin', 'admin']);
+        db()->prepare('DELETE FROM content_items WHERE id=? AND type="partner"')->execute([(int) ($_POST['id'] ?? 0)]);
+        flash('Partner deleted.');
+        redirect_admin('partners');
+    }
+
     if ($action === 'user_save') {
         require_role(['super_admin', 'admin']);
         $id = (int) ($_POST['id'] ?? 0);

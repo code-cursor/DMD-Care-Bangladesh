@@ -414,6 +414,28 @@ body {
   padding-bottom: 8px;
 }
 
+.partner-logo-field,
+.partner-order-field,
+.partner-publish-field {
+  align-self: end;
+}
+
+.partner-publish-field {
+  align-items: center;
+  min-height: 38px;
+  padding-bottom: 0;
+}
+
+.partner-publish-field .form-check-input {
+  flex: 0 0 auto;
+  margin-top: 0;
+}
+
+.partner-publish-field label {
+  margin: 0;
+  white-space: nowrap;
+}
+
 .button-row {
   display: flex;
   gap: 10px;
