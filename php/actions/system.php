@@ -38,7 +38,7 @@ function handle_system_action(string $action, array $user): never
             flash('Health care team profile updated.');
         } else {
             $values[] = $user['id'];
-            db()->prepare('INSERT INTO content_items (type,title,slug,summary,body,image_url,position,is_published,extra,created_by_id) VALUES (?,?,?,?,?,?,?,?,?,?)')->execute($values);
+            db()->prepare('INSERT INTO content_items (type,title,slug,summary,body,image_url,position,is_published,extra,created_by_id,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)')->execute($values);
             flash('Health care team profile created.');
         }
         redirect_admin('health_team');
@@ -93,7 +93,7 @@ function handle_system_action(string $action, array $user): never
             if (mb_strlen($password) < 6) {
                 throw new RuntimeException('Password must contain at least 6 characters.');
             }
-            db()->prepare('INSERT INTO users (name,email,password_hash,role,is_active) VALUES (?,?,?,?,1)')
+            db()->prepare('INSERT INTO users (name,email,password_hash,role,is_active,created_at,updated_at) VALUES (?,?,?,?,1,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)')
                 ->execute([$name, $email, password_hash($password, PASSWORD_DEFAULT), $role]);
             flash('User created successfully.');
         }

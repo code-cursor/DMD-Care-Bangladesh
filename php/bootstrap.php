@@ -68,7 +68,7 @@ function database_config(): array
             return [
                 'dsn' => sprintf(
                     'mysql:host=%s;port=%d;dbname=%s;charset=%s',
-                    $parts['host'] ?? '127.0.0.1',
+                    $parts['host'] ?? 'shared-mysql',
                     $parts['port'] ?? 3306,
                     $database,
                     $query['charset'] ?? 'utf8mb4'
@@ -83,7 +83,7 @@ function database_config(): array
     return [
         'dsn' => sprintf(
             'mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4',
-            env_value('DB_HOST', '127.0.0.1'),
+            env_value('DB_HOST', 'shared-mysql'),
             env_value('DB_PORT', '3306'),
             env_value('DB_DATABASE', 'dmd_care_bangladesh')
         ),
@@ -145,12 +145,198 @@ function initialize_database(): void
     }
 
     if ((int) $pdo->query('SELECT COUNT(*) FROM users')->fetchColumn() === 0) {
-        $statement = $pdo->prepare('INSERT INTO users (name, email, password_hash, role, is_active) VALUES (?, ?, ?, "super_admin", 1)');
+        $statement = $pdo->prepare('INSERT INTO users (name, email, password_hash, role, is_active, created_at, updated_at) VALUES (?, ?, ?, "super_admin", 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
         $statement->execute([
             env_value('ADMIN_BOOTSTRAP_NAME', 'Super Admin'),
             strtolower((string) env_value('ADMIN_BOOTSTRAP_EMAIL', 'admin@example.com')),
             password_hash((string) env_value('ADMIN_BOOTSTRAP_PASSWORD', 'ChangeMeNow123!'), PASSWORD_DEFAULT),
         ]);
+    }
+
+    try {
+        ensure_all_registrations_have_stories();
+    } catch (Throwable) {
+        // Suppress during initial bootstrap if tables are in creation
+    }
+}
+
+function sync_public_patient_story_cards(): void
+{
+    $rows = db()->query('SELECT id,title,summary,image_url,extra FROM content_items WHERE type="patient_story" AND is_published=1 ORDER BY position,id DESC')->fetchAll();
+    $stories = array_map(static function (array $row): array {
+        $extra = json_decode($row['extra'] ?: '{}', true) ?: [];
+        return [
+            'id' => (int) $row['id'],
+            'title' => $row['title'],
+            'summary' => $row['summary'] ?: '',
+            'image_url' => $row['image_url'] ?: './assets/src/img/p_muntasir_billah.jpg',
+            'extra' => [
+                'age' => $extra['age'] ?? '',
+                'diagnosis_year' => $extra['diagnosis_year'] ?? '',
+                'status' => $extra['status'] ?? ($row['summary'] ?? ''),
+                'link' => $extra['link'] ?? 'muntasir_billah_story?id=' . (int) $row['id'],
+                'author' => $extra['author'] ?? $row['title'],
+                'home_text' => $extra['home_text'] ?? '',
+                'home_link_text' => $extra['home_link_text'] ?? 'Click for more stories about me',
+                'registration_id' => $extra['registration_id'] ?? null,
+            ],
+        ];
+    }, $rows);
+    $directory = DMD_ROOT . '/assets/js/data';
+    if (!is_dir($directory) && !mkdir($directory, 0755, true) && !is_dir($directory)) {
+        return;
+    }
+    $json = json_encode($stories, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_THROW_ON_ERROR);
+    $javascript = 'window.DMD_PATIENT_STORIES = ' . $json . ';' . PHP_EOL;
+    @file_put_contents($directory . '/patient-story-list-data.js', $javascript, LOCK_EX);
+}
+
+function sync_registration_patient_story(int $registrationId, bool $preserveExisting = true): ?int
+{
+    $statement = db()->prepare('SELECT * FROM registrations WHERE id=?');
+    $statement->execute([$registrationId]);
+    $reg = $statement->fetch();
+    if (!$reg) {
+        return null;
+    }
+
+    $payload = json_decode((string) ($reg['payload'] ?: '{}'), true) ?: [];
+    $patientName = trim((string) ($reg['patient_name'] ?: ''));
+    $phone = trim((string) ($reg['guardian_phone'] ?: ''));
+
+    // Extract photo if any
+    $photoUrl = null;
+    if (!empty($payload['attachments']['photo']['url'])) {
+        $photoUrl = (string) $payload['attachments']['photo']['url'];
+    }
+
+    // Extract diagnosis info
+    $ageAtDiag = trim((string) ($payload['age_at_diagnosis'] ?? ''));
+    $ageStr = $ageAtDiag !== '' ? "Diagnosed at {$ageAtDiag} years" : '';
+    $diagDate = trim((string) ($payload['date_of_diagnosis'] ?? ''));
+    $diagYear = '';
+    if ($diagDate !== '') {
+        $diagYear = substr($diagDate, 0, 4);
+    }
+    $abilityStatus = trim((string) ($payload['ability'] ?? $payload['status'] ?? ''));
+
+    // Find existing content item for this registration
+    $existing = null;
+    $contentItems = db()->query('SELECT * FROM content_items WHERE type="patient_story"')->fetchAll();
+    foreach ($contentItems as $item) {
+        $ex = json_decode((string) ($item['extra'] ?: '{}'), true) ?: [];
+        if (isset($ex['registration_id']) && (int) $ex['registration_id'] === $registrationId) {
+            $existing = $item;
+            break;
+        }
+    }
+
+    if ($existing) {
+        $existingExtra = json_decode((string) ($existing['extra'] ?: '{}'), true) ?: [];
+        $contentId = (int) $existing['id'];
+
+        if ($preserveExisting) {
+            $updatedExtra = $existingExtra;
+            $updatedExtra['registration_id'] = $registrationId;
+            if (empty($updatedExtra['author'])) {
+                $updatedExtra['author'] = $patientName;
+            }
+            if (empty($updatedExtra['phone']) && $phone !== '') {
+                $updatedExtra['phone'] = $phone;
+            }
+            if (empty($updatedExtra['age']) && $ageStr !== '') {
+                $updatedExtra['age'] = $ageStr;
+            }
+            if (empty($updatedExtra['diagnosis_year']) && $diagYear !== '') {
+                $updatedExtra['diagnosis_year'] = $diagYear;
+            }
+            if (empty($updatedExtra['status']) && $abilityStatus !== '') {
+                $updatedExtra['status'] = $abilityStatus;
+            }
+            if (empty($updatedExtra['link'])) {
+                $updatedExtra['link'] = 'muntasir_billah_story?id=' . $contentId;
+            }
+            $img = $existing['image_url'] ?: $photoUrl;
+
+            $stmt = db()->prepare('UPDATE content_items SET title=?, summary=?, image_url=?, extra=?, updated_at=CURRENT_TIMESTAMP WHERE id=?');
+            $stmt->execute([
+                $patientName,
+                $existing['summary'] ?: ($abilityStatus ?: null),
+                $img ?: null,
+                json_encode($updatedExtra, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                $contentId,
+            ]);
+        }
+        sync_public_patient_story_cards();
+        return $contentId;
+    }
+
+    // If no existing content_item, create a new one
+    $maxPos = (int) db()->query('SELECT COALESCE(MAX(position), 0) FROM content_items WHERE type="patient_story"')->fetchColumn();
+    $position = $maxPos + 1;
+
+    $extra = [
+        'registration_id' => $registrationId,
+        'author' => $patientName,
+        'home_text' => '',
+        'home_link_text' => 'Click for more stories about me',
+        'age' => $ageStr,
+        'diagnosis_year' => $diagYear,
+        'status' => $abilityStatus,
+        'detail_title' => $patientName,
+        'detail_video_url' => '',
+        'detail_body' => '',
+        'phone' => $phone,
+        'whatsapp' => '',
+        'facebook' => '',
+    ];
+
+    $slug = slugify($patientName);
+    $checkSlug = db()->prepare('SELECT COUNT(*) FROM content_items WHERE slug=?');
+    $checkSlug->execute([$slug]);
+    if ((int) $checkSlug->fetchColumn() > 0) {
+        $slug .= '-' . $registrationId;
+    }
+
+    $stmt = db()->prepare('INSERT INTO content_items (type, title, slug, summary, body, image_url, position, is_published, extra, created_by_id, created_at, updated_at) VALUES ("patient_story", ?, ?, ?, NULL, ?, ?, 1, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
+    $stmt->execute([
+        $patientName,
+        $slug,
+        $abilityStatus ?: null,
+        $photoUrl ?: null,
+        $position,
+        json_encode($extra, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+        $reg['created_by_id'] ?? null,
+    ]);
+    $newContentId = (int) db()->lastInsertId();
+
+    $extra['link'] = 'muntasir_billah_story?id=' . $newContentId;
+    db()->prepare('UPDATE content_items SET extra=? WHERE id=?')->execute([
+        json_encode($extra, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+        $newContentId,
+    ]);
+
+    sync_public_patient_story_cards();
+    return $newContentId;
+}
+
+function delete_registration_patient_story(int $registrationId): void
+{
+    $contentItems = db()->query('SELECT id, extra FROM content_items WHERE type="patient_story"')->fetchAll();
+    foreach ($contentItems as $item) {
+        $ex = json_decode((string) ($item['extra'] ?: '{}'), true) ?: [];
+        if (isset($ex['registration_id']) && (int) $ex['registration_id'] === $registrationId) {
+            db()->prepare('DELETE FROM content_items WHERE id=?')->execute([(int) $item['id']]);
+        }
+    }
+    sync_public_patient_story_cards();
+}
+
+function ensure_all_registrations_have_stories(): void
+{
+    $registrations = db()->query('SELECT id FROM registrations ORDER BY id ASC')->fetchAll();
+    foreach ($registrations as $row) {
+        sync_registration_patient_story((int) $row['id'], true);
     }
 }
 
@@ -362,7 +548,7 @@ function send_sms_message(?int $registrationId, string $recipientType, string $p
         $status = $httpStatus >= 200 && $httpStatus < 300 ? 'sent' : 'failed';
     }
 
-    $statement = db()->prepare('INSERT INTO sms_logs (registration_id, recipient_type, recipient_phone, message, provider, status, response) VALUES (?, ?, ?, ?, "configured-http", ?, ?)');
+    $statement = db()->prepare('INSERT INTO sms_logs (registration_id, recipient_type, recipient_phone, message, provider, status, response, created_at) VALUES (?, ?, ?, ?, "configured-http", ?, ?, CURRENT_TIMESTAMP)');
     $statement->execute([$registrationId, $recipientType, $phone, $message, $status, $responseText]);
     return ['status' => $status, 'response' => $responseText];
 }

@@ -1,4 +1,4 @@
-﻿const detailConfiguredBase = window.DMD_API_BASE_URL?.replace(/\/$/, "");
+const detailConfiguredBase = window.DMD_API_BASE_URL?.replace(/\/$/, "");
 const detailApiCandidates = [
   detailConfiguredBase,
   location.protocol.startsWith("http") ? location.origin.replace(/\/$/, "") : null,
@@ -73,7 +73,7 @@ async function loadPatientStoryDetail() {
     const response = await fetch(`${apiBase}/content-api/content/patient_story`);
     if (!response.ok) return;
     const items = await response.json();
-    const item = items.find((story) => story.id === requestedId) || items[0];
+    const item = items.find((story) => story.id === requestedId || Number(story.extra?.registration_id) === requestedId) || items[0];
     if (!item) return;
 
     const extra = item.extra || {};
@@ -85,13 +85,18 @@ async function loadPatientStoryDetail() {
 
     const iframe = document.querySelector(".video-container iframe");
     const embedUrl = youtubeEmbedUrl(extra.detail_video_url);
-    if (iframe && embedUrl) iframe.src = embedUrl;
-    if (iframe && !embedUrl) iframe.closest(".video-container")?.classList.add("d-none");
+    if (iframe && embedUrl) {
+      iframe.src = embedUrl;
+      iframe.closest(".video-container")?.classList.remove("d-none");
+    } else if (iframe) {
+      iframe.closest(".video-container")?.classList.add("d-none");
+    }
 
     const info = document.querySelector(".patient-info");
     const heading = info?.querySelector("h2");
     if (heading) heading.textContent = extra.detail_title || item.title || "Patient Story";
-    if (info) renderStoryBody(info, extra.detail_body || item.body || "");
+    const bodyText = extra.detail_body || item.body || `${item.title} is a registered patient living with Duchenne Muscular Dystrophy (DMD), receiving multidisciplinary care, family support, and medical guidance through DMD Care Bangladesh.`;
+    if (info) renderStoryBody(info, bodyText);
 
     const phoneLink = document.querySelector('.social-links a[title="Call Guardian"]');
     const whatsappLink = document.querySelector('.social-links a[title="Chat on WhatsApp"]');

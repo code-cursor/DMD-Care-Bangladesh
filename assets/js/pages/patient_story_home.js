@@ -60,7 +60,7 @@ async function loadHomePatientStories() {
 
     inner.innerHTML = items.map((item, index) => {
       const extra = item.extra || {};
-      const text = extra.home_text || item.body || item.summary || "";
+      const text = extra.home_text || item.body || item.summary || `${item.title} is receiving multidisciplinary care, therapy, and family-supported rehabilitation through DMD Care Bangladesh.`;
       const linkText = extra.home_link_text || "Click for more stories about me";
       const author = extra.author || item.title || "";
       return `

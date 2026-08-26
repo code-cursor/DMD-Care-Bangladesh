@@ -51,11 +51,14 @@ function handle_registration_action(string $action, array $user): never
         if ($id) {
             $sql = 'UPDATE registrations SET patient_name=?,guardian_phone=?,guardian_email=?,status=?,notes=?,payload=?,reviewed_by_id=?,updated_at=CURRENT_TIMESTAMP WHERE id=?';
             db()->prepare($sql)->execute([$name, $phone, $email ?: null, $status, $notes ?: null, $payload, $user['id'], $id]);
+            sync_registration_patient_story($id, true);
             flash('Registration updated.');
             redirect_admin('requests');
         }
-        $sql = 'INSERT INTO registrations (patient_name,guardian_phone,guardian_email,status,source,notes,payload,created_by_id,reviewed_by_id) VALUES (?,?,?,?,"admin",?,?,?,?)';
+        $sql = 'INSERT INTO registrations (patient_name,guardian_phone,guardian_email,status,source,notes,payload,created_by_id,reviewed_by_id,created_at,updated_at) VALUES (?,?,?,?,"admin",?,?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)';
         db()->prepare($sql)->execute([$name, $phone, $email ?: null, $status, $notes ?: null, $payload, $user['id'], $user['id']]);
+        $newId = (int) db()->lastInsertId();
+        sync_registration_patient_story($newId, true);
         unset($_SESSION['direct_entry_old']);
         flash('Registration created.');
         redirect_admin('direct');
@@ -77,6 +80,7 @@ function handle_registration_action(string $action, array $user): never
         require_role(['super_admin', 'admin']);
         $id = (int) $_POST['id'];
         db()->prepare('DELETE FROM sms_logs WHERE registration_id=?')->execute([$id]);
+        delete_registration_patient_story($id);
         db()->prepare('DELETE FROM registrations WHERE id=?')->execute([$id]);
         flash('Registration deleted.');
         redirect_admin('requests');

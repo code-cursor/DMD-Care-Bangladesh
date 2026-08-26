@@ -195,16 +195,23 @@ try {
         $payload['attachments'] = $attachments;
     }
 
-    $statement = db()->prepare('INSERT INTO registrations (patient_name, guardian_phone, guardian_email, status, source, payload) VALUES (?, ?, ?, "pending", "public", ?)');
+    $statement = db()->prepare('INSERT INTO registrations (patient_name, guardian_phone, guardian_email, status, source, payload, created_at, updated_at) VALUES (?, ?, ?, "pending", "public", ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
     $statement->execute([
         $patientName,
         $guardianPhone,
         $guardianEmail !== '' ? $guardianEmail : null,
         json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
     ]);
+    $newId = (int) db()->lastInsertId();
+
+    try {
+        sync_registration_patient_story($newId, true);
+    } catch (Throwable) {
+        // Suppress story sync error if any to ensure registration still succeeds
+    }
 
     registration_json(201, [
-        'id' => (int) db()->lastInsertId(),
+        'id' => $newId,
         'status' => 'pending',
         'message' => 'Registration submitted successfully',
     ]);
