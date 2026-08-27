@@ -179,6 +179,7 @@ function sync_public_patient_story_cards(): void
                 'author' => $extra['author'] ?? $row['title'],
                 'home_text' => mb_substr((string) ($extra['home_text'] ?? ''), 0, 350),
                 'home_link_text' => 'Click for more stories about me',
+                'show_on_home' => array_key_exists('show_on_home', $extra) ? (bool) $extra['show_on_home'] : true,
                 'registration_id' => $extra['registration_id'] ?? null,
             ],
         ];
@@ -257,6 +258,9 @@ function sync_registration_patient_story(int $registrationId, bool $preserveExis
             if (empty($updatedExtra['link'])) {
                 $updatedExtra['link'] = 'muntasir_billah_story?id=' . $contentId;
             }
+            if (!array_key_exists('show_on_home', $updatedExtra)) {
+                $updatedExtra['show_on_home'] = true;
+            }
             $updatedExtra['home_link_text'] = 'Click for more stories about me';
             $img = $existing['image_url'] ?: $photoUrl;
 
@@ -282,6 +286,7 @@ function sync_registration_patient_story(int $registrationId, bool $preserveExis
         'author' => $patientName,
         'home_text' => '',
         'home_link_text' => 'Click for more stories about me',
+        'show_on_home' => true,
         'age' => $ageStr,
         'diagnosis_year' => $diagYear,
         'status' => $abilityStatus,

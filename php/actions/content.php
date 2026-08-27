@@ -3,6 +3,26 @@ declare(strict_types=1);
 
 function handle_content_action(string $action, array $user): never
 {
+    if ($action === 'content_toggle_home_publish') {
+        require_role(['super_admin', 'admin', 'editor']);
+        $id = (int) ($_POST['id'] ?? 0);
+        $stmt = db()->prepare('SELECT extra FROM content_items WHERE id=? AND type="patient_story"');
+        $stmt->execute([$id]);
+        $row = $stmt->fetch();
+        if (!$row) {
+            throw new RuntimeException('Patient story not found.');
+        }
+        $extra = json_decode((string) ($row['extra'] ?: '{}'), true) ?: [];
+        $current = array_key_exists('show_on_home', $extra) ? (bool) $extra['show_on_home'] : true;
+        $extra['show_on_home'] = !$current;
+        db()->prepare('UPDATE content_items SET extra=?, updated_at=CURRENT_TIMESTAMP WHERE id=? AND type="patient_story"')->execute([
+            json_encode($extra, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+            $id,
+        ]);
+        sync_public_patient_story_cards();
+        flash($extra['show_on_home'] ? 'Patient story shown on homepage.' : 'Patient story hidden from homepage.');
+        redirect_admin('content', ['type' => 'patient_story']);
+    }
     if ($action === 'content_toggle_publish') {
         require_role(['super_admin', 'admin', 'editor']);
         $id = (int) ($_POST['id'] ?? 0);
@@ -77,6 +97,7 @@ function handle_content_action(string $action, array $user): never
         foreach (['author','age','diagnosis_year','status','detail_title','detail_video_url','detail_body','phone','whatsapp','facebook'] as $key) {
             $extra[$key] = trim((string) ($_POST["story_$key"] ?? ''));
         }
+        $extra['show_on_home'] = isset($_POST['show_on_home']);
         $extra['home_text'] = $homeText;
         $extra['home_link_text'] = 'Click for more stories about me';
         $extra['link'] = 'muntasir_billah_story?id=' . ($id ?: ($registrationId ?: 1));

@@ -9,7 +9,7 @@ function public_content_items(string $type): array
     $statement = db()->prepare('SELECT id,type,title,slug,summary,body,image_url,position,is_published,extra,created_at,updated_at FROM content_items WHERE type=? AND is_published=1 ORDER BY position,id DESC');
     $statement->execute([$type]);
 
-    return array_map(static function (array $row): array {
+    return array_map(static function (array $row) use ($type): array {
         $row['id'] = (int) $row['id'];
         $row['position'] = (int) $row['position'];
         $row['is_published'] = (bool) $row['is_published'];
@@ -17,6 +17,7 @@ function public_content_items(string $type): array
         if ($type === 'patient_story') {
             $row['extra']['home_text'] = mb_substr((string) ($row['extra']['home_text'] ?? ''), 0, 350);
             $row['extra']['home_link_text'] = 'Click for more stories about me';
+            $row['extra']['show_on_home'] = array_key_exists('show_on_home', $row['extra']) ? (bool) $row['extra']['show_on_home'] : true;
         }
         return $row;
     }, $statement->fetchAll());

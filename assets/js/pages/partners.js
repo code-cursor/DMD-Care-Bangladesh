@@ -26,7 +26,7 @@ function escapePartnerText(value) {
 
 function partnerImageUrl(url, apiBase) {
   if (!url) return "assets/src/img/DMD_care_bd_Logo.webp";
-  if (url.startsWith("/uploads/")) return `${apiBase}${url}`;
+  if (url.startsWith("/uploads/") || url.startsWith("uploads/")) return `${apiBase}/${url.replace(/^\//, "")}`;
   return url;
 }
 
@@ -41,14 +41,26 @@ function renderPartners(partners, apiBase) {
   grid.querySelectorAll(".reveal").forEach((item) => item.classList.add("active"));
 }
 
+async function fetchPartners(apiBase) {
+  const paths = ["/content-api/content/partners", "/content-api/content/partners.php"];
+  for (const path of paths) {
+    try {
+      const response = await fetch(`${apiBase}${path}`);
+      if (response.ok) return response.json();
+    } catch {}
+  }
+  return [];
+}
+
 async function loadPartners() {
   try {
     const apiBase = await resolvePartnersApiBase();
-    const response = await fetch(`${apiBase}/content-api/content/partners`);
-    if (!response.ok) return;
-    const partners = await response.json();
+    const partners = await fetchPartners(apiBase);
     if (Array.isArray(partners)) renderPartners(partners, apiBase);
   } catch {}
 }
-
-document.addEventListener("DOMContentLoaded", loadPartners);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", loadPartners);
+} else {
+  loadPartners();
+}

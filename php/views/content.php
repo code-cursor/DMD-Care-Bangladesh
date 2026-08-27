@@ -12,7 +12,7 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
 <section class="work-section active">
   <div class="section-card-title">
     <h3><?= e($contentType === 'gallery' ? 'Gallery' : 'Patient Stories (CMS)') ?></h3>
-    <span><?= e($contentType === 'gallery' ? 'Maintain photo and video gallery records.' : 'Manage homepage teaser, story cards, and full story articles for registered patients.') ?></span>
+    <span><?= e($contentType === 'gallery' ? 'Maintain photo and video gallery records.' : 'Manage homepage visibility, story cards, and full story articles for registered patients.') ?></span>
   </div>
 
   <?php if ($contentType === 'gallery'): ?>
@@ -114,6 +114,7 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
                 <div class="row g-3">
                   <div class="col-md-6"><label class="form-label">Patient Name</label><input name="story_name" class="form-control" value="<?= e($contentForm['title']) ?>" required></div>
                   <div class="col-md-6"><label class="form-label">Author / Display Name</label><input name="story_author" class="form-control" value="<?= e($contentExtra['author'] ?? $contentForm['title']) ?>" placeholder="e.g. <?= e($contentForm['title']) ?>"></div>
+                  <div class="col-12"><div class="form-check form-switch mb-2"><input id="showOnHomeSwitch" name="show_on_home" type="checkbox" role="switch" class="form-check-input" value="1" <?= (($contentExtra['show_on_home'] ?? true) ? 'checked' : '') ?>><label for="showOnHomeSwitch" class="form-check-label fw-semibold">Show on Home Page</label></div></div>
                   <div class="col-12"><label class="form-label">Home Short Story Text <small class="text-muted">(max 350 characters)</small></label><textarea name="story_home_text" class="form-control" rows="4" maxlength="350" placeholder="Brief teaser story summary to display on the homepage carousel..."><?= e($contentExtra['home_text'] ?? '') ?></textarea></div>
                 </div>
               </div>
@@ -159,12 +160,12 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
                 <input name="position" type="number" class="form-control" value="<?= e($contentForm['position']) ?>">
               </div>
               <div class="col-md-4">
-                <label class="form-label fw-semibold">Publish Status</label>
+                <label class="form-label fw-semibold">Public Story Status</label>
                 <div class="form-check form-switch pt-1">
                   <input id="publishedSwitch" name="is_published" type="checkbox" role="switch" class="form-check-input" value="1" <?= $contentForm['is_published'] ? 'checked' : '' ?>>
-                  <label for="publishedSwitch" class="form-check-label ms-2 fw-semibold">Publish this Patient Story</label>
+                  <label for="publishedSwitch" class="form-check-label ms-2 fw-semibold">Publish story pages</label>
                 </div>
-                <small class="text-muted d-block mt-1">If enabled, this story will appear on Homepage carousel, All Stories page, and detail page.</small>
+                <small class="text-muted d-block mt-1">Controls All Stories and detail page availability. Use Home Page On/Off for the homepage carousel.</small>
               </div>
             </div>
 
@@ -179,7 +180,7 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
       <div class="alert alert-info d-flex align-items-center mb-4">
         <i class="bi bi-info-circle-fill fs-4 me-3"></i>
         <div>
-          <strong>Automatic Patient Integration:</strong> Registered patients (from the public registration form and direct admin entry) are automatically synced here. Click <strong>Edit Story</strong> on any patient below to customize their homepage teaser text, diagnosis details, YouTube video, or full story article. Use the <strong>Publish toggle</strong> in the table to quickly show or hide a patient from the public website.
+          <strong>Automatic Patient Integration:</strong> Registered patients (from the public registration form and direct admin entry) are automatically synced here. Click <strong>Edit Story</strong> on any patient below to customize their homepage teaser text, diagnosis details, YouTube video, or full story article. Use <strong>Home Page On/Off</strong> to control only the homepage carousel, or <strong>Published</strong> to show/hide the public story pages.
         </div>
       </div>
     <?php endif; ?>
@@ -198,7 +199,8 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
               <th>Diagnosis / Age</th>
               <th>Home Teaser</th>
               <th>Status / Condition</th>
-              <th style="min-width:140px;">Publish Toggle</th>
+              <th style="min-width:150px;">Home Page On/Off</th>
+              <th style="min-width:140px;">Published</th>
               <th>Order</th>
               <th class="text-end">Actions</th>
             </tr>
@@ -209,6 +211,7 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
                 $rowExtra = json_decode($row['extra'] ?: '{}', true) ?: [];
                 $hasHomeText = !empty($rowExtra['home_text']);
                 $hasDetailBody = !empty($rowExtra['detail_body']);
+                $showOnHome = array_key_exists('show_on_home', $rowExtra) ? (bool) $rowExtra['show_on_home'] : true;
               ?>
               <tr>
                 <td>
@@ -241,6 +244,18 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
                 <td>
                   <form method="post" class="d-inline">
                     <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                    <input type="hidden" name="action" value="content_toggle_home_publish">
+                    <input type="hidden" name="return_section" value="content">
+                    <input type="hidden" name="id" value="<?= e($row['id']) ?>">
+                    <button type="submit" class="btn btn-sm <?= $showOnHome ? 'btn-success' : 'btn-outline-secondary' ?>" title="Click to show or hide this story only on the homepage carousel">
+                      <i class="bi bi-<?= $showOnHome ? 'house-door-fill' : 'house-door' ?>"></i>
+                      <?= $showOnHome ? 'On Home' : 'Off Home' ?>
+                    </button>
+                  </form>
+                </td>
+                <td>
+                  <form method="post" class="d-inline">
+                    <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
                     <input type="hidden" name="action" value="content_toggle_publish">
                     <input type="hidden" name="return_section" value="content">
                     <input type="hidden" name="id" value="<?= e($row['id']) ?>">
@@ -265,7 +280,7 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
               </tr>
             <?php endforeach; ?>
             <?php if (!$contents): ?>
-              <tr><td colspan="8" class="text-center text-muted py-4">No registered patients found. Patients registering via website or direct entry will appear here automatically.</td></tr>
+              <tr><td colspan="9" class="text-center text-muted py-4">No registered patients found. Patients registering via website or direct entry will appear here automatically.</td></tr>
             <?php endif; ?>
           </tbody>
         </table>
