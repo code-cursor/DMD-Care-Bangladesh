@@ -110,14 +110,15 @@ if ($user) {
   ];
 
   $reportRows = db()->query('SELECT DATE(created_at) AS date, COUNT(*) AS count FROM registrations WHERE created_at >= DATE_SUB(CURRENT_DATE, INTERVAL 29 DAY) GROUP BY DATE(created_at) ORDER BY date DESC')->fetchAll();
-  $statusFilter = (string) ($_GET['status'] ?? '');
+  $statusFilter = (string) ($_GET['status'] ?? 'pending');
   $search = trim((string) ($_GET['search'] ?? ''));
+  if (!in_array($statusFilter, ['pending', 'rejected'], true)) {
+    $statusFilter = 'pending';
+  }
   $where = [];
   $parameters = [];
-  if (in_array($statusFilter, ['pending', 'accepted', 'rejected'], true)) {
-    $where[] = 'status=?';
-    $parameters[] = $statusFilter;
-  }
+  $where[] = 'status=?';
+  $parameters[] = $statusFilter;
   if ($search !== '') {
     $where[] = '(patient_name LIKE ? OR guardian_phone LIKE ? OR guardian_email LIKE ?)';
     array_push($parameters, "%$search%", "%$search%", "%$search%");

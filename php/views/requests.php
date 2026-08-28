@@ -2,7 +2,7 @@
   <div class="section-card-title"><h3>Registration Requests</h3><span>Review, export, approve, reject, edit, inspect images, or remove registrations.</span></div>
   <form class="toolbar" method="get">
     <input type="hidden" name="section" value="requests">
-    <select name="status" class="form-select form-select-sm"><option value="">All status</option><?php foreach (['pending','accepted','rejected'] as $value): ?><option value="<?= $value ?>" <?= ($_GET['status'] ?? '') === $value ? 'selected' : '' ?>><?= ucfirst($value) ?></option><?php endforeach; ?></select>
+    <select name="status" class="form-select form-select-sm"><?php $selectedStatus = $_GET['status'] ?? 'pending'; foreach (['pending','rejected'] as $value): ?><option value="<?= $value ?>" <?= $selectedStatus === $value ? 'selected' : '' ?>><?= ucfirst($value) ?></option><?php endforeach; ?></select>
     <input name="search" value="<?= e($_GET['search'] ?? '') ?>" class="form-control form-control-sm" placeholder="Patient, phone, or email">
     <button class="btn btn-outline-success btn-sm"><i class="bi bi-search"></i></button>
   </form>

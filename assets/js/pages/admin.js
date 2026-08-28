@@ -477,7 +477,7 @@ async function downloadPatientExcel(registration) {
   }
 }
 async function loadRequests() {
-  const status = document.getElementById("requestStatusFilter").value;
+  const status = document.getElementById("requestStatusFilter").value || "pending";
   const q = document.getElementById("requestSearch").value.trim();
   const params = new URLSearchParams();
   if (status) params.set("status_filter", status);
@@ -580,6 +580,7 @@ document.getElementById("requestsRows").addEventListener("click", async (event) 
       });
       showToast(`Registration ${nextStatus}`);
       loadRequests();
+      if (nextStatus === "accepted") loadAcceptedPatients();
       loadDashboard();
     } catch (error) {
       showToast(error.message);
