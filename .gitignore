@@ -3,5 +3,6 @@ __pycache__/
 .venv*/
 .tmp/
 .env
+assets/js/data/patient-story-list-data.js
 backend/dmd_admin.sqlite3
 backend/uploads/
