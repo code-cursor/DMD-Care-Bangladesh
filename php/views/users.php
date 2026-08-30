@@ -1,6 +1,6 @@
 <section class="work-section active">
   <div class="section-card-title"><h3>Admin Users</h3><span>Add, edit, activate, deactivate, and remove staff accounts.</span></div>
-  <?php if (in_array($user['role'], ['super_admin','admin'], true)): ?>
+  <?php if ($user['role'] === 'super_admin'): ?>
   <?php $userForm = $editUser ?: ['id'=>'','name'=>'','email'=>'','role'=>'editor','is_active'=>1]; ?>
   <form id="userForm" class="data-form mb-4" method="post">
     <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="user_save"><input type="hidden" name="return_section" value="users"><input type="hidden" name="id" value="<?= e($userForm['id']) ?>">
@@ -29,8 +29,8 @@
         <td><?= e($row['role']) ?></td>
         <td><?= $row['is_active'] ? 'Yes' : 'No' ?></td>
         <td><div class="actions">
-          <?php if (in_array($user['role'], ['super_admin','admin'], true)): ?><a class="btn btn-sm btn-outline-secondary" href="?section=users&amp;edit_user=<?= e($row['id']) ?>#userForm"><i class="bi bi-pencil"></i> Edit</a><?php endif; ?>
-          <?php if (in_array($user['role'], ['super_admin','admin'], true) && (int)$row['id'] !== (int)$user['id']): ?><form method="post"><input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="user_toggle"><input type="hidden" name="return_section" value="users"><input type="hidden" name="id" value="<?= e($row['id']) ?>"><button class="btn btn-sm btn-outline-secondary"><?= $row['is_active'] ? 'Deactivate' : 'Activate' ?></button></form><?php endif; ?>
+          <?php if ($user['role'] === 'super_admin'): ?><a class="btn btn-sm btn-outline-secondary" href="?section=users&amp;edit_user=<?= e($row['id']) ?>#userForm"><i class="bi bi-pencil"></i> Edit</a><?php endif; ?>
+          <?php if ($user['role'] === 'super_admin' && (int)$row['id'] !== (int)$user['id']): ?><form method="post"><input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="user_toggle"><input type="hidden" name="return_section" value="users"><input type="hidden" name="id" value="<?= e($row['id']) ?>"><button class="btn btn-sm btn-outline-secondary"><?= $row['is_active'] ? 'Deactivate' : 'Activate' ?></button></form><?php endif; ?>
           <?php if ($user['role'] === 'super_admin' && (int)$row['id'] !== (int)$user['id']): ?><form method="post" data-confirm="Delete this user permanently?"><input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="user_delete"><input type="hidden" name="return_section" value="users"><input type="hidden" name="id" value="<?= e($row['id']) ?>"><button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i> Delete</button></form><?php endif; ?>
         </div></td>
       </tr>

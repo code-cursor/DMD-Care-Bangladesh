@@ -33,7 +33,6 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
 
         <div class="row g-3">
           <div class="col-12"><label class="form-label">Title</label><input name="title" class="form-control" value="<?= e($contentForm['title']) ?>" required></div>
-          <div class="col-12"><label class="form-label">Summary</label><input name="summary" class="form-control" value="<?= e($contentForm['summary']) ?>"></div>
           <?php if ($contentMedia === 'video'): ?>
             <div class="col-12"><label class="form-label">Video URL</label><input name="video_url" class="form-control" value="<?= e($contentExtra['video_url'] ?? $contentForm['body']) ?>" required></div>
           <?php endif; ?>
@@ -52,24 +51,26 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
 
       <div class="table-wrap">
         <table class="table table-hover align-middle">
-          <thead><tr><th>Preview</th><th>Title</th><th>Published</th><th>Actions</th></tr></thead>
+          <thead><tr><th>Sl. No.</th><th>Preview</th><th>Title</th><th>Position</th><th>Published</th><th>Actions</th></tr></thead>
           <tbody>
-            <?php foreach ($contents as $row): ?>
+            <?php foreach ($contents as $index => $row): ?>
               <tr>
+                <td><?= e($index + 1) ?></td>
                 <td><?php if ($row['image_url']): ?><img class="content-preview" src="<?= e($row['image_url']) ?>" alt=""><?php else: ?><i class="bi bi-camera-video"></i><?php endif; ?></td>
                 <td><?= e($row['title']) ?><br><small class="muted"><?= e($row['slug']) ?></small></td>
+                <td><?= e($row['position']) ?></td>
                 <td><?= $row['is_published'] ? 'Yes' : 'No' ?></td>
                 <td>
                   <div class="actions">
                     <a class="btn btn-sm btn-outline-secondary" href="/admin?section=content&amp;type=gallery&amp;media=<?= e($contentMedia) ?>&amp;edit_content=<?= e($row['id']) ?>"><i class="bi bi-pencil"></i></a>
                     <?php if (in_array($user['role'], ['super_admin','admin'], true)): ?>
-                      <form method="post" data-confirm="Delete this gallery item?"><input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="content_delete"><input type="hidden" name="return_section" value="content"><input type="hidden" name="id" value="<?= e($row['id']) ?>"><input type="hidden" name="type" value="gallery"><button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button></form>
+                      <form method="post" data-confirm="Delete this gallery item?"><input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="content_delete"><input type="hidden" name="return_section" value="content"><input type="hidden" name="id" value="<?= e($row['id']) ?>"><input type="hidden" name="type" value="gallery"><input type="hidden" name="media_type" value="<?= e($contentMedia) ?>"><button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button></form>
                     <?php endif; ?>
                   </div>
                 </td>
               </tr>
             <?php endforeach; ?>
-            <?php if (!$contents): ?><tr><td colspan="4" class="text-center muted">No content found.</td></tr><?php endif; ?>
+            <?php if (!$contents): ?><tr><td colspan="6" class="text-center muted">No content found.</td></tr><?php endif; ?>
           </tbody>
         </table>
       </div>
@@ -206,7 +207,7 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
             </tr>
           </thead>
           <tbody>
-            <?php foreach ($contents as $row): ?>
+            <?php foreach ($contents as $index => $row): ?>
               <?php
                 $rowExtra = json_decode($row['extra'] ?: '{}', true) ?: [];
                 $hasHomeText = !empty($rowExtra['home_text']);

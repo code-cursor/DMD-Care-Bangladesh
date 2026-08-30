@@ -91,7 +91,7 @@ function handle_system_action(string $action, array $user): never
     }
 
     if ($action === 'user_save') {
-        require_role(['super_admin', 'admin']);
+        require_role(['super_admin']);
         $id = (int) ($_POST['id'] ?? 0);
         $name = trim((string) ($_POST['name'] ?? ''));
         $email = strtolower(trim((string) ($_POST['email'] ?? '')));
@@ -140,7 +140,7 @@ function handle_system_action(string $action, array $user): never
     }
 
     if ($action === 'user_toggle') {
-        require_role(['super_admin', 'admin']);
+        require_role(['super_admin']);
         $id = (int) $_POST['id'];
         if ($id === (int) $user['id']) {
             throw new RuntimeException('You cannot deactivate your own account.');

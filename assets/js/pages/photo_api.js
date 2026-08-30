@@ -83,7 +83,7 @@ async function loadGalleryContent() {
     photoItems = items.map((item) => `
       <div class="gallery-item scroll-reveal visible">
         <img src="${photoImageUrl(item.image_url)}" alt="${photoText(item.title)}">
-        <div class="overlay"><span>${photoText(item.summary || item.title)}</span></div>
+        <div class="overlay"><span>${photoText(item.title)}</span></div>
       </div>
     `);
     renderPhotoPage(1);

@@ -154,7 +154,6 @@ function initialize_database(): void
     }
 
     try {
-        ensure_all_registrations_have_stories();
         ensure_default_partners();
     } catch (Throwable) {
         // Suppress during initial bootstrap if tables are in creation

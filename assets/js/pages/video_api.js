@@ -85,7 +85,7 @@ async function loadVideoGalleryContent() {
     videoItems = items.map((item) => `
       <div class="gallery-item scroll-reveal visible">
         <iframe src="${embedVideoUrl(item.extra?.video_url || item.body)}" title="${videoText(item.title)}" allowfullscreen></iframe>
-        <div class="video-title">${videoText(item.summary || item.title)}</div>
+        <div class="video-title">${videoText(item.title)}</div>
       </div>
     `);
     renderVideoPage(1);
