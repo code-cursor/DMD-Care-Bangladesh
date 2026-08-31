@@ -36,6 +36,7 @@ from .sms import send_sms, update_sms_ip
 CONTENT_TYPES = {"health_team", "gallery", "patient_story"}
 MUTATION_ROLES = ("super_admin", "admin", "editor")
 USER_ADMIN_ROLES = ("super_admin", "admin")
+USER_CREATE_ROLES = ("super_admin",)
 
 app = FastAPI(title=settings.api_title)
 
@@ -646,7 +647,7 @@ def create_content(
         summary=payload.summary,
         body=payload.body,
         image_url=payload.image_url,
-        position=last_position + 1,
+        position=payload.position if payload.position > 0 else last_position + 1,
         is_published=payload.is_published,
         extra=payload.extra,
         created_by_id=current_user.id,
@@ -703,7 +704,7 @@ def list_users(
 def create_user(
     payload: UserCreate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles(*USER_ADMIN_ROLES)),
+    current_user: User = Depends(require_roles(*USER_CREATE_ROLES)),
 ) -> dict[str, Any]:
     existing = db.query(User).filter(User.email == payload.email).first()
     if existing:
@@ -726,7 +727,7 @@ def update_user(
     user_id: int,
     payload: UserUpdate,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles(*USER_ADMIN_ROLES)),
+    current_user: User = Depends(require_roles(*USER_CREATE_ROLES)),
 ) -> dict[str, Any]:
     user = db.get(User, user_id)
     if not user:

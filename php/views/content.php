@@ -276,6 +276,16 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
                     <a class="btn btn-sm btn-outline-success" href="/muntasir_billah_story?id=<?= e($row['id']) ?>" target="_blank" title="View Story Live">
                       <i class="bi bi-box-arrow-up-right"></i> View
                     </a>
+                    <?php if (in_array($user['role'], ['super_admin','admin'], true)): ?>
+                      <form method="post" data-confirm="Delete this patient story permanently?">
+                        <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                        <input type="hidden" name="action" value="content_delete">
+                        <input type="hidden" name="return_section" value="content">
+                        <input type="hidden" name="id" value="<?= e($row['id']) ?>">
+                        <input type="hidden" name="type" value="patient_story">
+                        <button class="btn btn-sm btn-outline-danger" type="submit"><i class="bi bi-trash"></i> Remove</button>
+                      </form>
+                    <?php endif; ?>
                   </div>
                 </td>
               </tr>

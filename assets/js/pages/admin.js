@@ -320,6 +320,7 @@ function setLoggedIn(user) {
   loginView.classList.add("d-none");
   appView.classList.remove("d-none");
   document.getElementById("currentUser").textContent = `${user.name} (${user.role})`;
+  document.getElementById("userForm")?.classList.toggle("d-none", user.role !== "super_admin");
   loadDashboard();
 }
 
@@ -935,7 +936,7 @@ function buildGenericContentPayload() {
       : { media_type: "photo" };
     return {
       title: document.getElementById("contentTitle").value.trim(),
-      summary: document.getElementById("contentSummary").value || null,
+      summary: null,
       body: galleryKind === "video" ? videoUrl : null,
       extra,
     };
@@ -1034,17 +1035,19 @@ async function loadContent() {
     contentItems = type === "gallery"
       ? allItems.filter((item) => (item.extra?.media_type || "photo") === galleryKind)
       : allItems;
-    document.getElementById("contentRows").innerHTML = contentItems.map((item) => `
+    document.getElementById("contentRows").innerHTML = contentItems.map((item, index) => `
       <tr>
+        <td>${index + 1}</td>
         <td>${escapeHtml(item.title)}</td>
         <td>${escapeHtml(item.type)}</td>
+        <td>${escapeHtml(item.position)}</td>
         <td>${item.is_published ? "Yes" : "No"}</td>
         <td class="text-end">
           <button class="btn btn-sm btn-outline-secondary" data-action="edit-content" data-id="${item.id}"><i class="bi bi-pencil"></i></button>
           <button class="btn btn-sm btn-outline-danger" data-action="delete-content" data-id="${item.id}"><i class="bi bi-trash"></i></button>
         </td>
       </tr>
-    `).join("") || `<tr><td colspan="4" class="text-muted">No content found</td></tr>`;
+    `).join("") || `<tr><td colspan="6" class="text-muted">No content found</td></tr>`;
   } catch (error) {
     showToast(error.message);
   }
@@ -1063,6 +1066,7 @@ document.getElementById("contentRows").addEventListener("click", async (event) =
   if (button.dataset.action === "delete-content") {
     try {
       await api(`/api/admin/content/${item.id}`, { method: "DELETE" });
+      contentItems = contentItems.filter((content) => content.id !== item.id);
       showToast("Content deleted");
       loadContent();
     } catch (error) {
