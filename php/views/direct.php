@@ -27,31 +27,33 @@ unset($_SESSION['direct_entry_old']);
 $directPayloadOld = is_array($directOld['payload_fields'] ?? null) ? $directOld['payload_fields'] : [];
 $directValue = static fn(string $key, string $default = ''): string => (string) ($directOld[$key] ?? $default);
 $directPayloadValue = static fn(string $key): string => (string) ($directPayloadOld[$key] ?? '');
+$directSelectOptions = static fn(array $options): array => array_values(array_unique(array_merge(['None'], $options)));
 ?>
 <section class="work-section active">
   <div class="section-card-title"><h3>Direct Entry</h3><span>Full patient registration form matching the public registration workflow.</span></div>
+  <p class="text-danger fw-semibold mb-3">All field mandatory</p>
   <form id="directEntryForm" class="data-form" method="post" enctype="multipart/form-data" novalidate>
     <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>"><input type="hidden" name="action" value="registration_save"><input type="hidden" name="return_section" value="direct"><input type="hidden" name="payload" value="{}">
     <div class="story-editor-group"><h4>Primary Contact</h4><div class="row g-3">
       <div class="col-md-4"><label class="form-label">Patient Full Name</label><input name="patient_name" class="form-control" value="<?= e($directValue('patient_name')) ?>" required></div>
       <div class="col-md-4"><label class="form-label">Guardian Contact No.</label><input name="guardian_phone" type="tel" class="form-control" placeholder="+8801XXXXXXXXX" value="<?= e($directValue('guardian_phone')) ?>" required></div>
-      <div class="col-md-4"><label class="form-label">Email Address</label><input name="guardian_email" type="email" class="form-control" value="<?= e($directValue('guardian_email')) ?>"></div>
+      <div class="col-md-4"><label class="form-label">Email Address</label><input name="guardian_email" type="email" class="form-control" value="<?= e($directValue('guardian_email')) ?>" required></div>
     </div></div>
     <?php foreach ($sections as $heading => $fields): ?>
       <div class="story-editor-group mt-4"><h4><?= e($heading) ?></h4><div class="row g-3">
         <?php foreach ($fields as $field): [$key,$label,$kind] = $field; $options = $field[3] ?? []; ?>
           <div class="<?= $kind === 'textarea' ? 'col-md-6' : 'col-md-4' ?>"><label class="form-label"><?= e($label) ?></label>
-          <?php if ($kind === 'select'): ?><select name="payload_fields[<?= e($key) ?>]" class="form-select" required><option value="">Select</option><?php foreach ($options as $option): ?><option value="<?= e($option) ?>" <?= $directPayloadValue($key) === $option ? 'selected' : '' ?>><?= e($option) ?></option><?php endforeach; ?></select>
+          <?php if ($kind === 'select'): ?><select name="payload_fields[<?= e($key) ?>]" class="form-select" required><option value="">Select</option><?php foreach ($directSelectOptions($options) as $option): ?><option value="<?= e($option) ?>" <?= $directPayloadValue($key) === $option ? 'selected' : '' ?>><?= e($option) ?></option><?php endforeach; ?></select>
           <?php elseif ($kind === 'textarea'): ?><textarea name="payload_fields[<?= e($key) ?>]" class="form-control" rows="2" required><?= e($directPayloadValue($key)) ?></textarea>
           <?php else: ?><input name="payload_fields[<?= e($key) ?>]" type="<?= e($kind) ?>" class="form-control" value="<?= e($directPayloadValue($key)) ?>" required><?php endif; ?></div>
         <?php endforeach; ?>
       </div></div>
     <?php endforeach; ?>
     <div class="story-editor-group mt-4"><h4>Attachments, Review, and Consent</h4><div class="row g-3">
-      <div class="col-md-6"><label class="form-label">Patient Photo</label><input name="patient_photo" type="file" class="form-control" accept="image/jpeg,image/png,image/webp"></div>
-      <div class="col-md-6"><label class="form-label">Genetic Report</label><input name="genetic_report" type="file" class="form-control" accept="application/pdf,image/jpeg,image/png,image/webp"><small class="muted">PDF up to 5MB; image up to 2MB.</small></div>
-      <div class="col-md-4"><label class="form-label">Registration Status</label><select name="status" class="form-select"><option <?= $directValue('status', 'pending') === 'pending' ? 'selected' : '' ?>>pending</option><option <?= $directValue('status') === 'accepted' ? 'selected' : '' ?>>accepted</option><option <?= $directValue('status') === 'rejected' ? 'selected' : '' ?>>rejected</option></select></div>
-      <div class="col-md-8"><label class="form-label">Admin Notes</label><input name="notes" class="form-control" value="<?= e($directValue('notes')) ?>"></div>
+      <div class="col-md-6"><label class="form-label">Patient Photo</label><input name="patient_photo" type="file" class="form-control" accept="image/jpeg,image/png,image/webp" required></div>
+      <div class="col-md-6"><label class="form-label">Genetic Report</label><input name="genetic_report" type="file" class="form-control" accept="application/pdf,image/jpeg,image/png,image/webp" required><small class="muted">PDF up to 5MB; image up to 2MB.</small></div>
+      <div class="col-md-4"><label class="form-label">Registration Status</label><select name="status" class="form-select" required><option <?= $directValue('status', 'pending') === 'pending' ? 'selected' : '' ?>>pending</option><option <?= $directValue('status') === 'accepted' ? 'selected' : '' ?>>accepted</option><option <?= $directValue('status') === 'rejected' ? 'selected' : '' ?>>rejected</option></select></div>
+      <div class="col-md-8"><label class="form-label">Admin Notes</label><input name="notes" class="form-control" value="<?= e($directValue('notes')) ?>" required></div>
       <div class="col-12"><label class="form-check"><input name="consent" value="1" type="checkbox" class="form-check-input" <?= isset($directOld['consent']) ? 'checked' : '' ?> required> Consent confirmed for storing and using this registration information.</label></div>
     </div></div>
     <button class="btn btn-success mt-4"><i class="bi bi-save"></i> Save Registration</button>

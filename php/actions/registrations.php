@@ -14,8 +14,14 @@ function handle_registration_action(string $action, array $user): never
         if (mb_strlen($name) < 2 || !valid_phone($phone)) {
             throw new RuntimeException('Enter a valid patient name and guardian phone.');
         }
-        if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new RuntimeException('Guardian email is invalid.');
+        if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new RuntimeException('Guardian email address is mandatory and must be valid.');
+        }
+        if ($notes === '') {
+            throw new RuntimeException('Admin notes are mandatory.');
+        }
+        if (empty($_POST['consent'])) {
+            throw new RuntimeException('Consent confirmation is mandatory.');
         }
         if (!in_array($status, ['pending', 'accepted', 'rejected'], true)) {
             throw new RuntimeException('Registration status is invalid.');
