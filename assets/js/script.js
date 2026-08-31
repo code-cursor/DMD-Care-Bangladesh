@@ -63,7 +63,7 @@ function ensureHeaderScript(callback) {
         return;
     }
 
-    ensureScript("./assets/js/components/header.js?v=20260824-1", function () {
+    ensureScript("./assets/js/components/header.js?v=20260831-1", function () {
         if (window.initSiteHeader) callback();
     });
 }
