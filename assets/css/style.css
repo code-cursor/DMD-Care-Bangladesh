@@ -29,6 +29,26 @@
   box-sizing: border-box;
 }
 
+body.copy-restricted,
+body.copy-restricted *:not(input):not(textarea):not(select):not([contenteditable="true"]) {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+body.copy-restricted input,
+body.copy-restricted textarea,
+body.copy-restricted select,
+body.copy-restricted [contenteditable="true"] {
+  -webkit-touch-callout: default;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+body.copy-restricted img {
+  -webkit-user-drag: none;
+}
+
 /* =========================
        Partners Section
 ========================= */

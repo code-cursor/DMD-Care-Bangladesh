@@ -1,4 +1,19 @@
-const frontendCacheVersion = "20260827-frontend-1";
+const frontendCacheVersion = "20260902-frontend-1";
+
+function initCopyRestriction() {
+    if (document.documentElement.dataset.copyRestrictionBound === "true") return;
+    document.documentElement.dataset.copyRestrictionBound = "true";
+    document.body?.classList.add("copy-restricted");
+
+    const isEditableTarget = (target) => Boolean(target?.closest?.("input, textarea, select, [contenteditable='true']"));
+    const block = (event) => {
+        if (!isEditableTarget(event.target)) event.preventDefault();
+    };
+
+    ["copy", "cut", "contextmenu", "selectstart", "dragstart"].forEach((eventName) => {
+        document.addEventListener(eventName, block, true);
+    });
+}
 
 function setFrontendCookie(name, value, days = 365) {
     const expires = new Date(Date.now() + days * 864e5).toUTCString();
@@ -50,7 +65,7 @@ function ensureScript(src, callback) {
     document.body.appendChild(script);
 }
 function ensureHeaderStylesheet() {
-    ensureStylesheet("./assets/css/components/header.css");
+    ensureStylesheet("./assets/css/components/header.css?v=20260902-1");
 }
 
 function ensureIconStylesheet() {
@@ -133,11 +148,12 @@ function initLoadedFooter() {
 }
 
 function initLoadedBanner() {
-    ensureStylesheet("./assets/css/components/banner.css");
+    ensureStylesheet("./assets/css/components/banner.css?v=20260902-1");
     ensureScript("./assets/js/components/banner.js?v=20260827-1");
 }
 
 function initSharedFragments() {
+    initCopyRestriction();
     ensureFrontendVisitorCookie();
     ensureIconStylesheet();
     ensureHeaderStylesheet();
