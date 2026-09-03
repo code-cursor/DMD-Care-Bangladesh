@@ -73,7 +73,7 @@ async function loadPatientStoryDetail() {
     const response = await fetch(`${apiBase}/content-api/content/patient_story`);
     if (!response.ok) return;
     const items = await response.json();
-    const item = items.find((story) => story.id === requestedId || Number(story.extra?.registration_id) === requestedId) || items[0];
+    const item = items.find((story) => story.extra?.show_detail_page === true && (story.id === requestedId || Number(story.extra?.registration_id) === requestedId));
     if (!item) return;
 
     const extra = item.extra || {};

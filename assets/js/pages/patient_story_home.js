@@ -61,7 +61,7 @@ async function loadHomePatientStories() {
     const response = await fetch(`${apiBase}/content-api/content/patient_story`);
     if (!response.ok) return;
     const fetchedItems = await response.json();
-    const items = fetchedItems.filter((item) => item.extra?.show_on_home !== false);
+    const items = fetchedItems.filter((item) => item.extra?.show_on_home === true);
     if (!items.length) {
       inner.innerHTML = "";
       return;

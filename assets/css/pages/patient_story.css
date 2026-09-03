@@ -77,7 +77,7 @@
 
     /* ===== Right Side (Text) ===== */
     .patient-info h2 {
-      font-family: 'Tiro Bangla';
+      font-family: 'Poppins', 'Tiro Bangla', sans-serif;
       color: #081c15;
       font-weight: 700;
       margin-bottom: 15px;
@@ -95,7 +95,7 @@
         padding: 25px;
       }
       .patient-info {
-        font-family: 'Tiro Bangla';
+        font-family: 'Poppins', 'Tiro Bangla', sans-serif;
         margin-top: 25px;
       }
     }

@@ -1,6 +1,10 @@
 <?php
-$contentForm = $editContent ?: ['id'=>'','title'=>'','slug'=>'','summary'=>'','body'=>'','image_url'=>'','position'=>0,'is_published'=>1,'extra'=>'{}'];
+$contentForm = $editContent ?: ['id'=>'','title'=>'','slug'=>'','summary'=>'','body'=>'','image_url'=>'','position'=>0,'is_published'=>($contentType === 'patient_story' ? 0 : 1),'extra'=>'{}'];
 $contentExtra = json_decode($contentForm['extra'] ?: '{}', true) ?: [];
+$storyDefaultVisible = !empty($contentForm['is_published']);
+$storyShowOnHome = array_key_exists('show_on_home', $contentExtra) ? (bool) $contentExtra['show_on_home'] : $storyDefaultVisible;
+$storyShowOnList = array_key_exists('show_on_list', $contentExtra) ? (bool) $contentExtra['show_on_list'] : $storyDefaultVisible;
+$storyShowDetailPage = array_key_exists('show_detail_page', $contentExtra) ? (bool) $contentExtra['show_detail_page'] : $storyDefaultVisible;
 
 $linkedRegistration = null;
 if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])) {
@@ -115,7 +119,7 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
                 <div class="row g-3">
                   <div class="col-md-6"><label class="form-label">Patient Name</label><input name="story_name" class="form-control" value="<?= e($contentForm['title']) ?>" required></div>
                   <div class="col-md-6"><label class="form-label">Author / Display Name</label><input name="story_author" class="form-control" value="<?= e($contentExtra['author'] ?? $contentForm['title']) ?>" placeholder="e.g. <?= e($contentForm['title']) ?>"></div>
-                  <div class="col-12"><div class="form-check form-switch mb-2"><input id="showOnHomeSwitch" name="show_on_home" type="checkbox" role="switch" class="form-check-input" value="1" <?= (($contentExtra['show_on_home'] ?? true) ? 'checked' : '') ?>><label for="showOnHomeSwitch" class="form-check-label fw-semibold">Show on Home Page</label></div></div>
+                  <div class="col-12"><div class="form-check form-switch mb-2"><input id="showOnHomeSwitch" name="show_on_home" type="checkbox" role="switch" class="form-check-input" value="1" <?= $storyShowOnHome ? 'checked' : '' ?>><label for="showOnHomeSwitch" class="form-check-label fw-semibold">Show on Home Page</label></div></div>
                   <div class="col-12"><label class="form-label">Home Short Story Text <small class="text-muted">(max 350 characters)</small></label><textarea name="story_home_text" class="form-control" rows="4" maxlength="350" placeholder="Brief teaser story summary to display on the homepage carousel..."><?= e($contentExtra['home_text'] ?? '') ?></textarea></div>
                 </div>
               </div>
@@ -124,6 +128,7 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
                 <h4><i class="bi bi-card-heading"></i> All Patient Stories Listing Card</h4>
                 <p class="text-muted small">These fields appear on the card in the All Patient Stories grid page.</p>
                 <div class="row g-3">
+                  <div class="col-12"><div class="form-check form-switch mb-2"><input id="showOnListSwitch" name="show_on_list" type="checkbox" role="switch" class="form-check-input" value="1" <?= $storyShowOnList ? 'checked' : '' ?>><label for="showOnListSwitch" class="form-check-label fw-semibold">Show on All Stories Page</label></div></div>
                   <div class="col-md-4"><label class="form-label">Age / Diagnosis Age</label><input name="story_age" class="form-control" value="<?= e($contentExtra['age'] ?? '') ?>" placeholder="e.g. Diagnosed at 6 years"></div>
                   <div class="col-md-4"><label class="form-label">Diagnosis Year</label><input name="story_diagnosis_year" class="form-control" value="<?= e($contentExtra['diagnosis_year'] ?? '') ?>" placeholder="e.g. 2022"></div>
                   <div class="col-md-4"><label class="form-label">Patient Status / Condition</label><input name="story_status" class="form-control" value="<?= e($contentExtra['status'] ?? $contentForm['summary']) ?>" placeholder="e.g. Wheelchair user / Physiotherapy care"></div>
@@ -134,6 +139,7 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
                 <h4><i class="bi bi-journal-richtext"></i> Main Story Detail Page</h4>
                 <p class="text-muted small">Detailed full story article, YouTube video link, and contact options.</p>
                 <div class="row g-3">
+                  <div class="col-12"><div class="form-check form-switch mb-2"><input id="showDetailPageSwitch" name="show_detail_page" type="checkbox" role="switch" class="form-check-input" value="1" <?= $storyShowDetailPage ? 'checked' : '' ?>><label for="showDetailPageSwitch" class="form-check-label fw-semibold">Show Main Story Article</label></div></div>
                   <div class="col-12"><label class="form-label">Story Headline / Title</label><input name="story_detail_title" class="form-control" value="<?= e($contentExtra['detail_title'] ?? $contentForm['title']) ?>"></div>
                   <div class="col-12"><label class="form-label">Story Video URL (YouTube embed or watch URL)</label><input name="story_detail_video_url" class="form-control" value="<?= e($contentExtra['detail_video_url'] ?? '') ?>" placeholder="https://www.youtube.com/embed/... or https://youtu.be/..."></div>
                   <div class="col-12"><label class="form-label">Full Story Narrative Details</label><textarea name="story_detail_body" class="form-control" rows="10" placeholder="Write the complete journey, medical background, challenges, and support details..."><?= e($contentExtra['detail_body'] ?? $contentForm['body']) ?></textarea></div>
@@ -160,14 +166,6 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
                 <label class="form-label fw-semibold">Display Order / Position</label>
                 <input name="position" type="number" class="form-control" value="<?= e($contentForm['position']) ?>">
               </div>
-              <div class="col-md-4">
-                <label class="form-label fw-semibold">Public Story Status</label>
-                <div class="form-check form-switch pt-1">
-                  <input id="publishedSwitch" name="is_published" type="checkbox" role="switch" class="form-check-input" value="1" <?= $contentForm['is_published'] ? 'checked' : '' ?>>
-                  <label for="publishedSwitch" class="form-check-label ms-2 fw-semibold">Publish story pages</label>
-                </div>
-                <small class="text-muted d-block mt-1">Controls All Stories and detail page availability. Use Home Page On/Off for the homepage carousel.</small>
-              </div>
             </div>
 
             <div class="mt-4 d-flex gap-2">
@@ -181,7 +179,7 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
       <div class="alert alert-info d-flex align-items-center mb-4">
         <i class="bi bi-info-circle-fill fs-4 me-3"></i>
         <div>
-          <strong>Automatic Patient Integration:</strong> Registered patients (from the public registration form and direct admin entry) are automatically synced here. Click <strong>Edit Story</strong> on any patient below to customize their homepage teaser text, diagnosis details, YouTube video, or full story article. Use <strong>Home Page On/Off</strong> to control only the homepage carousel, or <strong>Published</strong> to show/hide the public story pages.
+          <strong>Automatic Patient Integration:</strong> Registered patients (from the public registration form and direct admin entry) are automatically synced here. Click <strong>Edit Story</strong> on any patient below to customize their homepage teaser text, diagnosis details, YouTube video, or full story article. Use the Home Page, All Stories, and Main Article switches to control each public section independently.
         </div>
       </div>
     <?php endif; ?>
@@ -201,7 +199,8 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
               <th>Home Teaser</th>
               <th>Status / Condition</th>
               <th style="min-width:150px;">Home Page On/Off</th>
-              <th style="min-width:140px;">Published</th>
+              <th style="min-width:140px;">All Stories</th>
+              <th style="min-width:140px;">Main Article</th>
               <th>Order</th>
               <th class="text-end">Actions</th>
             </tr>
@@ -212,7 +211,9 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
                 $rowExtra = json_decode($row['extra'] ?: '{}', true) ?: [];
                 $hasHomeText = !empty($rowExtra['home_text']);
                 $hasDetailBody = !empty($rowExtra['detail_body']);
-                $showOnHome = array_key_exists('show_on_home', $rowExtra) ? (bool) $rowExtra['show_on_home'] : true;
+                $showOnHome = array_key_exists('show_on_home', $rowExtra) ? (bool) $rowExtra['show_on_home'] : (bool) $row['is_published'];
+                $showOnList = array_key_exists('show_on_list', $rowExtra) ? (bool) $rowExtra['show_on_list'] : (bool) $row['is_published'];
+                $showDetailPage = array_key_exists('show_detail_page', $rowExtra) ? (bool) $rowExtra['show_detail_page'] : (bool) $row['is_published'];
               ?>
               <tr>
                 <td>
@@ -257,13 +258,26 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
                 <td>
                   <form method="post" class="d-inline">
                     <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
-                    <input type="hidden" name="action" value="content_toggle_publish">
+                    <input type="hidden" name="action" value="content_toggle_story_section">
+                    <input type="hidden" name="story_section" value="list">
                     <input type="hidden" name="return_section" value="content">
                     <input type="hidden" name="id" value="<?= e($row['id']) ?>">
-                    <input type="hidden" name="type" value="patient_story">
-                    <button type="submit" class="btn btn-sm <?= $row['is_published'] ? 'btn-success' : 'btn-outline-secondary' ?>" title="Click to toggle publish / hide on public website">
-                      <i class="bi bi-<?= $row['is_published'] ? 'eye-fill' : 'eye-slash' ?>"></i>
-                      <?= $row['is_published'] ? 'Published' : 'Hidden' ?>
+                    <button type="submit" class="btn btn-sm <?= $showOnList ? 'btn-success' : 'btn-outline-secondary' ?>" title="Click to show or hide this story on the All Patient Stories page">
+                      <i class="bi bi-<?= $showOnList ? 'card-list' : 'card-heading' ?>"></i>
+                      <?= $showOnList ? 'On List' : 'Off List' ?>
+                    </button>
+                  </form>
+                </td>
+                <td>
+                  <form method="post" class="d-inline">
+                    <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
+                    <input type="hidden" name="action" value="content_toggle_story_section">
+                    <input type="hidden" name="story_section" value="detail">
+                    <input type="hidden" name="return_section" value="content">
+                    <input type="hidden" name="id" value="<?= e($row['id']) ?>">
+                    <button type="submit" class="btn btn-sm <?= $showDetailPage ? 'btn-success' : 'btn-outline-secondary' ?>" title="Click to show or hide this story detail article">
+                      <i class="bi bi-<?= $showDetailPage ? 'file-earmark-text-fill' : 'file-earmark-text' ?>"></i>
+                      <?= $showDetailPage ? 'On Article' : 'Off Article' ?>
                     </button>
                   </form>
                 </td>
@@ -291,7 +305,7 @@ if ($contentType === 'patient_story' && !empty($contentExtra['registration_id'])
               </tr>
             <?php endforeach; ?>
             <?php if (!$contents): ?>
-              <tr><td colspan="9" class="text-center text-muted py-4">No registered patients found. Patients registering via website or direct entry will appear here automatically.</td></tr>
+              <tr><td colspan="10" class="text-center text-muted py-4">No registered patients found. Patients registering via website or direct entry will appear here automatically.</td></tr>
             <?php endif; ?>
           </tbody>
         </table>

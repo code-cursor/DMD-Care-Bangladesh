@@ -1,5 +1,5 @@
 <section class="work-section active">
-  <div class="section-card-title"><h3>Admin Users</h3><span>Add, edit, activate, deactivate, and remove staff accounts.</span></div>
+  <div class="section-card-title"><h3>Admin Users</h3></div>
   <?php if ($user['role'] === 'super_admin'): ?>
   <?php $userForm = $editUser ?: ['id'=>'','name'=>'','email'=>'','role'=>'editor','is_active'=>1]; ?>
   <form id="userForm" class="data-form mb-4" method="post">

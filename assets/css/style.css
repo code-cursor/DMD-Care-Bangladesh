@@ -20,13 +20,26 @@
 
   /* Font size */
   --font-size-sm: 0.8rem;
+  --site-font-family: 'Poppins', 'Tiro Bangla', sans-serif;
 }
 
-* {
-  font-family: 'Poppins';
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+* {
+  font-family: var(--site-font-family);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
 }
 
 body.copy-restricted,
@@ -248,7 +261,7 @@ body.copy-restricted img {
 ========================= */
 
     .story-text {
-      font-family: 'Tiro Bangla';
+      font-family: var(--site-font-family);
       font-size: 1.1rem;
     }
 
@@ -341,7 +354,7 @@ body.copy-restricted img {
     }
 
     .story-author {
-      font-family: 'Tiro Bangla';
+      font-family: var(--site-font-family);
       margin-top: 15px;
       font-size: 1rem;
       color: var(--color-primary-2);

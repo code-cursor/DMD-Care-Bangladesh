@@ -35,6 +35,28 @@ function ensureFrontendVisitorCookie() {
     setFrontendCookie("dmd_visitor_id", randomPart);
 }
 
+function trackFrontendVisit() {
+    const visitorKey = getFrontendCookie("dmd_visitor_id");
+    if (!visitorKey) return;
+
+    const payload = JSON.stringify({
+        visitor_key: visitorKey,
+        path: `${window.location.pathname}${window.location.search}`,
+    });
+
+    if (navigator.sendBeacon) {
+        const blob = new Blob([payload], { type: "application/json" });
+        if (navigator.sendBeacon("/api/visits", blob)) return;
+    }
+
+    fetch("/api/visits", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload,
+        keepalive: true,
+    }).catch(() => {});
+}
+
 function ensureStylesheet(href) {
     if (document.querySelector(`link[href="${href}"]`)) return;
     const link = document.createElement("link");
@@ -65,7 +87,7 @@ function ensureScript(src, callback) {
     document.body.appendChild(script);
 }
 function ensureHeaderStylesheet() {
-    ensureStylesheet("./assets/css/components/header.css?v=20260902-1");
+    ensureStylesheet("./assets/css/components/header.css?v=20260902-2");
 }
 
 function ensureIconStylesheet() {
@@ -155,6 +177,7 @@ function initLoadedBanner() {
 function initSharedFragments() {
     initCopyRestriction();
     ensureFrontendVisitorCookie();
+    trackFrontendVisit();
     ensureIconStylesheet();
     ensureHeaderStylesheet();
     loadCachedFragment("header-container", "header", "header", initLoadedHeader);
@@ -232,3 +255,5 @@ if ($.fn.carousel) {
       pause: "hover"
     });
 }
+
+

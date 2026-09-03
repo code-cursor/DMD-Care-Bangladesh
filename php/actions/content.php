@@ -3,24 +3,43 @@ declare(strict_types=1);
 
 function handle_content_action(string $action, array $user): never
 {
-    if ($action === 'content_toggle_home_publish') {
+    if ($action === 'content_toggle_home_publish' || $action === 'content_toggle_story_section') {
         require_role(['super_admin', 'admin', 'editor']);
         $id = (int) ($_POST['id'] ?? 0);
-        $stmt = db()->prepare('SELECT extra FROM content_items WHERE id=? AND type="patient_story"');
+        $section = $action === 'content_toggle_home_publish' ? 'home' : (string) ($_POST['story_section'] ?? '');
+        $fieldMap = [
+            'home' => 'show_on_home',
+            'list' => 'show_on_list',
+            'detail' => 'show_detail_page',
+        ];
+        if (!isset($fieldMap[$section])) {
+            throw new RuntimeException('Invalid patient story section.');
+        }
+
+        $stmt = db()->prepare('SELECT extra,is_published FROM content_items WHERE id=? AND type="patient_story"');
         $stmt->execute([$id]);
         $row = $stmt->fetch();
         if (!$row) {
             throw new RuntimeException('Patient story not found.');
         }
+
         $extra = json_decode((string) ($row['extra'] ?: '{}'), true) ?: [];
-        $current = array_key_exists('show_on_home', $extra) ? (bool) $extra['show_on_home'] : true;
-        $extra['show_on_home'] = !$current;
-        db()->prepare('UPDATE content_items SET extra=?, updated_at=CURRENT_TIMESTAMP WHERE id=? AND type="patient_story"')->execute([
+        foreach ($fieldMap as $field) {
+            if (!array_key_exists($field, $extra)) {
+                $extra[$field] = (bool) $row['is_published'];
+            }
+        }
+        $field = $fieldMap[$section];
+        $extra[$field] = !(bool) $extra[$field];
+        $isPublished = patient_story_visible_anywhere($extra) ? 1 : 0;
+
+        db()->prepare('UPDATE content_items SET is_published=?, extra=?, updated_at=CURRENT_TIMESTAMP WHERE id=? AND type="patient_story"')->execute([
+            $isPublished,
             json_encode($extra, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
             $id,
         ]);
         sync_public_patient_story_cards();
-        flash($extra['show_on_home'] ? 'Patient story shown on homepage.' : 'Patient story hidden from homepage.');
+        flash($extra[$field] ? 'Patient story section shown.' : 'Patient story section hidden.');
         redirect_admin('content', ['type' => 'patient_story']);
     }
 
@@ -105,6 +124,8 @@ function handle_content_action(string $action, array $user): never
             $extra[$key] = trim((string) ($_POST["story_$key"] ?? ''));
         }
         $extra['show_on_home'] = isset($_POST['show_on_home']);
+        $extra['show_on_list'] = isset($_POST['show_on_list']);
+        $extra['show_detail_page'] = isset($_POST['show_detail_page']);
         $extra['home_text'] = $homeText;
         $extra['home_link_text'] = 'Click for more stories about me';
         $extra['link'] = 'muntasir_billah_story?id=' . ($id ?: ($registrationId ?: 1));
@@ -122,7 +143,7 @@ function handle_content_action(string $action, array $user): never
     $values = [
         $type, $title, slugify((string) ($_POST['slug'] ?? $title)),
         $summary ?: null, $body ?: null, $imageUrl ?: null,
-        (int) ($_POST['position'] ?? 0), isset($_POST['is_published']) ? 1 : 0,
+        (int) ($_POST['position'] ?? 0), $type === 'patient_story' ? (patient_story_visible_anywhere($extra) ? 1 : 0) : (isset($_POST['is_published']) ? 1 : 0),
         json_encode($extra, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
     ];
     if ($id) {

@@ -107,7 +107,7 @@
     }
 
     .overlay span {
-    font-family: 'Tiro Bangla';
+    font-family: 'Poppins', 'Tiro Bangla', sans-serif;
     font-size: 1.1rem;
     font-weight: 400;
     background: transparent;

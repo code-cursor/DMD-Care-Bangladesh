@@ -160,6 +160,12 @@ function initialize_database(): void
     }
 }
 
+function patient_story_visible_anywhere(array $extra): bool
+{
+    return (bool) ($extra['show_on_home'] ?? false)
+        || (bool) ($extra['show_on_list'] ?? false)
+        || (bool) ($extra['show_detail_page'] ?? false);
+}
 function sync_public_patient_story_cards(): void
 {
     $rows = db()->query('SELECT id,title,summary,image_url,extra FROM content_items WHERE type="patient_story" AND is_published=1 ORDER BY position,id DESC')->fetchAll();
@@ -179,6 +185,8 @@ function sync_public_patient_story_cards(): void
                 'home_text' => mb_substr((string) ($extra['home_text'] ?? ''), 0, 350),
                 'home_link_text' => 'Click for more stories about me',
                 'show_on_home' => array_key_exists('show_on_home', $extra) ? (bool) $extra['show_on_home'] : true,
+                'show_on_list' => array_key_exists('show_on_list', $extra) ? (bool) $extra['show_on_list'] : true,
+                'show_detail_page' => array_key_exists('show_detail_page', $extra) ? (bool) $extra['show_detail_page'] : true,
                 'registration_id' => $extra['registration_id'] ?? null,
             ],
         ];
@@ -258,7 +266,13 @@ function sync_registration_patient_story(int $registrationId, bool $preserveExis
                 $updatedExtra['link'] = 'muntasir_billah_story?id=' . $contentId;
             }
             if (!array_key_exists('show_on_home', $updatedExtra)) {
-                $updatedExtra['show_on_home'] = true;
+                $updatedExtra['show_on_home'] = (bool) $existing['is_published'];
+            }
+            if (!array_key_exists('show_on_list', $updatedExtra)) {
+                $updatedExtra['show_on_list'] = (bool) $existing['is_published'];
+            }
+            if (!array_key_exists('show_detail_page', $updatedExtra)) {
+                $updatedExtra['show_detail_page'] = (bool) $existing['is_published'];
             }
             $updatedExtra['home_link_text'] = 'Click for more stories about me';
             $img = $existing['image_url'] ?: $photoUrl;
@@ -285,7 +299,9 @@ function sync_registration_patient_story(int $registrationId, bool $preserveExis
         'author' => $patientName,
         'home_text' => '',
         'home_link_text' => 'Click for more stories about me',
-        'show_on_home' => true,
+        'show_on_home' => false,
+        'show_on_list' => false,
+        'show_detail_page' => false,
         'age' => $ageStr,
         'diagnosis_year' => $diagYear,
         'status' => $abilityStatus,
@@ -304,7 +320,7 @@ function sync_registration_patient_story(int $registrationId, bool $preserveExis
         $slug .= '-' . $registrationId;
     }
 
-    $stmt = db()->prepare('INSERT INTO content_items (type, title, slug, summary, body, image_url, position, is_published, extra, created_by_id, created_at, updated_at) VALUES ("patient_story", ?, ?, ?, NULL, ?, ?, 1, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
+    $stmt = db()->prepare('INSERT INTO content_items (type, title, slug, summary, body, image_url, position, is_published, extra, created_by_id, created_at, updated_at) VALUES ("patient_story", ?, ?, ?, NULL, ?, ?, 0, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)');
     $stmt->execute([
         $patientName,
         $slug,

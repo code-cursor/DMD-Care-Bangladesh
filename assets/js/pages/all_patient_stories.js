@@ -25,7 +25,9 @@ const fallbackPatients = [
       age: "Diagnosed at 12 years",
       diagnosis_year: "2022",
       status: "Wheelchair user",
-      link: "muntasir_billah_story?id=6"
+      link: "muntasir_billah_story?id=6",
+      show_on_list: true,
+      show_detail_page: true
     }
   }
 ];
@@ -58,7 +60,7 @@ function renderPatientListHtml(patients) {
             <p class="patient-info"><i class="fa fa-child"></i> ${escapePatientText(extra.age || "—")}</p>
             <p class="patient-info"><i class="fa fa-calendar"></i> Diagnosis Year: ${escapePatientText(extra.diagnosis_year || "—")}</p>
             <p class="patient-info"><i class="fa fa-heartbeat"></i> Status: ${escapePatientText(extra.status || patient.summary || "Living with DMD")}</p>
-            <a href="${escapePatientText(patientLink(patient))}" class="btn-view">View Details <i class="fa fa-arrow-right"></i></a>
+            ${extra.show_detail_page === true ? `<a href="${escapePatientText(patientLink(patient))}" class="btn-view">View Details <i class="fa fa-arrow-right"></i></a>` : ""}
           </div>
         </div>
       </div>
@@ -72,7 +74,7 @@ function renderPatientListHtml(patients) {
 async function loadAndRenderAllStories() {
   // First render immediately with static/preloaded window.DMD_PATIENT_STORIES
   const initialPatients = Array.isArray(window.DMD_PATIENT_STORIES) && window.DMD_PATIENT_STORIES.length
-    ? window.DMD_PATIENT_STORIES
+    ? window.DMD_PATIENT_STORIES.filter((item) => item.extra?.show_on_list === true)
     : fallbackPatients;
   renderPatientListHtml(initialPatients);
 
@@ -83,7 +85,7 @@ async function loadAndRenderAllStories() {
     if (response.ok) {
       const items = await response.json();
       if (Array.isArray(items) && items.length) {
-        renderPatientListHtml(items);
+        renderPatientListHtml(items.filter((item) => item.extra?.show_on_list === true));
       }
     }
   } catch {}

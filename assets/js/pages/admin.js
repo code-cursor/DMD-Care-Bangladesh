@@ -1000,7 +1000,7 @@ function resetContentForm(clearType = true) {
   document.getElementById("contentExtra").value = "{}";
   document.getElementById("contentPosition").value = "0";
   document.getElementById('contentImageFile').value = '';
-  document.getElementById("contentPublished").checked = true;
+  document.getElementById("contentPublished").checked = currentContentType() !== "patient_story";
   fillHealthTeamFields();
   fillPatientStoryFields();
   fillGenericContentFields();

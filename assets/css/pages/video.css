@@ -9,7 +9,7 @@
 
     body {
       background-color: #fafafa;
-      font-family: 'Tiro Bangla', 'Poppins';
+      font-family: 'Poppins', 'Tiro Bangla', sans-serif;
     }
 
     .py-5 {
@@ -73,7 +73,7 @@
 
     .video-title {
       background: rgba(40, 55, 75, 0.85);
-      font-family: 'Tiro Bangla';
+      font-family: 'Poppins', 'Tiro Bangla', sans-serif;
       color: #fff;
       font-weight: 400;
       font-size: 1.1rem;

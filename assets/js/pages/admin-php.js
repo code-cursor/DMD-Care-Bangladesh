@@ -18,7 +18,25 @@
 
   document.querySelectorAll("form[data-confirm]").forEach((form) => {
     form.addEventListener("submit", (event) => {
-      if (!window.confirm(form.dataset.confirm)) event.preventDefault();
+      if (form.dataset.submitting === "true") {
+        event.preventDefault();
+        return;
+      }
+
+      if (form.dataset.confirm && !window.confirm(form.dataset.confirm)) {
+        event.preventDefault();
+        return;
+      }
+
+      form.dataset.submitting = "true";
+      const submitter = event.submitter || form.querySelector("button[type='submit'], button:not([type]), input[type='submit']");
+      if (submitter) {
+        submitter.disabled = true;
+        if (submitter.tagName === "BUTTON") {
+          submitter.dataset.originalHtml = submitter.innerHTML;
+          submitter.innerHTML = '<span class="spinner-border spinner-border-sm" aria-hidden="true"></span> Working...';
+        }
+      }
     });
   });
 

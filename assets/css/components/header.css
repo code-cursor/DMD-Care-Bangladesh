@@ -23,6 +23,20 @@
 body {
   font-family:'Poppins';
 }
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+#header-container,
+#header-container header,
+header {
+  margin-top: 0;
+  padding-top: 0;
+}
 
 body.copy-restricted,
 body.copy-restricted *:not(input):not(textarea):not(select):not([contenteditable="true"]) {

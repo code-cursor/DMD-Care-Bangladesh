@@ -17,7 +17,10 @@ function public_content_items(string $type): array
         if ($type === 'patient_story') {
             $row['extra']['home_text'] = mb_substr((string) ($row['extra']['home_text'] ?? ''), 0, 350);
             $row['extra']['home_link_text'] = 'Click for more stories about me';
-            $row['extra']['show_on_home'] = array_key_exists('show_on_home', $row['extra']) ? (bool) $row['extra']['show_on_home'] : true;
+            $defaultVisible = !empty($row['is_published']);
+            $row['extra']['show_on_home'] = array_key_exists('show_on_home', $row['extra']) ? (bool) $row['extra']['show_on_home'] : $defaultVisible;
+            $row['extra']['show_on_list'] = array_key_exists('show_on_list', $row['extra']) ? (bool) $row['extra']['show_on_list'] : $defaultVisible;
+            $row['extra']['show_detail_page'] = array_key_exists('show_detail_page', $row['extra']) ? (bool) $row['extra']['show_detail_page'] : $defaultVisible;
         }
         return $row;
     }, $statement->fetchAll());

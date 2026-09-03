@@ -297,7 +297,7 @@ if ($user) {
         <?php require __DIR__ . '/php/views/' . $section . '.php'; ?>
       </main>
     </div>
-    <script src="./assets/js/pages/admin-php.js?v=20260824-1"></script>
+    <script src="./assets/js/pages/admin-php.js?v=20260902-1"></script>
   <?php endif; ?>
 </body>
 
