@@ -279,7 +279,7 @@
 function initWhatsAppWidget() {
   if (document.getElementById("wa-chat-widget")) return;
 
-  const phoneNumber = "8801914191919";
+  const phoneNumber = "8800123456789";
   const style = document.createElement("style");
   style.textContent = `
     #wa-chat-widget {
